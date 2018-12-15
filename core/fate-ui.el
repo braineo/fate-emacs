@@ -37,6 +37,9 @@
 ;; When emacs asks for "yes" or "no", let "y" or "n" suffice
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; highlight the current line
+(global-hl-line-mode +1)
+
 ;; Theme
 (use-package doom-themes
   :ensure t
