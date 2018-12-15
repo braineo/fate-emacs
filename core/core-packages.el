@@ -6,9 +6,8 @@
 (setq package-archives '(("org"   . "http://orgmode.org/elpa/")
                          ("gnu"   . "http://elpa.gnu.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")))
-
-(when (version< emacs-version "27.0")
-  (package-initialize))
+(unless package--initialized
+  (package-initialize t))
 
 ;; Bootstrap `use-package`
 (unless (package-installed-p 'use-package)
