@@ -48,7 +48,11 @@
    ("C-x C-f" . helm-find-files)
    ("C-x f" . helm-recentf)
    ("M-y" . helm-show-kill-ring)
-   ("C-x b" . helm-buffers-list))
+   ("C-x b" . helm-buffers-list)
+   :map helm-map
+   ("TAB" . helm-execute-persistent-action)
+   ("C-i" . helm-execute-persistent-action)
+   ("C-z" . helm-select-action))
   :config
   (progn
     (setq helm-buffers-fuzzy-matching t)))
