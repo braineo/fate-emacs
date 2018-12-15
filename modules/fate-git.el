@@ -13,6 +13,7 @@
 ;;; Code:
 
 (use-package magit
+  :defer t
   :config
   (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
   :bind

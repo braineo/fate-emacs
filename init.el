@@ -2,14 +2,18 @@
 (setq load-prefer-newer t)
 
 (load (concat (file-name-directory load-file-name)
-              "core/fate-core.el")
+              "core/core-load-paths.el")
       nil (not init-file-debug))
 
 ;; Custom file
 (setq custom-file (expand-file-name "custom.el" fate-directory))
 
-(require 'fate-ui)
+(require 'fate-core)
+
 (require 'fate-git)
+
+(when IS-MAC
+  (require 'fate-macos))
 
 ;; Font
 (add-to-list 'default-frame-alist '(font . "Operator Mono"))

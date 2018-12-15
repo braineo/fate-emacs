@@ -28,8 +28,8 @@
 (defconst IS-LINUX   (eq system-type 'gnu/linux))
 (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
 
-(require 'core-load-paths)
 (require 'core-packages)
+(require 'fate-ui)
 
 (provide 'fate-core)
 ;;; fate-core.el ends here
