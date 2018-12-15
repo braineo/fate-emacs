@@ -1,3 +1,5 @@
+;;; core/core-load-paths.el -*- lexical-binding: t; -*-
+
 (defun add-to-load-path (dir) (add-to-list 'load-path dir))
 
 (defvar fate-directory
@@ -23,3 +25,4 @@
         ,fate-modules-directory))
         
 (provide 'core-load-paths)
+;;; core-load-paths.el ends here

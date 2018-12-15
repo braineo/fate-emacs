@@ -1,41 +1,20 @@
+;; Always load newest byte code
 (setq load-prefer-newer t)
+
 (load (concat (file-name-directory load-file-name)
               "core/core-load-paths.el")
       nil (not init-file-debug))
-;; (require 'core-load-paths)
+
+;; Custom file
 (setq custom-file (expand-file-name "custom.el" fate-directory))
 
-;; Package configs
-(require 'package)
-(setq package-enable-at-startup nil)
-(setq package-archives '(("org"   . "http://orgmode.org/elpa/")
-                         ("gnu"   . "http://elpa.gnu.org/packages/")
-                         ("melpa" . "https://melpa.org/packages/")))
-(package-initialize)
-
-;; Bootstrap `use-package`
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(require 'use-package)
-
-
-;; Minimal UI
-(scroll-bar-mode -1)
-(tool-bar-mode   -1)
-(tooltip-mode    -1)
-(menu-bar-mode   -1)
+(require 'core-packages)
+(require 'fate-ui)
 
 ;; Font
 (add-to-list 'default-frame-alist '(font . "Operator Mono"))
 (add-to-list 'default-frame-alist '(height . 24))
 (add-to-list 'default-frame-alist '(width . 80))
-
-;; Theme
-(use-package doom-themes
-  :ensure t
-  :config
-  (load-theme 'doom-one t))
 
 ;; Which Key
 (use-package which-key
