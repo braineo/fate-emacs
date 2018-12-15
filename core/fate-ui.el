@@ -46,5 +46,13 @@
   :config
   (load-theme 'doom-one t))
 
+(defun set-font-size ()
+    "Set font size."
+  (interactive)
+  (set-face-attribute
+   'default nil :height
+   (string-to-number
+    (read-string "Font size: " (number-to-string (face-attribute 'default :height nil))))))
+
 (provide 'fate-ui)
 ;;; fate-ui.el ends here
