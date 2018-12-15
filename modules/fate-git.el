@@ -19,5 +19,14 @@
   :bind
   (("C-x g" . magit-status)))
 
+(use-package gitattributes-mode
+  :defer t)
+
+(use-package gitconfig-mode
+  :defer t)
+
+(use-package gitignore-mode
+  :defer t)
+
 (provide 'fate-git)
 ;;; fate-git.el ends here
