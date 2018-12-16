@@ -7,6 +7,8 @@
 
 ;; Custom file
 (setq custom-file (expand-file-name "custom.el" fate-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
 
 (require 'fate-core)
 
