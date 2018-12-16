@@ -49,7 +49,7 @@
 ;; revert buffers automatically when underlying files are changed externally
 (global-auto-revert-mode t)
 
-
+(require 'fate-auto-complete.el)
 
 (provide 'core-editor)
 ;;; core-editor.el ends here
