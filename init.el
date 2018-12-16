@@ -20,11 +20,6 @@
 (when IS-MAC
   (require 'fate-macos))
 
-;; Font
-(add-to-list 'default-frame-alist '(font . "Operator Mono"))
-(add-to-list 'default-frame-alist '(height . 80))
-(add-to-list 'default-frame-alist '(width . 160))
-
 ;; Which Key
 (use-package which-key
   :ensure t

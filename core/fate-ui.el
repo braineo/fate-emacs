@@ -40,6 +40,11 @@
 ;; highlight the current line
 (global-hl-line-mode +1)
 
+;; Font
+(add-to-list 'default-frame-alist '(font . "Operator Mono"))
+(add-to-list 'default-frame-alist '(height . 80))
+(add-to-list 'default-frame-alist '(width . 160))
+
 ;; Theme
 (use-package doom-themes
   :ensure t
