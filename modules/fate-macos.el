@@ -25,11 +25,12 @@
 
 ;; On macOS Emacs doesn't use the shell PATH if it's not started from
 ;; the shell. Let's fix that:
-(use-package exec-path-from-shell
-  :config
-  (progn
-    (exec-path-from-shell-initialize)
-    (exec-path-from-shell-copy-env "PYTHONPATH")))
+;; However it is too expensive, maybe not a good idea to enable it
+;; (use-package exec-path-from-shell
+;;   :config
+;;   (progn
+;;     (exec-path-from-shell-initialize)
+;;     (exec-path-from-shell-copy-env "PYTHONPATH")))
    
 
 ;; Swap command and option
