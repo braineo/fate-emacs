@@ -29,6 +29,7 @@
 (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
 
 (require 'core-packages)
+(require 'core-editor)
 (require 'fate-ui)
 
 (provide 'fate-core)

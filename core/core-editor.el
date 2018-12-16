@@ -24,9 +24,6 @@
 ;;; Code:
 
 
-(setq require-final-newline t)
-
-;; delete the selection with a keypress
 (delete-selection-mode t);; Death to the tabs!  However, tabs historically indent to the next
 ;; 8-character offset; specifying anything else will cause *mass*
 ;; confusion, as it will change the appearance of every existing file.
@@ -49,7 +46,17 @@
 ;; revert buffers automatically when underlying files are changed externally
 (global-auto-revert-mode t)
 
-(require 'fate-auto-complete.el)
+;; better search and replace
+(use-package anzu
+  :diminish anzu-mode
+  :bind (([remap query-replace] . anzu-query-replace)
+         ([remap query-replace-regexp] . anzu-query-replace-regexp)
+         :map isearch-mode-map
+         ([remap isearch-query-replace] . anzu-isearch-query-replace)
+         ([remap isearch-query-replace-regexp] . anzu-isearch-query-replace-regexp))
+  :hook (after-init . global-anzu-mode))
+
+(require 'fate-auto-complete)
 
 (provide 'core-editor)
 ;;; core-editor.el ends here
