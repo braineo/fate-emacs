@@ -7,14 +7,17 @@
                          ("gnu"   . "http://elpa.gnu.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")))
 (unless package--initialized
-  (package-initialize t))
+  (package-initialize))
 
 ;; Bootstrap `use-package`
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-(require 'use-package)
+
+(setq use-package-always-defer t)
 (setq use-package-always-ensure t)
+
+(require 'use-package)
 
 (provide 'core-packages)
 ;;; core-packages.el ends here
