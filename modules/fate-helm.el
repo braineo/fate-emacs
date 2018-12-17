@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2018  Binbin Ye
 
-;; Keywords: 
+;; Keywords:
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -23,13 +23,10 @@
 ;; ace-jump-helm-line
 ;; auto-highlight-symbol
 ;; bookmark
-;; helm
-;; helm-ag
 ;; helm-descbinds
 ;; helm-flx
 ;; helm-make
 ;; helm-mode-manager
-;; helm-projectile
 ;; helm-swoop
 ;; helm-themes
 ;; (helm-spacemacs-help :location local)
@@ -38,7 +35,6 @@
 ;; imenu
 ;; persp-mode
 ;; popwin
-;; projectile;; 
 
 ;;; Code:
 
@@ -73,9 +69,16 @@
              helm-projectile-recentf
              helm-projectile-find-file
              helm-projectile-grep
+             helm-projectile-ag
+             helm-projectile-rg
              helm-projectile
              helm-projectile-switch-project)
-  :init (helm-projectile-on))
+  :init (helm-projectile-on)
+  :bind
+  (("C-." . helm-projectile-rg)))
+
+(use-package helm-rg
+  :defer t)
 
 (provide 'fate-helm)
 ;;; fate-helm.el ends here

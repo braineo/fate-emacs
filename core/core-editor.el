@@ -64,7 +64,7 @@
 (use-package projectile
   :diminish
   :bind (:map projectile-mode-map
-              ("C-," . projectile-find-file) ; `cmd-t' or `super-t'
+              ("C-," . projectile-find-file)
               ("C-c p" . projectile-command-map))
   :hook (after-init . projectile-mode)
   :init
