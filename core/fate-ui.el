@@ -41,7 +41,7 @@
 (global-hl-line-mode +1)
 
 ;; Font
-(add-to-list 'default-frame-alist '(font . "Operator Mono"))
+(add-to-list 'default-frame-alist '(font . "Operator Mono-9:weight=light:style=book"))
 (add-to-list 'default-frame-alist '(height . 80))
 (add-to-list 'default-frame-alist '(width . 160))
 
