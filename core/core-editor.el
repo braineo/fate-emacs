@@ -46,6 +46,10 @@
 ;; revert buffers automatically when underlying files are changed externally
 (global-auto-revert-mode t)
 
+;; Do not create backup and auto save files
+(setq make-backup-files nil) ; stop creating backup~ files
+(setq auto-save-default nil) ; stop creating #autosave# files
+
 ;; better search and replace
 (use-package anzu
   :diminish anzu-mode
