@@ -23,17 +23,14 @@
 
 ;; Which Key
 (use-package which-key
-  :ensure t
   :init
   (setq which-key-separator " ")
   (setq which-key-prefix-prefix "+")
   :config
-  (which-key-mode 1))
+  (which-key-mode t))
 
 (use-package parinfer
-  :ensure t
-  :bind
-  (("C-," . parinfer-toggle-mode))
+  :defer t
   :init
   (progn
     (setq parinfer-extensions

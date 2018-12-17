@@ -3,7 +3,7 @@
 (defun add-to-load-path (dir) (add-to-list 'load-path dir))
 
 (defvar fate-directory
-  user-emacs-directory
+  (file-truename user-emacs-directory)
   "Root directory of Fate Emacs")
 
 (defconst fate-core-directory

@@ -28,6 +28,9 @@
 ;; the blinking cursor is nothing, but an annoyance
 (blink-cursor-mode -1)
 
+;; Turn on line numbers
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+
 ;; disable the annoying bell ring
 (setq ring-bell-function 'ignore)
 
@@ -41,7 +44,7 @@
 (global-hl-line-mode +1)
 
 ;; Font
-(add-to-list 'default-frame-alist '(font . "Operator Mono-9:weight=light:style=book"))
+(add-to-list 'default-frame-alist '(font . "Operator Mono-12:weight=light:style=book"))
 (add-to-list 'default-frame-alist '(height . 80))
 (add-to-list 'default-frame-alist '(width . 160))
 

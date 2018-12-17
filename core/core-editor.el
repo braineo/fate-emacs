@@ -24,7 +24,7 @@
 ;;; Code:
 
 
-(delete-selection-mode t);; Death to the tabs!  However, tabs historically indent to the next
+;; Death to the tabs!  However, tabs historically indent to the next
 ;; 8-character offset; specifying anything else will cause *mass*
 ;; confusion, as it will change the appearance of every existing file.
 ;; In some cases (python), even worse -- it will change the semantics

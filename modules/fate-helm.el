@@ -58,7 +58,7 @@
     (setq helm-buffers-fuzzy-matching t)))
 
 (use-package helm-swoop
-  :defer (spacemacs/defer)
+  :defer t
   :config
   (progn
     (setq helm-swoop-split-with-multiple-windows t
