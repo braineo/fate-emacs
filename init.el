@@ -10,12 +10,12 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-(require 'fate-core)
-
-(require 'fate-git)
-(require 'fate-helm)
-(require 'fate-python)
-(require 'fate-lsp)
+(eval-when-compile
+  (require 'fate-core)
+  (require 'fate-git)
+  (require 'fate-helm)
+  (require 'fate-python)
+  (require 'fate-lsp))
 
 (when IS-MAC
   (require 'fate-macos))
