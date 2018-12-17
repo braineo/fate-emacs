@@ -66,5 +66,16 @@
           helm-swoop-speed-or-color t
           helm-swoop-split-window-function 'helm-default-display-buffer)))
 
+(use-package helm-projectile
+  :commands (helm-projectile-switch-to-buffer
+             helm-projectile-find-dir
+             helm-projectile-dired-find-dir
+             helm-projectile-recentf
+             helm-projectile-find-file
+             helm-projectile-grep
+             helm-projectile
+             helm-projectile-switch-project)
+  :init (helm-projectile-on))
+
 (provide 'fate-helm)
 ;;; fate-helm.el ends here

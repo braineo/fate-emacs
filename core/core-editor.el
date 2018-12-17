@@ -50,7 +50,7 @@
 (setq make-backup-files nil) ; stop creating backup~ files
 (setq auto-save-default nil) ; stop creating #autosave# files
 
-;; better search and replace
+;; Core package anzu better search and replace
 (use-package anzu
   :diminish anzu-mode
   :bind (([remap query-replace] . anzu-query-replace)
@@ -59,6 +59,20 @@
          ([remap isearch-query-replace] . anzu-isearch-query-replace)
          ([remap isearch-query-replace-regexp] . anzu-isearch-query-replace-regexp))
   :hook (after-init . global-anzu-mode))
+
+;; Core package Projectile
+(use-package projectile
+  :diminish
+  :bind (:map projectile-mode-map
+              ("C-," . projectile-find-file) ; `cmd-t' or `super-t'
+              ("C-c p" . projectile-command-map))
+  :hook (after-init . projectile-mode)
+  :init
+  (setq projectile-sort-order 'recentf
+        projectile-cache-file (concat fate-cache-directory
+                                          "projectile.cache")
+        projectile-known-projects-file (concat fate-cache-directory
+                                               "projectile-bookmarks.eld")))
 
 (require 'fate-auto-complete)
 

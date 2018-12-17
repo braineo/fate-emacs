@@ -14,6 +14,10 @@
   (expand-file-name "modules" fate-directory)
   "Fate modules directory")
 
+(defconst fate-cache-directory
+  (expand-file-name (concat fate-directory ".cache/"))
+  "Fate cache directory")
+
 (defconst user-home-directory
   (expand-file-name "~/")
   "User home directory (~/).")
