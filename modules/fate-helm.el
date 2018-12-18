@@ -51,7 +51,14 @@
    ("C-z" . helm-select-action))
   :config
   (progn
-    (setq helm-buffers-fuzzy-matching t)))
+    (setq helm-buffers-fuzzy-matching t
+          helm-prevent-escaping-from-minibuffer t
+          helm-bookmark-show-location t
+          helm-display-header-line nil
+          helm-always-two-windows t
+          helm-echo-input-in-header-line t
+          helm-autoresize-min-height 10)
+    (helm-autoresize-mode t)))
 
 (use-package helm-swoop
   :defer t
@@ -63,6 +70,7 @@
           helm-swoop-split-window-function 'helm-default-display-buffer)))
 
 (use-package helm-projectile
+  :after (helm projectile)
   :commands (helm-projectile-switch-to-buffer
              helm-projectile-find-dir
              helm-projectile-dired-find-dir
@@ -78,7 +86,11 @@
   (("C-." . helm-projectile-rg)))
 
 (use-package helm-rg
-  :defer t)
+  :after (helm)
+  :defer t
+  :config
+  (progn
+    (setq helm-rg-hidden t)))
 
 (provide 'fate-helm)
 ;;; fate-helm.el ends here
