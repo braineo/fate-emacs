@@ -74,6 +74,16 @@
         projectile-known-projects-file (concat fate-cache-directory
                                                "projectile-bookmarks.eld")))
 
+
+;; Core package origami for folding
+(use-package origami
+    :defer t
+    :bind
+    ("C-<tab>" . origami-forward-toggle-node)
+    :init
+    (progn
+      (global-origami-mode)))
+
 (require 'fate-auto-complete)
 
 (provide 'core-editor)
