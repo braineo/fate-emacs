@@ -77,12 +77,45 @@
 
 ;; Core package origami for folding
 (use-package origami
-    :defer t
-    :bind
-    ("C-<tab>" . origami-forward-toggle-node)
-    :init
-    (progn
-      (global-origami-mode)))
+  :diminish
+  :defer t
+  :bind
+  ("C-<tab>" . origami-forward-toggle-node)
+  :init
+  (progn
+    (global-origami-mode)))
+
+;; Core package smartparens
+(use-package smartparens
+  :defer t
+  :commands (sp-split-sexp sp-newline sp-up-sexp)
+  :init
+  (progn
+    ;; settings
+    (setq sp-show-pair-delay 0.2
+          ;; fix paren highlighting in normal mode
+          sp-show-pair-from-inside t
+          sp-cancel-autoskip-on-backward-movement nil
+          sp-highlight-pair-overlay nil
+          sp-highlight-wrap-overlay nil
+          sp-highlight-wrap-tag-overlay nil))
+  :config
+  (progn
+    (require 'smartparens-config)
+    (smartparens-global-mode t)
+    (show-smartparens-global-mode t)
+    ;; don't create a pair with single quote in minibuffer
+    (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)))
+
+;; Core package
+
+
+(use-package mwim
+  :defer t
+  :init
+  :bind
+  (([remap  move-beginning-of-line] . mwim-beginning-of-code-or-line)
+   ([remap move-end-of-line] . mwim-end-of-code-or-line)))
 
 (require 'fate-auto-complete)
 
