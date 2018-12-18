@@ -14,7 +14,8 @@
 
 (use-package magit
   :config
-  (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+  (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     ")
+        magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
   :bind
   (("C-x g" . magit-status)))
 

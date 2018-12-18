@@ -55,9 +55,12 @@
           helm-prevent-escaping-from-minibuffer t
           helm-bookmark-show-location t
           helm-display-header-line nil
+          helm-split-window-in-side-p t
           helm-always-two-windows t
           helm-echo-input-in-header-line t
-          helm-autoresize-min-height 10)
+          helm-autoresize-min-height 10
+          helm-buffer-max-length 40 ;; make helm buffer wider to display full file names
+          helm-default-display-buffer-functions '(display-buffer-in-side-window))
     (helm-autoresize-mode t)))
 
 (use-package helm-swoop
