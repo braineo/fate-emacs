@@ -50,9 +50,22 @@
 
 ;; Theme
 (use-package doom-themes
-  :ensure t
   :config
   (load-theme 'doom-one t))
+
+;; Highlight nested parenttheses
+(use-package highlight-parentheses
+  :init
+  (progn
+    (setq hl-paren-delay 0.2)
+    (setq hl-paren-colors '("Springgreen3"
+                            "IndianRed1"
+                            "IndianRed3"
+                            "IndianRed4")))
+  :config
+  (set-face-attribute 'hl-paren-face nil :weight 'ultra-bold)
+  :hook
+  (prog-mode . highlight-parentheses-mode))
 
 (defun set-font-size ()
     "Set font size."
