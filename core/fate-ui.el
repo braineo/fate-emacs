@@ -67,6 +67,12 @@
   :hook
   (prog-mode . highlight-parentheses-mode))
 
+
+(use-package highlight-numbers
+  :hook
+  (prog-mode . highlight-numbers-mode)
+  (asm-mode . highlight-numbers--turn-off))
+
 (defun set-font-size ()
     "Set font size."
   (interactive)
