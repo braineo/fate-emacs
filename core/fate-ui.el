@@ -67,11 +67,21 @@
   :hook
   (prog-mode . highlight-parentheses-mode))
 
+;; Color delimiters
+(use-package rainbow-delimiters
+  :hook
+  (prog-mode . rainbow-delimiters-mode))
 
+;; Highlight number variables
 (use-package highlight-numbers
   :hook
   (prog-mode . highlight-numbers-mode)
   (asm-mode . highlight-numbers--turn-off))
+
+;;  Highlight TODO keywords FIXME HACK DONE FAIL OKAY
+(use-package hl-todo
+  :hook
+  ((prog-mode text-mode) . hl-todo-mode))
 
 (defun set-font-size ()
     "Set font size."
