@@ -70,7 +70,9 @@
     (setq helm-swoop-split-with-multiple-windows t
           helm-swoop-split-direction 'split-window-vertically
           helm-swoop-speed-or-color t
-          helm-swoop-split-window-function 'helm-default-display-buffer)))
+          helm-swoop-split-window-function 'helm-default-display-buffer))
+  :bind (:map isearch-mode-map
+         ("M-i" . helm-swoop-from-isearch)))
 
 (use-package helm-projectile
   :after (helm projectile)
@@ -91,7 +93,7 @@
 (use-package helm-rg
   :after (helm)
   :defer t
-  :config
+  :init
   (progn
     (setq helm-rg-hidden t)))
 
