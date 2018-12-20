@@ -83,6 +83,10 @@
   :hook
   ((prog-mode text-mode) . hl-todo-mode))
 
+;; Show color of color text #FFE4C4
+(use-package rainbow-mode
+  :hook(prog-mode text-mode))
+
 (defun set-font-size ()
     "Set font size."
   (interactive)
