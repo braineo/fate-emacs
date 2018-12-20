@@ -17,7 +17,8 @@
   (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     ")
         magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
   :bind
-  (("C-x g" . magit-status)))
+  (("C-x g" . magit-status)
+   ("s-m b" . magit-blame)))
 
 (use-package gitattributes-mode
   :defer t)
