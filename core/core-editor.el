@@ -74,17 +74,6 @@
         projectile-known-projects-file (concat fate-cache-directory
                                                "projectile-bookmarks.eld")))
 
-
-;; Core package origami for folding
-(use-package origami
-  :diminish
-  :defer t
-  :bind
-  ("C-<tab>" . origami-forward-toggle-node)
-  :init
-  (progn
-    (global-origami-mode)))
-
 ;; Core package smartparens
 (use-package smartparens
   :defer t
@@ -117,6 +106,12 @@
 (use-package easy-kill
   :bind
   ([remap kill-ring-save] . easy-kill))
+
+(use-package hideshow
+  :hook
+  (prog-mode . hs-minor-mode)
+  :bind
+  ("C-<tab>" . hs-toggle-hiding))
 
 (require 'fate-auto-complete)
 
