@@ -53,7 +53,7 @@
   :config
   (load-theme 'doom-one t))
 
-;; Highlight nested parenttheses
+;; Highlight nested parentheses
 (use-package highlight-parentheses
   :init
   (progn
@@ -78,7 +78,7 @@
   (prog-mode . highlight-numbers-mode)
   (asm-mode . highlight-numbers--turn-off))
 
-;;  Highlight TODO keywords FIXME HACK DONE FAIL OKAY
+;; Highlight TODO keywords FIXME HACK DONE FAIL OKAY)
 (use-package hl-todo
   :hook
   ((prog-mode text-mode) . hl-todo-mode))
