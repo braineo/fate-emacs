@@ -106,15 +106,17 @@
     ;; don't create a pair with single quote in minibuffer
     (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)))
 
-;; Core package
-
-
+;; Core package move to beginning of code first
 (use-package mwim
   :defer t
-  :init
   :bind
   (([remap  move-beginning-of-line] . mwim-beginning-of-code-or-line)
    ([remap move-end-of-line] . mwim-end-of-code-or-line)))
+
+;; Core package easy kill. easy to copy the buffer name/path
+(use-package easy-kill
+  :bind
+  ([remap kill-ring-save] . easy-kill))
 
 (require 'fate-auto-complete)
 
