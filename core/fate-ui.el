@@ -20,7 +20,7 @@
 ;; relegate tooltips to echo area only
 (when (boundp 'tooltip-mode)
   (tooltip-mode -1))
-  
+
 ;; Minimal UI
 (scroll-bar-mode -1)
 (menu-bar-mode   -1)
@@ -44,7 +44,7 @@
 (global-hl-line-mode +1)
 
 ;; Font
-(add-to-list 'default-frame-alist '(font . "Operator Mono-12:weight=light:style=book"))
+(add-to-list 'default-frame-alist '(font . "Operator Mono:weight=light:style=book:pixelsize=12"))
 (add-to-list 'default-frame-alist '(height . 80))
 (add-to-list 'default-frame-alist '(width . 160))
 
@@ -85,7 +85,16 @@
 
 ;; Show color of color text #FFE4C4
 (use-package rainbow-mode
-  :hook(prog-mode text-mode))
+  :hook
+  (prog-mode text-mode))
+
+;; Show whitespaces
+(use-package whitespace
+  :hook
+  ((prog-mode text-mode) . whitespace-mode)
+  :init
+  (progn
+    (setq whitespace-style '(face tabs empty trailing))))
 
 (defun set-font-size ()
     "Set font size."
