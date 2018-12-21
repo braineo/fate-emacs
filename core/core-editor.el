@@ -92,9 +92,7 @@
     (require 'smartparens-config)
     (smartparens-global-mode t)
     ;; don't create a pair with single quote in minibuffer
-    (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil))
-  :hook
-  (prog-mode text-mode))
+    (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)))
 
 ;; Core package move to beginning of code first
 (use-package mwim
@@ -135,6 +133,12 @@
   ("C-c j" . avy-goto-word-or-subword-1)
   :config
   (setq avy-background t))
+
+(use-package move-text
+  ;; :ensure t
+  :bind
+  ("M-S-<up>" . move-text-up)
+  ("M-S-<down>" . move-text-down))
 
 (use-package hydra)
 
