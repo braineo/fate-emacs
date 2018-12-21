@@ -1,9 +1,9 @@
-;;; fate-qml.el ---                                  -*- lexical-binding: t; -*-
+;;; fate-langs.el ---                                -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2018  Binbin Ye
 
 ;; Author: Binbin Ye
-;; Keywords: 
+;; Keywords:
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -20,11 +20,19 @@
 
 ;;; Commentary:
 
-;; 
+;; collection of simple language package settings
 
 ;;; Code:
 
+;; QML
 (use-package qml-mode)
 
-(provide 'fate-qml)
-;;; fate-qml.el ends here
+;; Markdown
+(use-package markdown-mode
+  :mode (("\\.md\\'" . gfm-mode)
+         ("\\.markdown\\'" . gfm-mode))
+  :config
+  (setq markdown-fontify-code-blocks-natively t))
+
+(provide 'fate-langs)
+;;; fate-langs.el ends here

@@ -15,7 +15,7 @@
   (require 'fate-git)
   (require 'fate-helm)
   (require 'fate-python)
-  (require 'fate-qml)
+  (require 'fate-langs)
   (require 'fate-lsp))
 
 (when IS-MAC
