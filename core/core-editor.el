@@ -76,7 +76,6 @@
 
 ;; Core package smartparens
 (use-package smartparens
-  :defer t
   :commands (sp-split-sexp sp-newline sp-up-sexp)
   :init
   (progn
@@ -128,6 +127,14 @@
   ("M-6" . winum-select-window-6)
   ("M-7" . winum-select-window-7)
   ("M-8" . winum-select-window-8))
+
+;; Avy. Jump to anywhere like a sniper
+(use-package avy
+  :ensure t
+  :bind
+  ("C-c j" . avy-goto-word-or-subword-1)
+  :config
+  (setq avy-background t))
 
 (use-package hydra)
 
