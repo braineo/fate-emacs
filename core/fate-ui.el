@@ -53,6 +53,9 @@
   :config
   (load-theme 'doom-one t))
 
+(use-package doom-modeline
+  :hook (after-init . doom-modeline-init))
+
 ;; Highlight nested parentheses
 (use-package highlight-parentheses
   :init
