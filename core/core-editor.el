@@ -140,6 +140,21 @@
   ("M-S-<up>" . move-text-up)
   ("M-S-<down>" . move-text-down))
 
+(use-package crux
+  :bind
+  (("C-c o" . crux-open-with)
+   ("M-o" . crux-smart-open-line)
+   ("s-o" . crux-smart-open-line-above)
+   ("C-c f" . crux-recentf-find-file)
+   ("s-r" . crux-recentf-find-file)
+   ("C-c D" . crux-delete-file-and-buffer)
+   ("C-c r" . crux-rename-buffer-and-file)
+   ("C-c I" . crux-find-user-init-file)
+   ("s-j" . crux-top-join-line)
+   ("C-^" . crux-top-join-line)
+   ("C-<backspace>" . crux-kill-line-backwards)
+   ([remap kill-whole-line] . crux-kill-whole-line)))
+
 (use-package hydra)
 
 (require 'fate-auto-complete)
