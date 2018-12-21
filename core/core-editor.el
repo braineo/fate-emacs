@@ -127,6 +127,8 @@
   ("M-7" . winum-select-window-7)
   ("M-8" . winum-select-window-8))
 
+(use-package hydra)
+
 (require 'fate-auto-complete)
 
 (provide 'core-editor)
