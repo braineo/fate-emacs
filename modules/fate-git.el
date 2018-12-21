@@ -29,5 +29,13 @@
 (use-package gitignore-mode
   :defer t)
 
+(use-package diff-hl
+  :diminish
+  :hook
+  ((after-init . global-diff-hl-mode)
+   (after-init . diff-hl-flydiff-mode)
+   (magit-post-refresh-hook . diff-hl-magit-post-refresh)
+   (dired-mode-hook . diff-hl-dired-mode)))
+
 (provide 'fate-git)
 ;;; fate-git.el ends here
