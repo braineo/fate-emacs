@@ -93,7 +93,9 @@
     (require 'smartparens-config)
     (smartparens-global-mode t)
     ;; don't create a pair with single quote in minibuffer
-    (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)))
+    (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil))
+  :hook
+  (prog-mode text-mode))
 
 ;; Core package move to beginning of code first
 (use-package mwim
