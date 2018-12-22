@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2018  Binbin Ye
 
-;; Keywords: 
+;; Keywords:
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
@@ -69,10 +69,19 @@
   :hook (after-init . projectile-mode)
   :init
   (setq projectile-sort-order 'recentf
-        projectile-cache-file (concat fate-cache-directory
-                                          "projectile.cache")
+        projectile-cache-file (concat fate-cache-directory "projectile.cache")
         projectile-known-projects-file (concat fate-cache-directory
                                                "projectile-bookmarks.eld")))
+(use-package recentf
+  :hook
+  (after-init . recentf-mode)
+  :config
+  (setq recentf-save-file (concat fate-cache-directory "recentf")
+        recentf-max-saved-items 500
+        recentf-max-menu-items 15
+        ;; disable recentf-cleanup on Emacs start, because it can cause
+        ;; problems with remote files
+        recentf-auto-cleanup 'never))
 
 ;; Core package smartparens
 (use-package smartparens
@@ -166,4 +175,3 @@
 (require 'fate-align-text)
 (provide 'core-editor)
 ;;; core-editor.el ends here
-
