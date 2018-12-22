@@ -47,6 +47,13 @@
 (add-to-list 'default-frame-alist '(font . "Operator Mono:weight=light:style=book:pixelsize=12"))
 (add-to-list 'default-frame-alist '(height . 80))
 (add-to-list 'default-frame-alist '(width . 160))
+(add-to-list 'default-frame-alist '(alpha 95 95))
+
+(set-frame-parameter (selected-frame) 'alpha '(95 95))
+
+;; When it is macOS and verison number is higher than 26.0
+(when (and IS-MAC (>= emacs-major-version 26))
+  (setq default-frame-alist '((ns-transparent-titlebar . t) (ns-appearance . dark))))
 
 ;; Theme
 (use-package doom-themes
