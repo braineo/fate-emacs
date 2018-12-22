@@ -27,14 +27,14 @@
 (use-package lsp-mode
   :defer t
   :diminish lsp-mode
-  :hook ((python-mode sh-mode
-          html-mode web-mode json-mode
-          css-mode less-mode sass-mode scss-mode
-          js-mode js2-mode typescript-mode
-          groovy-mode) . lsp)
+  :hook
+  ((python-mode sh-mode
+    html-mode web-mode json-mode
+    css-mode less-mode sass-mode scss-mode
+    js-mode js2-mode typescript-mode
+    groovy-mode) . lsp)
   :init
   (setq lsp-auto-guess-root t)       ; Detect project root
-  :config
   (require 'lsp-clients))
 
 ;; (use-package company-lsp
