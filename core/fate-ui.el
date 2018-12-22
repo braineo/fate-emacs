@@ -117,14 +117,13 @@
    (string-to-number
     (read-string "Font size: " (number-to-string (face-attribute 'default :height nil))))))
 
-;; left ibuffer show full path and file names
-;; (setq ibuffer-formats '((mark modified read-only " "
-;;                          (name 40 40 :left :elide)
-;;                          " "
-;;                          (size 9 -1 :right)
-;;                          " "
-;;                          (mode 16 16 :left :elide)
-;;                          " " filename-and-process)))
+;; Which Key
+(use-package which-key
+  :init
+  (setq which-key-separator " ")
+  (setq which-key-prefix-prefix "+")
+  :config
+  (which-key-mode t))
 
 (provide 'fate-ui)
 ;;; fate-ui.el ends here

@@ -35,11 +35,24 @@
     groovy-mode) . lsp)
   :init
   (setq lsp-auto-guess-root t)       ; Detect project root
-  (require 'lsp-clients))
+  (require 'lsp-clients)
+  :custom
+  (lsp-prefer-flymake nil "prefer using flycheck"))
 
-;; (use-package company-lsp
-;;   :defer t
-;;   :commands company-lsp)
+(use-package company-lsp
+  :defer t)
+
+(use-package lsp-ui
+  :hook
+  (lsp-mode . lsp-ui-mode)
+  :bind
+  (:map lsp-ui-mode-map
+        ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+        ([remap xref-find-references] . lsp-ui-peek-find-references)
+        ("C-c u" . lsp-ui-imenu))
+  :custom
+  (lsp-ui-sideline-enable nil "Hide sideline")
+  (lsp-ui-peek-always-show t "Show peek even only one matching"))
 
 (provide 'fate-lsp)
 ;;; fate-lsp.el ends here
