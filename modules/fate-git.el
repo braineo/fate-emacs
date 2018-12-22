@@ -18,7 +18,7 @@
         magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
   :bind
   (("C-x g" . magit-status)
-   ("s-m b" . magit-blame)))
+   ("s-m b" . magit-blame-addition)))
 
 (use-package gitattributes-mode
   :defer t)
@@ -34,8 +34,8 @@
   :hook
   ((after-init . global-diff-hl-mode)
    (after-init . diff-hl-flydiff-mode)
-   (magit-post-refresh-hook . diff-hl-magit-post-refresh)
-   (dired-mode-hook . diff-hl-dired-mode)))
+   (magit-post-refresh . diff-hl-magit-post-refresh)
+   (dired-mode . diff-hl-dired-mode)))
 
 (provide 'fate-git)
 ;;; fate-git.el ends here
