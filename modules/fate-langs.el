@@ -34,5 +34,7 @@
   :config
   (setq markdown-fontify-code-blocks-natively t))
 
+(use-package yaml-mode)
+
 (provide 'fate-langs)
 ;;; fate-langs.el ends here
