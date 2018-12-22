@@ -39,6 +39,7 @@
 (require 'fate-core)
 (require 'fate-git)
 (require 'fate-helm)
+(require 'fate-company)
 (require 'fate-python)
 (require 'fate-lisp)
 (require 'fate-langs)

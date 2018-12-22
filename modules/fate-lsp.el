@@ -3,7 +3,7 @@
 ;; Copyright (C) 2018  Binbin Ye
 
 ;; Author: Binbin Ye
-;; Keywords: 
+;; Keywords:
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
@@ -53,6 +53,11 @@
   :custom
   (lsp-ui-sideline-enable nil "Hide sideline")
   (lsp-ui-peek-always-show t "Show peek even only one matching"))
+
+(use-package company-lsp
+  :after company
+  :init
+  (cl-pushnew 'company-lsp company-backends))
 
 (provide 'fate-lsp)
 ;;; fate-lsp.el ends here
