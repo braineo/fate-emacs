@@ -158,7 +158,7 @@
 (use-package hydra)
 
 (require 'fate-auto-complete)
-
+(require 'fate-align-text)
 (provide 'core-editor)
 ;;; core-editor.el ends here
 
