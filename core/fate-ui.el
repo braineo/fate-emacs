@@ -56,6 +56,16 @@
 (use-package doom-modeline
   :hook (after-init . doom-modeline-init))
 
+(use-package dashboard
+  :hook (after-init . dashboard-setup-startup-hook)
+  :init
+  (setq inhibit-startup-screen t)
+  :config
+  (setq dashboard-banner-logo-title "Unlimited Blade Works")
+  (setq dashboard-startup-banner (expand-file-name (concat fate-directory "asset/fate-banner.png")))
+  (setq dashboard-items '((recents  . 10)
+                          (projects . 10))))
+
 ;; Highlight nested parentheses
 (use-package highlight-parentheses
   :init
