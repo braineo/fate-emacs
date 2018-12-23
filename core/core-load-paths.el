@@ -24,7 +24,9 @@
 
 ;;; Code:
 
-(defun add-to-load-path (dir) (add-to-list 'load-path dir))
+(defun add-to-load-path (dir)
+  "Add a list of directories to 'load-path"
+  (add-to-list 'load-path dir))
 
 (defvar fate-directory
   (file-truename user-emacs-directory)
@@ -45,6 +47,9 @@
 (defconst user-home-directory
   (expand-file-name "~/")
   "User home directory (~/).")
+
+(unless (file-exists-p fate-cache-directory)
+    (make-directory fate-cache-directory))
 
 ;; load paths
 (mapc 'add-to-load-path
