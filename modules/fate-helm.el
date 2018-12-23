@@ -19,23 +19,6 @@
 
 ;;; Commentary:
 
-;; TODO add following packages
-;; ace-jump-helm-line
-;; auto-highlight-symbol
-;; bookmark
-;; helm-descbinds
-;; helm-flx
-;; helm-make
-;; helm-mode-manager
-;; helm-swoop
-;; helm-themes
-;; (helm-spacemacs-help :location local)
-;; (helm-spacemacs-faq :location local)
-;; helm-xref
-;; imenu
-;; persp-mode
-;; popwin
-
 ;;; Code:
 
 (use-package helm
@@ -91,11 +74,7 @@
   (("C-." . helm-projectile-rg)))
 
 (use-package helm-rg
-  :after (helm)
-  :defer t
-  :init
-  (progn
-    (setq helm-rg-hidden t)))
+  :after (helm))
 
 (provide 'fate-helm)
 ;;; fate-helm.el ends here

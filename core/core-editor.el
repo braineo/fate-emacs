@@ -23,6 +23,8 @@
 
 ;;; Code:
 
+(eval-when-compile
+  (require 'core-load-paths))
 
 ;; Death to the tabs!  However, tabs historically indent to the next
 ;; 8-character offset; specifying anything else will cause *mass*
@@ -76,12 +78,14 @@
   :hook
   (after-init . recentf-mode)
   :config
-  (setq recentf-save-file (concat fate-cache-directory "recentf")
+  (progn
+    (setq recentf-save-file (concat fate-cache-directory "recentf")
         recentf-max-saved-items 500
         recentf-max-menu-items 15
         ;; disable recentf-cleanup on Emacs start, because it can cause
         ;; problems with remote files
-        recentf-auto-cleanup 'never))
+        recentf-auto-cleanup 'never)
+    (add-to-list 'recentf-exclude (recentf-expand-file-name fate-cache-directory))))
 
 ;; Core package smartparens
 (use-package smartparens
