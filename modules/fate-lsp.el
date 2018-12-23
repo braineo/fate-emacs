@@ -24,6 +24,9 @@
 
 ;;; Code:
 
+(eval-when-compile
+  (require 'core-load-paths))
+
 (use-package lsp-mode
   :defer t
   :diminish lsp-mode
@@ -52,7 +55,8 @@
         ("C-c u" . lsp-ui-imenu))
   :custom
   (lsp-ui-sideline-enable nil "Hide sideline")
-  (lsp-ui-peek-always-show t "Show peek even only one matching"))
+  (lsp-ui-peek-always-show t "Show peek even only one matching")
+  (lsp-session-file (concat fate-cache-directory "lsp-session-v1")))
 
 (use-package company-lsp
   :after company
