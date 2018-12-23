@@ -195,6 +195,10 @@
    ("C-<backspace>" . crux-kill-line-backwards)
    ([remap kill-whole-line] . crux-kill-whole-line)))
 
+(use-package editorconfig
+  :config
+  (editorconfig-mode t))
+
 (use-package hydra)
 
 (require 'fate-auto-complete)
