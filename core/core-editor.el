@@ -81,9 +81,10 @@
 ;; Core package Projectile
 (use-package projectile
   :diminish
-  :bind (:map projectile-mode-map
-              ("C-," . projectile-find-file)
-              ("C-c p" . projectile-command-map))
+  :bind
+  (:map projectile-mode-map
+        ("C-," . projectile-find-file)
+        ("C-c p" . projectile-command-map))
   :hook (after-init . projectile-mode)
   :init
   (setq projectile-sort-order 'recentf

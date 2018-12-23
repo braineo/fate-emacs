@@ -44,7 +44,8 @@
           helm-autoresize-min-height 10
           helm-buffer-max-length 40 ;; make helm buffer wider to display full file names
           helm-default-display-buffer-functions '(display-buffer-in-side-window))
-    (helm-autoresize-mode t)))
+    (helm-autoresize-mode t))
+  :hook (after-init . helm-mode))
 
 (use-package helm-swoop
   :defer t
