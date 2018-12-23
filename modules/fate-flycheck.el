@@ -3,7 +3,7 @@
 ;; Copyright (C) 2018  Binbin Ye
 
 ;; Author: Binbin Ye
-;; Keywords: 
+;; Keywords:
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -20,12 +20,20 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
 (use-package flycheck
   :hook (after-init . global-flycheck-mode)
+  :config
+  ;; Fix error list to bottom of window
+  (add-to-list 'display-buffer-alist
+    `(,(rx bos "*Flycheck errors*" eos)
+       (display-buffer-reuse-window display-buffer-in-side-window)
+       (side            . bottom)
+       (reusable-frames . visible)
+       (window-height   . 0.33)))
   :custom
   (flycheck-indication-mode 'right-fringe)
   (flycheck-check-syntax-automatically '(save mode-enabled) "Only check while saving and opening files")
