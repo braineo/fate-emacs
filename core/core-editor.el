@@ -62,6 +62,22 @@
          ([remap isearch-query-replace-regexp] . anzu-isearch-query-replace-regexp))
   :hook (after-init . global-anzu-mode))
 
+(use-package dired
+  :ensure nil
+  :config
+  ;; dired - reuse current buffer
+  (put 'dired-find-alternate-file 'disabled nil)
+  ;; always delete and copy recursively
+  (setq dired-recursive-deletes 'always)
+  (setq dired-recursive-copies 'always)
+
+  ;; if there is a dired buffer displayed in the next window, use its
+  ;; current subdir, instead of the current subdir of this dired buffer
+  (setq dired-dwim-target t)
+  :bind
+  (:map dired-mode-map
+   ("RET" . dired-find-alternate-file)))
+
 ;; Core package Projectile
 (use-package projectile
   :diminish
