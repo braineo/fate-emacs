@@ -18,7 +18,7 @@
         magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
   :bind
   (("C-x g" . magit-status)
-   ("s-m b" . magit-blame-addition)))
+   ("s-m" . magit-file-popup)))
 
 (use-package gitattributes-mode
   :defer t)

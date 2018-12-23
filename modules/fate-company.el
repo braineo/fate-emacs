@@ -28,7 +28,8 @@
   :hook
   (after-init . global-company-mode)
   :bind
-  (:map company-active-map
+  (("C-M-/" . company-complete)
+   :map company-active-map
    ("C-p" . company-select-previous)
    ("C-n" . company-select-next)
    ("TAB" . company-complete-common-or-cycle)
