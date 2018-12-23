@@ -51,6 +51,11 @@
 (unless (file-exists-p fate-cache-directory)
     (make-directory fate-cache-directory))
 
+;; Custom file
+(setq custom-file (expand-file-name "custom.el" fate-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
+
 ;; load paths
 (mapc 'add-to-load-path
       `(

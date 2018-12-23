@@ -27,14 +27,13 @@
 ;; Always load newest byte code
 (setq load-prefer-newer t)
 
+;; reduce the frequency of garbage collection by making it happen on
+;; each 50MB of allocated data (the default is on every 0.76MB)
+(setq gc-cons-threshold 50000000)
+
 (load (concat (file-name-directory load-file-name)
               "core/core-load-paths.el")
       nil (not init-file-debug))
-
-;; Custom file
-(setq custom-file (expand-file-name "custom.el" fate-directory))
-(when (file-exists-p custom-file)
-  (load custom-file))
 
 (require 'fate-core)
 (require 'fate-git)
