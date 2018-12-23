@@ -163,8 +163,13 @@
   :config
   (setq avy-background t))
 
+;; Ace window. specify which window to jump to
+(use-package ace-window
+  :bind
+  ("s-w" . ace-window)
+  ([remap other-window] . ace-window))
+
 (use-package move-text
-  ;; :ensure t
   :bind
   ("M-S-<up>" . move-text-up)
   ("M-S-<down>" . move-text-down))
