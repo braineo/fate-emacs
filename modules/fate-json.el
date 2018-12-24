@@ -24,12 +24,22 @@
 
 ;;; Code:
 
+(defun fate/json-setup-prettier ()
+   "Tell prettier the content is to be parsed as JSON regardless of any file
+extensions."
+  (setq-local prettier-js-args '("--parser=json")))
+
 (use-package json-mode
-  :mode "\\.json?\\'")
+  :mode "\\.json?\\'"
+  :hook
+  (json-mode . fate/json-setup-prettier))
 
-(use-package json-reformat)
-
-(use-package json-snatcher)
+(use-package prettier-js
+  :after json-mode
+  :defines prettier-js-args
+  :bind
+  (:map json-mode-map
+   ("C-c C-l" . prettier-js)))
 
 (provide 'fate-json)
 ;;; fate-json.el ends here
