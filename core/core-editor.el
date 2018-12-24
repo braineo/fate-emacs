@@ -185,8 +185,6 @@
   (("C-c o" . crux-open-with)
    ("M-o" . crux-smart-open-line)
    ("s-o" . crux-smart-open-line-above)
-   ("C-c f" . crux-recentf-find-file)
-   ("s-r" . crux-recentf-find-file)
    ("C-c D" . crux-delete-file-and-buffer)
    ("C-c r" . crux-rename-buffer-and-file)
    ("C-c I" . crux-find-user-init-file)
