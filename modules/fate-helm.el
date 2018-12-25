@@ -76,7 +76,9 @@
   (("C-." . helm-projectile-rg)))
 
 (use-package helm-rg
-  :after (helm))
+  :after (helm)
+  :custom-face
+  (helm-rg-preview-line-highlight ((t (:inherit highlight :distant-foreground "black")))))
 
 (provide 'fate-helm)
 ;;; fate-helm.el ends here
