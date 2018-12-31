@@ -103,6 +103,32 @@
   :hook
   ((prog-mode text-mode) . hl-todo-mode))
 
+;; Highlight operations
+(use-package volatile-highlights
+  :diminish
+  :hook (after-init . volatile-highlights-mode))
+
+(use-package symbol-overlay
+  :diminish
+  :config
+  (defhydra hydra-symbol-overlay (:hint nil)
+    "
+^Highlight^        ^Navigation^           ^Manipulate^
+^^^^^^^^-------------------------------------------------
+_i_: turn on        _n_: next              _s_: search
+_t_: toogle scope   _p_: previous          _r_: replace
+_c_: clean          ^ ^                    _R_: rename
+"
+    ("i" symbol-overlay-put)
+    ("n" symbol-overlay-jump-next)
+    ("p" symbol-overlay-jump-prev)
+    ("t" symbol-overlay-toggle-in-scope)
+    ("s" symbol-overlay-isearch-literally)
+    ("r" symbol-overlay-query-replace)
+    ("R" symbol-overlay-rename)
+    ("c" symbol-overlay-remove-all)
+    ("q" nil :color blue)))
+
 ;; Show color of color text #FFE4C4
 (use-package rainbow-mode
   :hook

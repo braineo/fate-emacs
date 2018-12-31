@@ -26,6 +26,8 @@
 (eval-when-compile
   (require 'core-load-paths))
 
+(use-package hydra)
+
 ;; Death to the tabs!  However, tabs historically indent to the next
 ;; 8-character offset; specifying anything else will cause *mass*
 ;; confusion, as it will change the appearance of every existing file.
@@ -196,8 +198,6 @@
 (use-package editorconfig
   :config
   (editorconfig-mode t))
-
-(use-package hydra)
 
 (require 'fate-auto-complete)
 (require 'fate-align-text)

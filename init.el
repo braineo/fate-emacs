@@ -45,6 +45,7 @@
 (require 'fate-langs)
 (require 'fate-flycheck)
 (require 'fate-lsp)
+(require 'fate-hydra)
 
 (when IS-MAC
   (require 'fate-macos))

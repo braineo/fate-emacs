@@ -76,7 +76,24 @@ the right."
 
 ;; END align functions
 
-
+(defhydra hydra-align-text (:hint nil)
+    "
+Align text
+^^^^^^^^-------------------------------------------------
+[_,_] comma       [_=_] equal
+[_;_] semicolon   [_&_] ampersand
+[_:_] colon       [_o_] math-oper
+"
+  ("," fate/align-repeat-comma)
+  (";" fate/align-repeat-semicolon)
+  (":" fate/align-repeat-colon)
+  ("=" fate/align-repeat-equal)
+  ("o" fate/align-repeat-math-oper)
+  ("&" fate/align-repeat-ampersand)
+  ("|" fate/align-repeat-bar)
+  ("(" fate/align-repeat-left-paren)
+  (")" fate/align-repeat-right-paren)
+  ("\\" fate/align-repeat-backslash))
 
 (provide 'fate-align-text)
 ;;; fate-align-text.el ends here
