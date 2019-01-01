@@ -111,23 +111,24 @@
 (use-package symbol-overlay
   :diminish
   :config
-  (defhydra hydra-symbol-overlay (:hint nil)
-    "
+  (with-eval-after-load 'hydra
+    (defhydra hydra-symbol-overlay (:hint nil)
+      "
 ^Highlight^            ^Navigation^           ^Manipulate^
 ^^^^^^^^-------------------------------------------------
 [_h_]ighlight symbol    [_n_]ext              [_s_]earch
 [_t_]oogle scope        [_p_]revious          [_r_]eplace
 [_c_]lean               ^ ^                   [_R_]ename
 "
-    ("h" symbol-overlay-put)
-    ("n" symbol-overlay-jump-next)
-    ("p" symbol-overlay-jump-prev)
-    ("t" symbol-overlay-toggle-in-scope)
-    ("s" symbol-overlay-isearch-literally)
-    ("r" symbol-overlay-query-replace)
-    ("R" symbol-overlay-rename)
-    ("c" symbol-overlay-remove-all)
-    ("q" nil :color blue)))
+      ("h" symbol-overlay-put)
+      ("n" symbol-overlay-jump-next)
+      ("p" symbol-overlay-jump-prev)
+      ("t" symbol-overlay-toggle-in-scope)
+      ("s" symbol-overlay-isearch-literally)
+      ("r" symbol-overlay-query-replace)
+      ("R" symbol-overlay-rename)
+      ("c" symbol-overlay-remove-all)
+      ("q" nil :color blue))))
 
 ;; Show color of color text #FFE4C4
 (use-package rainbow-mode

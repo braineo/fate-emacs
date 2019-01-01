@@ -77,7 +77,8 @@ the right."
 
 ;; END align functions
 
-(defhydra hydra-align-text (:hint nil)
+(with-eval-after-load 'hydra
+  (defhydra hydra-align-text (:hint nil)
     "
 Align text
 ^^^^^^^^-------------------------------------------------
@@ -85,18 +86,18 @@ Align text
 [_;_] semicolon     [_._] period      [_o_] math-oper
 [_:_] colon         [_&_] ampersand
 "
-  ("x" fate/align-repeat)
-  ("," fate/align-repeat-comma)
-  (";" fate/align-repeat-semicolon)
-  (":" fate/align-repeat-colon)
-  ("=" fate/align-repeat-equal)
-  ("o" fate/align-repeat-math-oper)
-  ("&" fate/align-repeat-ampersand)
-  ("|" fate/align-repeat-bar)
-  ("(" fate/align-repeat-left-paren)
-  (")" fate/align-repeat-right-paren)
-  ("\\" fate/align-repeat-backslash)
-  ("\." fate/align-repeat-period))
+    ("x" fate/align-repeat)
+    ("," fate/align-repeat-comma)
+    (";" fate/align-repeat-semicolon)
+    (":" fate/align-repeat-colon)
+    ("=" fate/align-repeat-equal)
+    ("o" fate/align-repeat-math-oper)
+    ("&" fate/align-repeat-ampersand)
+    ("|" fate/align-repeat-bar)
+    ("(" fate/align-repeat-left-paren)
+    (")" fate/align-repeat-right-paren)
+    ("\\" fate/align-repeat-backslash)
+    ("\." fate/align-repeat-period)))
 
 (provide 'fate-align-text)
 ;;; fate-align-text.el ends here
