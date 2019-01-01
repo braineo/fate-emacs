@@ -205,6 +205,10 @@
   :config
   (editorconfig-mode t))
 
+(use-package quickrun
+  :bind (("<f9>" . quickrun)
+         ("C-c x" . quickrun)))
+
 (require 'fate-auto-complete)
 (require 'fate-align-text)
 (provide 'core-editor)
