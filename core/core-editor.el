@@ -138,6 +138,10 @@
   :bind
   ([remap kill-ring-save] . easy-kill))
 
+;; Core package expand-region. Increase selected region by semantic units
+(use-package expand-region
+  :bind ("C-=" . er/expand-region))
+
 ;; Core package hideshow. Code folding tool
 (use-package hideshow
   :hook
