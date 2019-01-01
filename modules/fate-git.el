@@ -35,7 +35,11 @@
   ((after-init . global-diff-hl-mode)
    (after-init . diff-hl-flydiff-mode)
    (magit-post-refresh . diff-hl-magit-post-refresh)
-   (dired-mode . diff-hl-dired-mode)))
+   (dired-mode . diff-hl-dired-mode))
+  :config
+  (unless (display-graphic-p)
+    ;; There's no fringe when Emacs is running in the console
+    (diff-hl-margin-mode 1)))
 
 (provide 'fate-git)
 ;;; fate-git.el ends here
