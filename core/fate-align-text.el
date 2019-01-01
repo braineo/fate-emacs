@@ -73,6 +73,7 @@ the right."
 (fate|create-align-repeat-x "left-paren" "(")
 (fate|create-align-repeat-x "right-paren" ")" t)
 (fate|create-align-repeat-x "backslash" "\\\\")
+(fate|create-align-repeat-x "period" "\\\.")
 
 ;; END align functions
 
@@ -80,10 +81,11 @@ the right."
     "
 Align text
 ^^^^^^^^-------------------------------------------------
-[_,_] comma       [_=_] equal
-[_;_] semicolon   [_&_] ampersand
-[_:_] colon       [_o_] math-oper
+[_x_] regex         [_,_] comma       [_=_] equal
+[_;_] semicolon     [_._] period      [_o_] math-oper
+[_:_] colon         [_&_] ampersand
 "
+  ("x" fate/align-repeat)
   ("," fate/align-repeat-comma)
   (";" fate/align-repeat-semicolon)
   (":" fate/align-repeat-colon)
@@ -93,7 +95,8 @@ Align text
   ("|" fate/align-repeat-bar)
   ("(" fate/align-repeat-left-paren)
   (")" fate/align-repeat-right-paren)
-  ("\\" fate/align-repeat-backslash))
+  ("\\" fate/align-repeat-backslash)
+  ("\." fate/align-repeat-period))
 
 (provide 'fate-align-text)
 ;;; fate-align-text.el ends here
