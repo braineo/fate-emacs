@@ -209,6 +209,13 @@
   :bind (("<f9>" . quickrun)
          ("C-c x" . quickrun)))
 
+(use-package bm
+  :bind
+  (("<f2>" . bm-next)
+   ("<C-f2>" . bm-toggle))
+  :custom
+  (bm-buffer-persistence nil "Do not save bookmarks"))
+
 (require 'fate-auto-complete)
 (require 'fate-align-text)
 (provide 'core-editor)
