@@ -109,6 +109,8 @@
 ;; Core package smartparens
 (use-package smartparens
   :commands (sp-split-sexp sp-newline sp-up-sexp)
+  :hook
+  (after-init . smartparens-global-mode)
   :init
   (progn
     ;; settings
@@ -122,7 +124,6 @@
   :config
   (progn
     (require 'smartparens-config)
-    (smartparens-global-mode t)
     ;; don't create a pair with single quote in minibuffer
     (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)))
 
