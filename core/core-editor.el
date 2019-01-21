@@ -104,7 +104,8 @@
         ;; disable recentf-cleanup on Emacs start, because it can cause
         ;; problems with remote files
         recentf-auto-cleanup 'never)
-    (add-to-list 'recentf-exclude (recentf-expand-file-name fate-cache-directory))))
+    (add-to-list 'recentf-exclude (recentf-expand-file-name fate-cache-directory))
+    (add-to-list 'recentf-exclude (recentf-expand-file-name package-user-dir))))
 
 ;; Core package smartparens
 (use-package smartparens
