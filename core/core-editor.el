@@ -54,6 +54,11 @@
 (setq make-backup-files nil) ; stop creating backup~ files
 (setq auto-save-default nil) ; stop creating #autosave# files
 
+(use-package tramp
+  :ensure nil
+  :custom
+  (tramp-default-method "ssh"))
+
 ;; Core package anzu better search and replace
 (use-package anzu
   :diminish anzu-mode
