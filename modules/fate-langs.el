@@ -38,5 +38,7 @@
   :mode (("\\.yaml\\'" . yaml-mode)
          ("\\.yml\\'" . yaml-mode)))
 
+(use-package swift-mode)
+
 (provide 'fate-langs)
 ;;; fate-langs.el ends here
