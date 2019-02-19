@@ -112,8 +112,14 @@
     (add-to-list 'recentf-exclude (recentf-expand-file-name fate-cache-directory))
     (add-to-list 'recentf-exclude (recentf-expand-file-name package-user-dir))))
 
+(use-package elec-pair
+  :ensure nil
+  :hook (after-init . electric-pair-mode)
+  :custom (electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit))
+
 ;; Core package smartparens
 (use-package smartparens
+  :disabled
   :commands (sp-split-sexp sp-newline sp-up-sexp)
   :hook
   (after-init . smartparens-global-mode)
