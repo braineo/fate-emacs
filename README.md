@@ -60,6 +60,11 @@ mkdir -p ~/.config && wget https://github.com/braineo/configs/blob/master/pycode
 
 [Error codes](http://pycodestyle.pycqa.org/en/latest/intro.html#error-codes)
 
+### all-the-icons
+
+Install fonts for mode-line
+
+`M-x` `all-the-icons-install-fonts`
 
 ## Useful links
 
