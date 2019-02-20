@@ -61,7 +61,7 @@
   (load-theme 'doom-one t))
 
 (use-package doom-modeline
-  :hook (after-init . doom-modeline-init))
+  :hook (after-init . doom-modeline-mode))
 
 (use-package dashboard
   :hook (after-init . dashboard-setup-startup-hook)
