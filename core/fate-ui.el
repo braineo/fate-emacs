@@ -11,6 +11,9 @@
 
 ;;; Code:
 
+(require 'fate-const)
+(require 'core-load-paths)
+
 ;; the toolbar is just a waste of valuable screen estate
 ;; in a tty tool-bar-mode does not properly auto-load, and is
 ;; already disabled anyway

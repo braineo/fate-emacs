@@ -1,4 +1,4 @@
-;;; core-packages.el --- core package setup          -*- lexical-binding: t; -*-
+;;; fate-const.el ---                                -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019  Binbin Ye
 
@@ -20,28 +20,13 @@
 
 ;;; Commentary:
 
-;; 
+;; Const variables
 
 ;;; Code:
 
-;; Package configs
-(require 'package)
+(defconst IS-MAC     (eq system-type 'darwin))
+(defconst IS-LINUX   (eq system-type 'gnu/linux))
+(defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
 
-(setq package-enable-at-startup nil)
-(setq package-archives '(("org"   . "http://orgmode.org/elpa/")
-                         ("gnu"   . "http://elpa.gnu.org/packages/")
-                         ("melpa" . "https://melpa.org/packages/")))
-(unless package--initialized
-  (package-initialize))
-
-;; Bootstrap `use-package`
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(setq use-package-always-ensure t)
-
-(require 'use-package)
-
-(provide 'core-packages)
-;;; core-packages.el ends here
+(provide 'fate-const)
+;;; fate-const.el ends here

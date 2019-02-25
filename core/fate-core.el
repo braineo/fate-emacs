@@ -24,10 +24,6 @@
 
 ;;; Code:
 
-(defconst IS-MAC     (eq system-type 'darwin))
-(defconst IS-LINUX   (eq system-type 'gnu/linux))
-(defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
-
 (require 'core-packages)
 (require 'core-editor)
 (require 'fate-ui)
