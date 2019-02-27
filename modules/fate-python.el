@@ -36,5 +36,11 @@
 (use-package yapfify
   :defer t)
 
+(use-package sphinx-doc
+  :hook (python-mode . sphinx-doc-mode))
+
+(use-package pytest
+  :defer t)
+
 (provide 'fate-python)
 ;;; fate-python.el ends here
