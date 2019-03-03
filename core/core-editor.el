@@ -112,6 +112,18 @@
     (add-to-list 'recentf-exclude (recentf-expand-file-name fate-cache-directory))
     (add-to-list 'recentf-exclude (recentf-expand-file-name package-user-dir))))
 
+;; Power package visualizing undo redo history
+(use-package undo-tree
+  :ensure t
+  :hook (after-init . global-undo-tree-mode)
+  :custom
+  ;; autosave the undo-tree history
+  (undo-tree-history-directory-alist `((".*" . ,fate-cache-directory)))
+  (undo-tree-auto-save-history t)
+  (undo-tree-enable-undo-in-region nil "Known to be problematic so disable it https://debbugs.gnu.org/cgi/bugreport.cgi?bug=16377"))
+
+
+;; Pair parentheses, brace, quotes
 (use-package elec-pair
   :ensure nil
   :hook (after-init . electric-pair-mode)
