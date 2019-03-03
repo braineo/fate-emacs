@@ -77,6 +77,12 @@
 
 (use-package helm-rg
   :after (helm)
+  :bind
+  (:map helm-rg-map
+    ("M-b" . nil)
+    ("M-d" . nil)
+    ("M-i" . helm-rg--bounce)
+    ("M-o" . helm-rg--set-dir))
   :custom-face
   (helm-rg-preview-line-highlight ((t (:inherit highlight :distant-foreground "black")))))
 
