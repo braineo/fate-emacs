@@ -59,9 +59,13 @@
   (setq default-frame-alist '((ns-transparent-titlebar . t) (ns-appearance . dark))))
 
 ;; Theme
-(use-package doom-themes
-  :config
-  (load-theme 'doom-one t))
+(use-package doom-themes)
+  ;;:config)
+  ;;(load-theme 'doom-one t))
+
+(use-package doom-snazzy-theme
+  :after doom-themes
+  :load-path "theme/")
 
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode))
