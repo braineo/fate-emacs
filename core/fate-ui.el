@@ -59,11 +59,12 @@
   (setq default-frame-alist '((ns-transparent-titlebar . t) (ns-appearance . dark))))
 
 ;; Theme
-(use-package doom-themes)
-  ;;:config)
-  ;;(load-theme 'doom-one t))
+(use-package doom-themes
+  :config
+  (load-theme 'doom-vibrant t))
 
 (use-package doom-snazzy-theme
+  :disabled
   :after doom-themes
   :load-path "theme/")
 
