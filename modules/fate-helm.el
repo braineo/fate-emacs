@@ -33,29 +33,32 @@
    ("TAB" . helm-execute-persistent-action)
    ("C-i" . helm-execute-persistent-action)
    ("C-z" . helm-select-action))
+  :custom
+  (helm-buffers-fuzzy-matching t)
+  (helm-prevent-escaping-from-minibuffer t)
+  (helm-bookmark-show-location t)
+  (helm-display-header-line nil)
+  (helm-split-window-inside-p t)
+  (helm-always-two-windows t)
+  (helm-echo-input-in-header-line t)
+  (helm-autoresize-min-height 10)
+  (helm-buffer-max-length 40 "make helm buffer wider to display full file names")
+  (helm-default-display-buffer-functions '(display-buffer-in-side-window))
+  (helm-show-completion-display-function #'helm-display-buffer-in-own-frame)
   :config
   (progn
-    (setq helm-buffers-fuzzy-matching t
-          helm-prevent-escaping-from-minibuffer t
-          helm-bookmark-show-location t
-          helm-display-header-line nil
-          helm-split-window-in-side-p t
-          helm-always-two-windows t
-          helm-echo-input-in-header-line t
-          helm-autoresize-min-height 10
-          helm-buffer-max-length 40 ;; make helm buffer wider to display full file names
-          helm-default-display-buffer-functions '(display-buffer-in-side-window))
     (helm-autoresize-mode t))
   :hook (after-init . helm-mode))
 
 (use-package helm-swoop
   :defer t
+  :custom
+  (helm-swoop-split-with-multiple-windows t)
+  (helm-swoop-split-direction 'split-window-vertically)
+  (helm-swoop-speed-or-color t)
   :config
   (progn
-    (setq helm-swoop-split-with-multiple-windows t
-          helm-swoop-split-direction 'split-window-vertically
-          helm-swoop-speed-or-color t
-          helm-swoop-split-window-function 'helm-default-display-buffer))
+    (setq helm-swoop-split-window-function 'helm-default-display-buffer))
   :bind (:map isearch-mode-map
          ("M-i" . helm-swoop-from-isearch)))
 
