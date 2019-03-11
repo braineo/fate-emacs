@@ -52,7 +52,14 @@
 (add-to-list 'default-frame-alist '(width . 160))
 (add-to-list 'default-frame-alist '(alpha 95 95))
 
+;; Transparent frame
 (set-frame-parameter (selected-frame) 'alpha '(95 95))
+
+;; right border takes 1 pixel on right splited buffer, make fringe visible
+(setq-default window-divider-default-places t
+  window-divider-default-bottom-width 1
+  window-divider-default-right-width 1)
+(window-divider-mode)
 
 ;; When it is macOS and verison number is higher than 26.0
 (when (and IS-MAC (>= emacs-major-version 26))
