@@ -47,7 +47,12 @@
 (global-hl-line-mode +1)
 
 ;; Font
-(add-to-list 'default-frame-alist '(font . "Operator Mono:weight=light:style=book:pixelsize=12"))
+
+(when (x-list-fonts "Operator Mono")
+  (let ((font "Operator Mono:weight=light:style=book:pixelsize=12"))
+    (set-frame-font font)
+    (add-to-list 'default-frame-alist `(font . ,font))))
+
 (add-to-list 'default-frame-alist '(height . 80))
 (add-to-list 'default-frame-alist '(width . 160))
 (add-to-list 'default-frame-alist '(alpha 95 95))
