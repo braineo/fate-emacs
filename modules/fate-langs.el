@@ -40,5 +40,10 @@
 
 (use-package swift-mode)
 
+(use-package cmake-mode
+  :mode (("CMakeLists\\.txt\\'" . cmake-mode)
+         ("\\.cmake\\'" . cmake-mode)))
+
+
 (provide 'fate-langs)
 ;;; fate-langs.el ends here
