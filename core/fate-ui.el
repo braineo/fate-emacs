@@ -73,7 +73,7 @@
 ;; Theme
 (use-package doom-themes
   :config
-  (load-theme 'doom-vibrant t))
+  (load-theme 'doom-one t))
 
 (use-package doom-snazzy-theme
   :disabled
