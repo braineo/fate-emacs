@@ -193,7 +193,9 @@
   :bind
   ("C-c j" . avy-goto-word-or-subword-1)
   :config
-  (setq avy-background t))
+  (avy-setup-default)
+  :custom
+  (avy-background t))
 
 ;; Ace window. specify which window to jump to
 (use-package ace-window
