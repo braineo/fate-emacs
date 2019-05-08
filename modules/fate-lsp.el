@@ -27,6 +27,12 @@
 (eval-when-compile
   (require 'core-load-paths))
 
+(defvar fate-lsp-use-ms-pyls-p (if (executable-find "Microsoft.Python.LanguageServer") t nil)
+  "Use Microsoft Python language server if it is available.")
+
+(use-package lsp-python-ms
+  :if fate-lsp-use-ms-pyls-p)
+
 (use-package lsp-mode
   :defer t
   :diminish lsp-mode
@@ -40,7 +46,8 @@
   (setq lsp-auto-guess-root t)       ; Detect project root
   (require 'lsp-clients)
   :custom
-  (lsp-prefer-flymake nil "prefer using flycheck"))
+  (lsp-prefer-flymake nil "prefer using flycheck")
+  (lsp-enable-snippet nil "not yet configured"))
 
 (use-package company-lsp
   :defer t)
