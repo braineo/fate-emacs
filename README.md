@@ -37,6 +37,32 @@ brew install ripgrep
 pip install python-language-server[all]
 ```
 
+Or you can use Microsoft Python Lanugage Server
+
+1. Install [dotnet-sdk](https://www.microsoft.com/net/download)
+2. Clone and install [python-language-server](https://github.com/Microsoft/python-language-server)
+
+``` shell
+git clone https://github.com/Microsoft/python-language-server.git
+cd python-language-server/src/LanguageServer/Impl
+dotnet build -c Release
+dotnet publish -c Release -r linux-x64 # linux
+dotnet publish -c Release -r osx-x64   # mac
+```
+
+change the value of the `-r` flag depending on your architecture and
+operating system.  See Microsoft's [Runtime ID Catalog](https://docs.microsoft.com/en-us/dotnet/core/rid-catalog) for the right
+value for your system.
+
+Then, link the executable to somewhere on your path, e.g.
+
+``` shell
+ln -sf $(git rev-parse --show-toplevel)/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer ~/.local/bin/
+ln -sf $(git rev-parse --show-toplevel)/output/bin/Release/osx-x64/publish/Microsoft.Python.LanguageServer ~/.local/bin/
+```
+
+Credit to [lsp-python-ms](https://github.com/emacs-lsp/lsp-python-ms/blob/master/README.org)
+
 ## Optional Configs
 
 Optional configuration, take a look at my [configs](https://github.com/braineo/configs) if interested
