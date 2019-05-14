@@ -25,10 +25,19 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'core-load-paths))
+  (require 'core-load-paths)
+  (require 'flycheck))
 
 (defvar fate-lsp-use-ms-pyls-p (if (executable-find "Microsoft.Python.LanguageServer") t nil)
   "Use Microsoft Python language server if it is available.")
+
+(defun fate-lsp-setup ()
+  "Microsoft Python Language Server does not have a syntax checker, setup one for it."
+  (progn
+    (lsp)
+    (when 'fate-lsp-use-ms-pyls-p
+      (setq-local flycheck-checker 'python-pylint))))
+
 
 (use-package lsp-python-ms
   :if fate-lsp-use-ms-pyls-p)
@@ -41,7 +50,7 @@
     html-mode web-mode json-mode
     css-mode less-mode sass-mode scss-mode
     js-mode js2-mode typescript-mode
-    groovy-mode) . lsp)
+    groovy-mode) . fate-lsp-setup)
   :init
   (setq lsp-auto-guess-root t)       ; Detect project root
   (require 'lsp-clients)
