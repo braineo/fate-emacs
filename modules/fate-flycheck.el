@@ -36,7 +36,6 @@
        (window-height   . 0.33)))
   :custom
   (flycheck-indication-mode 'right-fringe)
-  (flycheck-check-syntax-automatically '(save mode-enabled) "Only check while saving and opening files")
   (flycheck-emacs-lisp-load-path 'inherit))
 
 (use-package flycheck-pos-tip
