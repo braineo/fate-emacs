@@ -51,6 +51,7 @@
   :hook (after-init . helm-mode))
 
 (use-package helm-swoop
+  :disabled
   :defer t
   :custom
   (helm-swoop-split-with-multiple-windows t)

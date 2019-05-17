@@ -29,7 +29,7 @@
 
 ;; reduce the frequency of garbage collection by making it happen on
 ;; each 50MB of allocated data (the default is on every 0.76MB)
-(setq gc-cons-threshold 50000000)
+(setq gc-cons-threshold 90000000)
 
 (load (concat (file-name-directory load-file-name)
               "core/core-load-paths.el")
@@ -38,6 +38,7 @@
 (require 'fate-core)
 (require 'fate-git)
 (require 'fate-helm)
+(require 'fate-ivy)
 (require 'fate-company)
 (require 'fate-python)
 (require 'fate-lisp)

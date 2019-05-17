@@ -44,7 +44,7 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; highlight the current line
-(global-hl-line-mode +1)
+(global-hl-line-mode t)
 
 ;; Font
 (when window-system
