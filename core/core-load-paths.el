@@ -24,9 +24,9 @@
 
 ;;; Code:
 
-(defun add-to-load-path (dir)
-  "Add a list of directories to 'load-path"
-  (add-to-list 'load-path dir))
+(defun add-to-load-path (dirs)
+  "Add a list of directories `DIRS' to 'load-path."
+  (add-to-list 'load-path dirs))
 
 (defvar fate-directory
   (file-truename user-emacs-directory)

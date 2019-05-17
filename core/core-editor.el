@@ -69,6 +69,12 @@
          ([remap isearch-query-replace-regexp] . anzu-isearch-query-replace-regexp))
   :hook (after-init . global-anzu-mode))
 
+
+;; Use PCRE regular expression syntax instead of emacs ones
+(use-package pcre2el
+  :diminish rxt-mode
+  :hook (after-init . pcre-mode))
+
 (use-package dired
   :ensure nil
   :config
