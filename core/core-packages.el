@@ -42,5 +42,13 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+
+;; Only enable for benchmarking
+(use-package benchmark-init
+  :disabled
+  :config
+  ;; To disable collection of benchmark data after init is done.
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+
 (provide 'core-packages)
 ;;; core-packages.el ends here
