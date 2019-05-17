@@ -35,9 +35,7 @@
               "core/core-load-paths.el")
       nil (not init-file-debug))
 
-(eval-when-compile
-  (require 'fate-const))
-
+(require 'fate-const)
 (require 'fate-core)
 (require 'fate-git)
 (require 'fate-helm)

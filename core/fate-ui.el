@@ -11,8 +11,8 @@
 
 ;;; Code:
 
+(require 'fate-const)
 (eval-when-compile
- (require 'fate-const)
  (require 'core-load-paths))
 
 ;; the toolbar is just a waste of valuable screen estate
@@ -173,11 +173,11 @@
 
 ;; Which Key
 (use-package which-key
-  :init
-  (setq which-key-separator " ")
-  (setq which-key-prefix-prefix "+")
-  :config
-  (which-key-mode t))
+  :hook
+  (after-init-hook . which-key-mode)
+  :custom
+  (which-key-separator " ")
+  (which-key-prefix-prefix "+"))
 
 (provide 'fate-ui)
 ;;; fate-ui.el ends here
