@@ -25,7 +25,8 @@
 ;;; Code:
 
 ;; QML
-(use-package qml-mode)
+(use-package qml-mode
+  :mode (("\\.qml\\'" . qml-mode)))
 
 ;; Markdown
 (use-package markdown-mode
