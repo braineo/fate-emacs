@@ -215,6 +215,23 @@
   ("M-S-<down>" . move-text-down))
 
 (use-package multiple-cursors
+  :diminish
+  :init
+  (with-eval-after-load 'hydra
+    (defhydra hydra-multiple-cursors (:hint nil)
+      "
+^ ^ M/C^ ^ ^ |^Cancel^
+^-^-^-^-^-^-+-^-^-----------
+^ ^ _k_ ^ ^ | _q_uit
+_h_ ^+^ _l_ |
+^ ^ _j_ ^ ^ |
+"
+      ("j" mc/mark-next-like-this)
+      ("k" mc/mark-previous-like-this)
+      ("h" mc/skip-to-previous-like-this)
+      ("l" mc/skip-to-next-like-this)
+      ("q" nil :color blue)))
+
   :bind
   ("C->"   . mc/mark-next-like-this)
   ("C-<"   . mc/mark-previous-like-this)
