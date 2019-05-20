@@ -26,8 +26,13 @@
   (tooltip-mode -1))
 
 ;; Minimal UI
-(scroll-bar-mode -1)
-(menu-bar-mode   -1)
+(when (fboundp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
+
+(when (fboundp 'horizontal-scroll-bar-mode)
+  (horizontal-scroll-bar-mode -1))
+
+(menu-bar-mode -1)
 
 ;; the blinking cursor is nothing, but an annoyance
 (blink-cursor-mode -1)
