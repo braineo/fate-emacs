@@ -53,6 +53,7 @@
     groovy-mode) . fate-lsp-setup)
   :init
   (setq lsp-auto-guess-root t)       ; Detect project root
+  :config
   (require 'lsp-clients)
   :custom
   (lsp-prefer-flymake nil "prefer using flycheck")

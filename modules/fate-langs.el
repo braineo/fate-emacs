@@ -39,7 +39,8 @@
   :mode (("\\.yaml\\'" . yaml-mode)
          ("\\.yml\\'" . yaml-mode)))
 
-(use-package swift-mode)
+(use-package swift-mode
+  :mode (("\\.swift\\'" . swift-mode)))
 
 (use-package cmake-mode
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)

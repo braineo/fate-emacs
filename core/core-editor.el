@@ -55,6 +55,7 @@
 (setq auto-save-default nil) ; stop creating #autosave# files
 
 (use-package tramp
+  :defer t
   :ensure nil
   :custom
   (tramp-default-method "ssh"))

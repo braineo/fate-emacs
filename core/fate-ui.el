@@ -135,7 +135,8 @@
 
 (use-package symbol-overlay
   :diminish
-  :config
+  :defer t
+  :init
   (with-eval-after-load 'hydra
     (defhydra hydra-symbol-overlay (:hint nil)
       "
