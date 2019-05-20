@@ -164,6 +164,10 @@
   (([remap  move-beginning-of-line] . mwim-beginning-of-code-or-line)
    ([remap move-end-of-line] . mwim-end-of-code-or-line)))
 
+(use-package comment-dwim-2
+  :bind
+  ([remap comment-dwim] . comment-dwim-2))
+
 ;; Core package easy kill. easy to copy the buffer name/path
 (use-package easy-kill
   :bind
