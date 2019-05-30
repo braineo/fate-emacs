@@ -75,10 +75,18 @@
              helm-projectile-ag
              helm-projectile-rg
              helm-projectile
-             helm-projectile-switch-project)
+             helm-projectile-switch-project
+             fate-helm-rg)
   :init (helm-projectile-on)
+  :config
+  (defun fate-helm-rg ()
+    "Run projectile-rg if in a project, otherwise rg current directory."
+    (interactive)
+    (if (projectile-project-p)
+      (helm-projectile-rg)
+      (helm-rg (helm-rg--get-thing-at-pt))))
   :bind
-  (("C-." . helm-projectile-rg)))
+  (("C-." . fate-helm-rg)))
 
 (use-package helm-rg
   :after (helm)
