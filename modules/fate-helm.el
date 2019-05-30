@@ -84,7 +84,7 @@
     (interactive)
     (if (projectile-project-p)
       (helm-projectile-rg)
-      (helm-rg (helm-rg--get-thing-at-pt))))
+      (helm-rg nil)))
   :bind
   (("C-." . fate-helm-rg)))
 
