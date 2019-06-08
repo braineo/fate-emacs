@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/braineo/fate-emacs.svg?branch=master)](https://travis-ci.com/braineo/fate-emacs)
+
 ## Get Started
 
 Only tested with Emacs 26 in Debian and macOS
