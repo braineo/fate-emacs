@@ -24,10 +24,6 @@
 
 ;;; Code:
 
-;; QML
-(use-package qml-mode
-  :mode (("\\.qml\\'" . qml-mode)))
-
 ;; Markdown
 (use-package markdown-mode
   :mode (("\\.md\\'" . gfm-mode)
@@ -45,6 +41,14 @@
 (use-package cmake-mode
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)
          ("\\.cmake\\'" . cmake-mode)))
+
+;; QML
+(use-package qml-mode
+  :mode (("\\.qml\\'" . qml-mode)))
+
+;; i18n
+(use-package po-mode
+  :mode (("\\.po\\'" . po-mode)))
 
 
 (provide 'fate-langs)
