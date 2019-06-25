@@ -49,6 +49,7 @@
 (require 'fate-ivy)
 (require 'fate-company)
 (require 'fate-python)
+(require 'fate-web)
 (require 'fate-lisp)
 (require 'fate-json)
 (require 'fate-langs)
