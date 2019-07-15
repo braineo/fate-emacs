@@ -18,21 +18,15 @@
 ;; the toolbar is just a waste of valuable screen estate
 ;; in a tty tool-bar-mode does not properly auto-load, and is
 ;; already disabled anyway
-(when (fboundp 'tool-bar-mode)
-  (tool-bar-mode -1))
+(unless (>= emacs-major-version 27)
+  (push '(menu-bar-lines . 0) default-frame-alist)
+  (push '(tool-bar-lines . 0) default-frame-alist)
+  (push '(vertical-scroll-bars . 0) default-frame-alist)
+  (push '(horizontal-scroll-bars. 0) default-frame-alist))
 
 ;; relegate tooltips to echo area only
 (when (boundp 'tooltip-mode)
   (tooltip-mode -1))
-
-;; Minimal UI
-(when (fboundp 'scroll-bar-mode)
-  (scroll-bar-mode -1))
-
-(when (fboundp 'horizontal-scroll-bar-mode)
-  (horizontal-scroll-bar-mode -1))
-
-(menu-bar-mode -1)
 
 ;; the blinking cursor is nothing, but an annoyance
 (blink-cursor-mode -1)
