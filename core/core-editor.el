@@ -50,6 +50,10 @@
 ;; revert buffers automatically when underlying files are changed externally
 (global-auto-revert-mode t)
 
+;; handle sooooooooo long line like one liner json file
+(when (>= emacs-major-version 27)
+  (global-so-long-mode t))
+
 ;; Do not create backup and auto save files
 (setq make-backup-files nil) ; stop creating backup~ files
 (setq auto-save-default nil) ; stop creating #autosave# files
