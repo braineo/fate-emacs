@@ -42,7 +42,7 @@
   (helm-always-two-windows t)
   (helm-echo-input-in-header-line nil)
   (helm-autoresize-min-height 10)
-  (helm-autoresize-max-height 15)
+  (helm-autoresize-max-height 25)
   (helm-buffer-max-length 40 "make helm buffer wider to display full file names")
   (helm-default-display-buffer-functions '(display-buffer-in-side-window))
   (helm-show-completion-display-function #'helm-display-buffer-in-own-frame)
