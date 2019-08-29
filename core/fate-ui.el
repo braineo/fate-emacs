@@ -75,11 +75,6 @@
   :config
   (load-theme 'doom-one t))
 
-(use-package doom-snazzy-theme
-  :disabled
-  :after doom-themes
-  :load-path "theme/")
-
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode))
 

@@ -1,4 +1,4 @@
-language: python
+language: emacs-lisp
 sudo: false
 
 cache:
@@ -22,5 +22,6 @@ before_script:
   - evm install $EVM_EMACS --use --skip
 
 script:
+  - lsb_release -a
   - ${EMACS:=emacs} --version
   - ./.travis/test-startup.sh
