@@ -53,8 +53,9 @@
 
 ;; Custom file
 (setq custom-file (expand-file-name "custom.el" fate-directory))
-(when (file-exists-p custom-file)
-  (load custom-file))
+(unless (file-exists-p custom-file)
+  (copy-file (expand-file-name "fate-custom-template.el" fate-core-directory) custom-file))
+(load custom-file)
 
 ;; load paths
 (mapc 'add-to-load-path
