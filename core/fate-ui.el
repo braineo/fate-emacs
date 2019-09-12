@@ -24,9 +24,19 @@
   (push '(vertical-scroll-bars . 0) default-frame-alist)
   (push '(horizontal-scroll-bars. 0) default-frame-alist))
 
+(when (fboundp 'tool-bar-mode)
+  (tool-bar-mode -1))
+
 ;; relegate tooltips to echo area only
 (when (boundp 'tooltip-mode)
   (tooltip-mode -1))
+
+;; Minimal UI
+(when (fboundp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
+
+(when (fboundp 'horizontal-scroll-bar-mode)
+  (horizontal-scroll-bar-mode -1))
 
 ;; the blinking cursor is nothing, but an annoyance
 (blink-cursor-mode -1)
