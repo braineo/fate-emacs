@@ -56,6 +56,7 @@
 (require 'fate-flycheck)
 (require 'fate-lsp)
 (require 'fate-hydra)
+(require 'fate-docker)
 
 (when IS-MAC
   (require 'fate-macos))
