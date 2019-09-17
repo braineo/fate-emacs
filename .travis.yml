@@ -1,10 +1,6 @@
 language: emacs-lisp
 sudo: false
 
-cache:
-  directories:
-    - $HOME/.evm
-
 env:
   - EVM_EMACS=emacs-26.1-travis
   - EVM_EMACS=emacs-26.2-travis
