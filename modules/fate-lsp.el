@@ -36,7 +36,7 @@
   (progn
     (lsp)
     (when 'fate-lsp-use-ms-pyls-p
-      (setq-local flycheck-checker 'python-pylint))))
+      (setq-local flycheck-checker 'python-flake8))))
 
 
 (use-package lsp-python-ms

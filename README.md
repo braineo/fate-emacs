@@ -33,11 +33,15 @@ for masOS
 brew install ripgrep
 ```
 
-### python language server
+### Python language server
 
+
+#### palantir Python Language Server
 ``` shell
 pip install python-language-server[all]
 ```
+
+#### MicroSoft Python Language Server
 
 Or you can use Microsoft Python Lanugage Server
 
@@ -59,11 +63,16 @@ value for your system.
 Then, link the executable to somewhere on your path, e.g.
 
 ``` shell
-ln -sf $(git rev-parse --show-toplevel)/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer ~/.local/bin/
-ln -sf $(git rev-parse --show-toplevel)/output/bin/Release/osx-x64/publish/Microsoft.Python.LanguageServer ~/.local/bin/
+ln -sf $(git rev-parse --show-toplevel)/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer ~/.emacs.d/mspyls/
+ln -sf $(git rev-parse --show-toplevel)/output/bin/Release/osx-x64/publish/Microsoft.Python.LanguageServer ~/.emacs.d/mspyls/
 ```
-
 Credit to [lsp-python-ms](https://github.com/emacs-lsp/lsp-python-ms/blob/master/README.org)
+
+Because MicroSoft's Python language server does not ship with a linter, need to install flake8
+
+``` shell
+pip install flake8
+```
 
 ## Optional Configs
 
