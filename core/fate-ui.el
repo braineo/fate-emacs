@@ -85,11 +85,20 @@
   :hook (after-init . dashboard-setup-startup-hook)
   :init
   (setq inhibit-startup-screen t)
+  :custom
+  (dashboard-banner-logo-title "Unlimited Blade Works")
+  (dashboard-startup-banner (expand-file-name (concat fate-directory "asset/fate-banner.png")))
+  (dashboard-set-heading-icons t)
+  (dashboard-set-file-icons t)
+  (dashboard-set-init-info t)
   :config
-  (setq dashboard-banner-logo-title "Unlimited Blade Works")
-  (setq dashboard-startup-banner (expand-file-name (concat fate-directory "asset/fate-banner.png")))
   (setq dashboard-items '((recents  . 10)
                           (projects . 10))))
+
+(use-package all-the-icons
+  :if (display-graphic-p)
+  :init (unless (member "all-the-icons" (font-family-list))
+          (all-the-icons-install-fonts t)))
 
 ;; Highlight nested parentheses
 (use-package highlight-parentheses
