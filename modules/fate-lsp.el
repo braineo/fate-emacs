@@ -59,9 +59,6 @@
   (lsp-prefer-flymake nil "prefer using flycheck")
   (lsp-enable-snippet nil "not yet configured"))
 
-(use-package company-lsp
-  :defer t)
-
 (use-package lsp-ui
   :hook
   (lsp-mode . lsp-ui-mode)
@@ -78,6 +75,7 @@
 (use-package company-lsp
   :after company
   :init
+  (setq company-lsp-cache-candidates 'auto)
   (cl-pushnew 'company-lsp company-backends))
 
 (provide 'fate-lsp)
