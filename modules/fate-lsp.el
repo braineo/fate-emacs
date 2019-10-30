@@ -74,5 +74,9 @@
   (setq company-lsp-cache-candidates 'auto)
   (cl-pushnew 'company-lsp company-backends))
 
+(use-package lsp-treemacs
+  :after lsp
+  :commands lsp-treemacs-errors-list)
+
 (provide 'fate-lsp)
 ;;; fate-lsp.el ends here
