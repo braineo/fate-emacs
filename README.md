@@ -33,17 +33,9 @@ for masOS
 brew install ripgrep
 ```
 
-### Python language server
+### MicroSoft Python Language Server
 
-
-#### palantir Python Language Server
-``` shell
-pip install python-language-server[all]
-```
-
-#### MicroSoft Python Language Server
-
-Or you can use Microsoft Python Lanugage Server
+`lsp-python-ms` now downloads language server binary automatically, or you can build latest Microsoft Python Lanugage Server by yourself
 
 1. Install [dotnet-sdk](https://www.microsoft.com/net/download)
 2. Clone and install [python-language-server](https://github.com/Microsoft/python-language-server)

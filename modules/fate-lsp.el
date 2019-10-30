@@ -28,19 +28,15 @@
   (require 'core-load-paths)
   (require 'flycheck))
 
-(defvar fate-lsp-use-ms-pyls-p (if (executable-find "Microsoft.Python.LanguageServer") t nil)
-  "Use Microsoft Python language server if it is available.")
-
-(defun fate-lsp-setup ()
+(defun fate-lsp-setup-python ()
   "Microsoft Python Language Server does not have a syntax checker, setup one for it."
   (progn
+    (require 'lsp-python-ms)
     (lsp)
-    (when 'fate-lsp-use-ms-pyls-p
-      (setq-local flycheck-checker 'python-flake8))))
-
+    (setq-local flycheck-checker 'python-flake8)))
 
 (use-package lsp-python-ms
-  :if fate-lsp-use-ms-pyls-p)
+  :hook (python-mode . fate-lsp-setup-python))
 
 (use-package lsp-mode
   :defer t
@@ -50,7 +46,7 @@
     html-mode web-mode json-mode
     css-mode less-mode sass-mode scss-mode
     js-mode js2-mode typescript-mode
-    groovy-mode) . fate-lsp-setup)
+    groovy-mode) . lsp)
   :init
   (setq lsp-auto-guess-root t)       ; Detect project root
   :config
