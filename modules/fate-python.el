@@ -32,9 +32,14 @@
   (setq python-shell-completion-native-enable nil))
 
 ;; Format using YAPF
-;; Install: pip install yapf
-(use-package yapfify
-  :defer t)
+;; Install:
+;; pip install black
+;; pip install black-macchiato
+(use-package python-black
+  :demand t
+  :after python
+  :custom
+  (python-black-extra-args '("--line-length=100")))
 
 (use-package sphinx-doc
   :hook (python-mode . sphinx-doc-mode))

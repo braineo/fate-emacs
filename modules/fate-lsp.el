@@ -42,7 +42,7 @@
   :defer t
   :diminish lsp-mode
   :hook
-  ((python-mode sh-mode c-mode c++-mode
+  ((sh-mode c-mode c++-mode
     html-mode web-mode json-mode
     css-mode less-mode sass-mode scss-mode
     js-mode js2-mode typescript-mode
