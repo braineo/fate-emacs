@@ -2,7 +2,7 @@
 
 ## Get Started
 
-Only tested with Emacs 26 in Debian and macOS
+Only tested with > Emacs 26.2 in Debian and macOS
 
 ### Backup
 
@@ -66,6 +66,12 @@ Because MicroSoft's Python language server does not ship with a linter, need to 
 pip install flake8
 ```
 
+### all-the-icons
+
+Install fonts for mode-line
+
+`M-x` `all-the-icons-install-fonts`
+
 ## Optional Configs
 
 Optional configuration, take a look at my [configs](https://github.com/braineo/configs) if interested
@@ -89,11 +95,36 @@ mkdir -p ~/.config && wget https://github.com/braineo/configs/blob/master/pycode
 
 [Error codes](http://pycodestyle.pycqa.org/en/latest/intro.html#error-codes)
 
-### all-the-icons
+### Adding your custom parameters
 
-Install fonts for mode-line
+The first time you open Emacs, it will create a `custom.el` for you automatically from `fate-custom-template.el`. There you can made custom configuration does not go with emacs for different computers (like your personal ones and working ones). For example, font face/size and executable path
 
-`M-x` `all-the-icons-install-fonts`
+#### exec-path
+
+``` emacs-lisp
+(setq exec-path (append exec-path '("/path/to/bin")))
+```
+
+#### Setting ENV variables
+
+``` emacs-lisp
+(setenv "LD_LIBRARY_PATH"
+  (let ((current (getenv "LD_LIBRARY_PATH"))
+        (new "/path/to/lib/"))
+    (if current (concat new ":" current) new)))
+```
+
+#### custom variable for packages
+
+``` emacs-lisp
+(setq lsp-python-ms-extra-paths
+  '("/path/to/a/site-packages"
+    "/path/to/b/site-packages"))
+```
+
+
+
+
 
 ## Useful links
 

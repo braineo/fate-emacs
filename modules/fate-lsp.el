@@ -32,7 +32,7 @@
   "Microsoft Python Language Server does not have a syntax checker, setup one for it."
   (progn
     (require 'lsp-python-ms)
-    (lsp)
+    (lsp-deferred)
     (setq-local flycheck-checker 'python-flake8)))
 
 (use-package lsp-python-ms
@@ -71,8 +71,7 @@
 (use-package company-lsp
   :after company
   :init
-  (setq company-lsp-cache-candidates 'auto)
-  (cl-pushnew 'company-lsp company-backends))
+  (setq company-lsp-cache-candidates 'auto))
 
 (use-package lsp-treemacs
   :after lsp
