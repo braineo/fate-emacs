@@ -68,11 +68,13 @@ Because MicroSoft's Python language server does not ship with a linter, need to 
 pip install flake8
 ```
 
-#### JSON Language Server
-
-``` shell
-npm i -g vscode-json-languageserver
-```
+| Language              | Installation command                                     |
+|-----------------------|----------------------------------------------------------|
+| TypeScript/JavaScript | npm i -g typescript-language-server; npm i -g typescript |
+| JSON                  | npm i -g vscode-json-languageserver                      |
+| CSS/LessCSS/SASS/SCSS | npm install -g vscode-css-languageserver-bin             |
+| HTML                  | npm install -g vscode-html-languageserver-bin            |
+| Dockerfile            | npm install -g dockerfile-language-server-nodejs         |
 
 
 ### all-the-icons
