@@ -33,7 +33,9 @@ for masOS
 brew install ripgrep
 ```
 
-### MicroSoft Python Language Server
+### Language servers
+
+#### MicroSoft Python Language Server
 
 `lsp-python-ms` now downloads language server binary automatically, or you can build latest Microsoft Python Lanugage Server by yourself
 
@@ -65,6 +67,13 @@ Because MicroSoft's Python language server does not ship with a linter, need to 
 ``` shell
 pip install flake8
 ```
+
+#### JSON Language Server
+
+``` shell
+npm i -g vscode-json-languageserver
+```
+
 
 ### all-the-icons
 
