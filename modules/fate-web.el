@@ -25,16 +25,14 @@
 ;;; Code:
 
 (use-package rjsx-mode
-  :mode
-  (("\\.js\\'"  . web-mode)))
+  :mode ("\\.js\\'"))
 
 (use-package web-mode
-  :mode
-  (("\\.jsx\\'"  . web-mode)
-   ("\\.ts\\'"   . web-mode)
-   ("\\.tsx\\'"  . web-mode)
-   ("\\.ejs\\'"  . web-mode)
-   ("\\.html\\'" . web-mode)))
+  :mode ("\\.jsx\\'"
+         "\\.ts\\'"
+         "\\.tsx\\'"
+         "\\.ejs\\'"
+         "\\.html\\'"))
 
 (provide 'fate-web)
 ;;; fate-web.el ends here
