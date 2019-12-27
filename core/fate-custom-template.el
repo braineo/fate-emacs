@@ -18,4 +18,7 @@
     (set-fontset-font t 'kana "Noto Sans CJK JP Regular")
     (set-fontset-font t 'cjk-misc "Noto Sans CJK Sc Regular")))
 
+;; Open from mac
+(setenv "LANG" "en_US.UTF-8")
+
 ;;; fate-custom.el ends here
