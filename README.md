@@ -15,6 +15,17 @@ backup your `.emacs` and `.emacs.d`, rename them to something else because emacs
 git clone https://github.com/braineo/fate-emacs.git ~/.emacs.d
 ```
 
+### Try it in docker
+
+``` shell
+docker pull braineo/fate-emacs
+# run in terminal
+docker run -it --rm braineo/fate-emacs
+# run with GUI
+xhost +local:root # WARN: this comes with security issues
+docker run -it --rm -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v /your/workspace/:/mnt/workspace braineo/fate-emacs
+```
+
 ## Recommend tools
 
 ### ripgrep
