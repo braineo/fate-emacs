@@ -65,6 +65,7 @@
         ("C-c u" . lsp-ui-imenu))
   :custom
   (lsp-ui-sideline-enable nil "Hide sideline")
+  (lsp-ui-doc-enable nil "Disable lsp doc for now as size is not property handled ")
   (lsp-ui-peek-always-show t "Show peek even only one matching")
   (lsp-session-file (concat fate-cache-directory "lsp-session-v1")))
 
