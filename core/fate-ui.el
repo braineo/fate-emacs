@@ -79,7 +79,15 @@
   (load-theme 'doom-one t))
 
 (use-package doom-modeline
-  :hook (after-init . doom-modeline-mode))
+  :config
+  (doom-modeline-def-modeline 'doom-fate
+    '(bar workspace-name window-number modals matches buffer-info remote-host buffer-position word-count parrot selection-info)
+    '(objed-state misc-info persp-name grip gnus debug lsp minor-modes input-method indent-info buffer-encoding major-mode vcs checker))
+  (defun fate-doom-modeline ()
+    "Setup custom doom modeline."
+    (doom-modeline-set-modeline 'doom-fate 'default))
+  :hook ((after-init . doom-modeline-mode)
+         (doom-modeline-mode . fate-doom-modeline)))
 
 (use-package dashboard
   :hook (after-init . dashboard-setup-startup-hook)
