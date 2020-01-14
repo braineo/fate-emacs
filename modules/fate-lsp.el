@@ -32,21 +32,27 @@
   "Microsoft Python Language Server does not have a syntax checker, setup one for it."
   (progn
     (require 'lsp-python-ms)
-    (lsp-deferred)
+    (lsp)
     (setq-local flycheck-checker 'python-flake8)))
 
-(use-package lsp-python-ms
-  :hook (python-mode . fate-lsp-setup-python))
+(defun fate-lsp-setup-js ()
+  "Do not start lsp when major mode is qml which derives from `js-mode'."
+  (unless (member major-mode '(qml-mode))
+    (lsp)))
+
+(use-package lsp-python-ms)
 
 (use-package lsp-mode
   :defer t
   :diminish lsp-mode
   :hook
-  ((sh-mode c-mode c++-mode
-    html-mode web-mode json-mode
-    css-mode less-mode sass-mode scss-mode
-    js-mode js2-mode typescript-mode
-    groovy-mode) . lsp)
+  (((python-mode . fate-lsp-setup-python)
+    (js-mode. fate-lsp-setup-js)
+    (sh-mode c-mode c++-mode
+     html-mode web-mode json-mode
+     css-mode less-mode sass-mode scss-mode
+     js2-mode typescript-mode
+     groovy-mode) . lsp))
   :init
   (setq lsp-auto-guess-root t)       ; Detect project root
   :config
