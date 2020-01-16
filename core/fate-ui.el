@@ -189,7 +189,7 @@
 ;; Which Key
 (use-package which-key
   :hook
-  (after-init-hook . which-key-mode)
+  (after-init . which-key-mode)
   :custom
   (which-key-separator " ")
   (which-key-prefix-prefix "+"))
