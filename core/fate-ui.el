@@ -101,7 +101,18 @@
   (dashboard-set-init-info t)
   :config
   (setq dashboard-items '((recents  . 10)
-                          (projects . 10))))
+                          (projects . 10))
+        ;; Format: "(icon title help action face prefix suffix)"
+        dashboard-set-navigator t
+        dashboard-navigator-buttons
+        `(((,(when (display-graphic-p)
+               (all-the-icons-octicon "mark-github" :height 1.1 :v-adjust 0.0))
+             "Homepage" "Browse homepage"
+             (lambda (&rest _) (browse-url FATE-HOME)))
+           (,(when (display-graphic-p)
+               (all-the-icons-material "update" :height 1.35 :v-adjust -0.24))
+             "Update" "Update Fate Emacs"
+              (lambda (&rest _) (auto-package-update-now)))))))
 
 (use-package all-the-icons
   :if (display-graphic-p)

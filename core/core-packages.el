@@ -26,6 +26,7 @@
 
 ;; Package configs
 (require 'package)
+(require 'core-load-paths)
 
 (setq package-enable-at-startup nil)
 (setq package-archives '(("org"   . "http://orgmode.org/elpa/")
@@ -49,6 +50,14 @@
   :config
   ;; To disable collection of benchmark data after init is done.
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
+
+(use-package auto-package-update
+  :custom
+  (auto-package-update-delete-old-versions t)
+  (auto-package-update-hide-results t)
+  (auto-package-update-last-update-day-filename
+   (concat fate-cache-directory "auto-package-last-update-day")))
+
 
 (provide 'core-packages)
 ;;; core-packages.el ends here
