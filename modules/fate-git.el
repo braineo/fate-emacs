@@ -13,9 +13,9 @@
 ;;; Code:
 
 (use-package magit
-  :config
-  (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     ")
-        magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
+  :custom
+  (magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+  (magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
   :bind
   (("C-x g" . magit-status)
    ("s-m" . magit-file-dispatch)))
