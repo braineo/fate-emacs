@@ -2,7 +2,7 @@
 
 ## Get Started
 
-Only tested with > Emacs 26.2 in Debian and macOS
+Only tested with >= Emacs 26.3 in Debian and macOS
 
 ### Backup
 
@@ -26,7 +26,7 @@ xhost +local:root # WARN: this comes with security issues
 docker run -it --rm -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v /your/workspace/:/mnt/workspace braineo/fate-emacs
 ```
 
-## Recommend tools
+## External tools
 
 ### ripgrep
 
@@ -93,6 +93,14 @@ pip install flake8
 Install fonts for mode-line
 
 `M-x` `all-the-icons-install-fonts`
+
+### Tools configured for Python
+
+| Name            | Description                 | Installation command                                                                |
+|-----------------|-----------------------------|-------------------------------------------------------------------------------------|
+| flake8          | pip install flake8          | Flake8 is a wrapper around PyFlakes, pycodestyle and Ned Batchelder’s McCabe script |
+| python-black    | pip install flake8          | Black is the uncompromising Python code formatter                                   |
+| black-macchiato | pip install black-macchiato | Enable formatting of partial files using black                                      |
 
 ## Optional Configs
 
