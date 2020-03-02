@@ -39,7 +39,7 @@
   :demand t
   :after python
   :custom
-  (python-black-extra-args '("--line-length=120")))
+  (python-black-extra-args '("--line-length=120" "--skip-string-normalization")))
 
 (use-package sphinx-doc
   :hook (python-mode . sphinx-doc-mode))
