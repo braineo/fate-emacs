@@ -76,9 +76,11 @@
   (lsp-session-file (concat fate-cache-directory "lsp-session-v1")))
 
 (use-package company-lsp
-  :after company
+  :after company lsp-mode
   :init
-  (setq company-lsp-cache-candidates 'auto))
+  (push 'company-lsp company-backends)
+  :custom
+  (company-lsp-cache-candidates 'auto))
 
 (use-package lsp-treemacs
   :after lsp
