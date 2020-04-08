@@ -24,14 +24,15 @@
 
 ;;; Code:
 
-(use-package rjsx-mode
-  :mode ("\\.js\\'"))
+(use-package js-mode
+  :ensure nil
+  :mode ("\\.js\\'"
+         "\\.jsx\\'"
+         "\\.ts\\'"
+         "\\.tsx\\'"))
 
 (use-package web-mode
-  :mode ("\\.jsx\\'"
-         "\\.ts\\'"
-         "\\.tsx\\'"
-         "\\.ejs\\'"
+  :mode ("\\.ejs\\'"
          "\\.html\\'"))
 
 (provide 'fate-web)
