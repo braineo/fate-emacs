@@ -24,6 +24,15 @@
 
 ;;; Code:
 
+(defun fate-parinfer-yank ()
+  "Delete selection and yank overriding default behavior of parinfer-yank."
+  (interactive)
+  (if (region-active-p)
+    (progn
+      (delete-region (region-beginning) (region-end))
+      (parinfer-yank))
+    (parinfer-yank)))
+
 (use-package parinfer
   :hook
   ((emacs-lisp-mode scheme-mode) . parinfer-mode)
@@ -35,7 +44,12 @@
           ;; lispy          ; If you use Lispy. With this extension, you should install Lispy and do not enable lispy-mode directly.
           ;; paredit        ; Introduce some paredit commands.
           ;; smart-tab      ; C-b & C-f jump positions and smart shift with tab & S-tab.
-          smart-yank)))   ; Yank behavior depend on mode.
+          smart-yank))     ; Yank behavior depend on mode.
+  :bind
+  (:map parinfer-mode-map
+        ([remap yank] . fate-parinfer-yank)
+        ([remap parinfer-yank] . fate-parinfer-yank)
+        ([remap parinfer-smart-yank:yank] . fate-parinfer-yank)))
 
 (provide 'fate-lisp)
 ;;; fate-lisp.el ends here
