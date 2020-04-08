@@ -78,7 +78,9 @@
   :custom
   (evil-disable-insert-state-bindings t "Leave emacs unchange insert mode")
   (evil-default-state 'insert)
-  :hook (after-init . evil-mode))
+  :config
+  (evil-set-initial-state 'help-mode 'emacs)
+  :hook (prog-mode . evil-mode))
 
 (use-package dired
   :ensure nil
