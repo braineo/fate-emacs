@@ -18,6 +18,11 @@
     (set-fontset-font t 'kana "Noto Sans CJK JP Regular")
     (set-fontset-font t 'cjk-misc "Noto Sans CJK Sc Regular")))
 
+
+;; Fix path issue or executable not found
+;; (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin")))
+;; (setq exec-path (append '("/usr/local/bin") exec-path))
+
 ;; Open from mac
 (setenv "LANG" "en_US.UTF-8")
 
