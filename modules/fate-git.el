@@ -12,6 +12,8 @@
 
 ;;; Code:
 
+(require 'fate-core)
+
 (use-package magit
   :custom
   (magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
@@ -41,5 +43,11 @@
     ;; There's no fringe when Emacs is running in the console
     (diff-hl-margin-mode 1)))
 
+(use-package transient
+  :after magit
+  :custom
+  (transient-history-file (concat fate-cache-directory "transient/history.el"))
+  (transient-values-file (concat fate-cache-directory "transient/values.el"))
+  (transient-levels-file (concat fate-cache-directory "transient/levels.el")))
 (provide 'fate-git)
 ;;; fate-git.el ends here
