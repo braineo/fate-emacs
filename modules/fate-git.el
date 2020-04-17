@@ -12,7 +12,8 @@
 
 ;;; Code:
 
-(require 'fate-core)
+(eval-when-compile
+  (require 'core-load-paths))
 
 (use-package magit
   :custom

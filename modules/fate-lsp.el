@@ -40,7 +40,10 @@
   (unless (member major-mode '(qml-mode))
     (lsp)))
 
-(use-package lsp-python-ms)
+(use-package lsp-python-ms
+  :defer t
+  :custom
+  (lsp-python-ms-cache-dir (concat fate-cache-directory ".lsp-python")))
 
 (use-package lsp-mode
   :defer t
