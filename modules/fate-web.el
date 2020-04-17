@@ -24,6 +24,24 @@
 
 ;;; Code:
 
+
+(use-package prettier-js
+  :defines prettier-js-args prettier-js)
+
+(use-package json-mode
+  :mode "\\.json?\\'"
+  :config
+  (defun fate/json-prettier ()
+    "Tell prettier the content is to be parsed as JSON regardless of any file extensions."
+    (interactive)
+    (setq-local prettier-js-args '("--parser=json"))
+    (prettier-js))
+  :hook
+  (json-mode . fate/json-setup-prettier)
+  :bind
+  (:map json-mode-map
+   ("C-c C-l" . fate/json-prettier)))
+
 (use-package js-mode
   :ensure nil
   :mode ("\\.js\\'"
