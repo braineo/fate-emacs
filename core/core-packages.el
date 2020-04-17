@@ -62,8 +62,9 @@
 (defun fate-update ()
   "Update packages and configure repository."
   (if (executable-find "git")
+    (progn
       (print "Pulling configuration update from git")
-      (call-process-shell-command "cd ~/.emacs.d && git pull" nil nil t))
+      (call-process-shell-command "cd ~/.emacs.d && git pull" nil nil t)))
   (print "Pulling configuration update from git")
   (auto-package-update-now))
 
