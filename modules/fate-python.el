@@ -39,7 +39,10 @@
   :demand t
   :after python
   :custom
-  (python-black-extra-args '("--line-length=120" "--skip-string-normalization")))
+  (python-black-extra-args '("--line-length=120" "--skip-string-normalization"))
+  :bind
+  (:map python-mode-map
+    ("C-c C-l" . python-black-partial-dwim)))
 
 (use-package sphinx-doc
   :hook (python-mode . sphinx-doc-mode))
