@@ -26,6 +26,7 @@
 
 
 (use-package prettier-js
+  :defer t
   :defines prettier-js-args prettier-js)
 
 (use-package json-mode
@@ -37,17 +38,18 @@
     (setq-local prettier-js-args '("--parser=json"))
     (prettier-js))
   :hook
-  (json-mode . fate/json-setup-prettier)
+  (json-mode . prettier-js-mode)
   :bind
   (:map json-mode-map
-   ("C-c C-l" . fate/json-prettier)))
+    ("C-c C-l" . fate/json-prettier)))
 
 (use-package js-mode
   :ensure nil
   :mode ("\\.js\\'"
          "\\.jsx\\'"
          "\\.ts\\'"
-         "\\.tsx\\'"))
+         "\\.tsx\\'")
+  :hook (js-mode . prettier-js-mode))
 
 (use-package web-mode
   :mode ("\\.ejs\\'"
