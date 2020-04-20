@@ -46,16 +46,15 @@
   (lsp-python-ms-cache-dir (concat fate-cache-directory ".lsp-python")))
 
 (use-package lsp-mode
-  :defer t
   :diminish lsp-mode
   :hook
-  (((python-mode . fate-lsp-setup-python)
-    (js-mode. fate-lsp-setup-js)
-    (sh-mode c-mode c++-mode
-     html-mode web-mode json-mode
-     css-mode less-mode sass-mode scss-mode
-     js2-mode typescript-mode
-     groovy-mode) . lsp))
+  ((python-mode . fate-lsp-setup-python)
+   (js-mode. fate-lsp-setup-js)
+   ((sh-mode c-mode c++-mode
+      html-mode web-mode json-mode
+      css-mode less-mode sass-mode scss-mode
+      js-mode js2-mode typescript-mode
+      groovy-mode) . lsp))
   :init
   (setq lsp-auto-guess-root t)       ; Detect project root
   :config
