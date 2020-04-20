@@ -32,10 +32,10 @@
 (defun fate/prettier-minor-mode ()
   "Enable minor mdoe for certain extensions."
   (when (buffer-file-name)
-    (dolist (extension '(".js[x]?" ".ts[x]?" ".[s]?css" ".less" ".vue" ".json" ".gql" ".md"))
+    (cl-dolist (extension '(".js[x]?" ".ts[x]?" ".[s]?css" ".less" ".vue" ".json" ".gql" ".md"))
       (when (string-match-p extension buffer-file-name)
         (prettier-js-mode)
-        (return)))))
+        (cl-return)))))
 
 (use-package json-mode
   :mode "\\.json?\\'"
