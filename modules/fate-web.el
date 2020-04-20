@@ -29,6 +29,14 @@
   :defer t
   :defines prettier-js-args prettier-js)
 
+(defun fate/prettier-minor-mode ()
+  "Enable minor mdoe for certain extensions."
+  (when (buffer-file-name)
+    (dolist (extension '(".js[x]?" ".ts[x]?" ".[s]?css" ".less" ".vue" ".json" ".gql" ".md"))
+      (when (string-match-p extension buffer-file-name)
+        (prettier-js-mode)
+        (return)))))
+
 (use-package json-mode
   :mode "\\.json?\\'"
   :config
@@ -38,7 +46,7 @@
     (setq-local prettier-js-args '("--parser=json"))
     (prettier-js))
   :hook
-  (json-mode . prettier-js-mode)
+  (json-mode . fate/prettier-minor-mode)
   :bind
   (:map json-mode-map
     ("C-c C-l" . fate/json-prettier)))
@@ -46,10 +54,12 @@
 (use-package js-mode
   :ensure nil
   :mode ("\\.js\\'"
-         "\\.jsx\\'"
-         "\\.ts\\'"
-         "\\.tsx\\'")
-  :hook (js-mode . prettier-js-mode))
+         "\\.jsx\\'")
+  :hook (js-mode . fate/prettier-minor-mode))
+
+(use-package typescript-mode
+  :mode ("\\.ts[x]?\\'")
+  :hook (typescript-mode . fate/prettier-minor-mode))
 
 (use-package web-mode
   :mode ("\\.ejs\\'"
