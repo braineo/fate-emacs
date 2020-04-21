@@ -24,12 +24,32 @@
 
 ;;; Code:
 
+(defun fate/python-hideshow-forward-sexp-function (arg)
+  "Python specific `forward-sexp' function for `hs-minor-mode'.
+Argument ARG is ignored."
+  arg  ; Shut up, byte compiler.
+  (python-nav-end-of-block))
+
+(defun fate/python-setup-hs-mode ()
+  "Replace `hs-special-modes-alist' for `python-mode'."
+  (let
+    ((python-mode-hs-info
+       '(python-mode
+          "\\s-*\\_<\\(?:def\\|class\\|if\\|elif\\|else\\|for\\|try\\|except\\|with\\)\\_>" "" "#"
+          fate/python-hideshow-forward-sexp-function
+          nil)))
+    (setq hs-special-modes-alist (remove-if #'(lambda (x) (eq (car x) 'python-mode)) hs-special-modes-alist))
+    (add-to-list 'hs-special-modes-alist python-mode-hs-info)
+    (hs-grok-mode-type)))
+
 (use-package python
   :defer t
   :defines gud-pdb-command-name pdb-path
   :config
   ;; Disable readline based native completion
-  (setq python-shell-completion-native-enable nil))
+  (setq python-shell-completion-native-enable nil)
+  :hook
+  (python-mode . fate/python-setup-hs-mode))
 
 ;; Format using YAPF
 ;; Install:
