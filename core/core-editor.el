@@ -178,7 +178,22 @@
 ;; Core package easy kill. easy to copy the buffer name/path
 (use-package easy-kill
   :bind
-  ([remap kill-ring-save] . easy-kill))
+  ([remap kill-ring-save] . easy-kill)
+  :config
+  (progn
+    (defun fate/easy-kill-on-buffer-file-name (n)
+      "extends buffer file name kill function. if `n' is 8, return the path in repo
+if `n' is 9, return root dir + repo path."
+      (unless (or buffer-file-name (projectile-project-root))
+        (easy-kill-echo "No `buffer-file-name'")
+        (return))
+      (let ((repo-buffer-name (substring buffer-file-name (length (projectile-project-root))))
+             (repo-root-dir-name (car (last (split-string (projectile-project-root) "/" t)))))
+        (let ((text (pcase n
+                      (`8 repo-buffer-name)
+                      (`9 (concat repo-root-dir-name "/" repo-buffer-name)))))
+          (easy-kill-adjust-candidate 'buffer-file-name text))))
+    (advice-add 'easy-kill-on-buffer-file-name :after #'fate/easy-kill-on-buffer-file-name)))
 
 ;; Core package expand-region. Increase selected region by semantic units
 (use-package expand-region
