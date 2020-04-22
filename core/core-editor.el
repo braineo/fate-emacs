@@ -74,6 +74,18 @@
          ([remap isearch-query-replace-regexp] . anzu-isearch-query-replace-regexp))
   :hook (after-init . global-anzu-mode))
 
+;; Better isearch behavior
+(use-package swiper
+  :defer t
+  :custom
+  (swiper-action-recenter t)
+  :bind (:map swiper-map
+         ("M-%" . swiper-query-replace)
+         :map isearch-mode-map
+         ("M-i" . swiper-from-isearch)
+         ([remap isearch-delete-char] . isearch-del-char)))
+
+;; Perl regular expression search and replace
 (use-package evil
   :custom
   (evil-disable-insert-state-bindings t "Leave emacs unchange insert mode")
