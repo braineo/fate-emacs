@@ -114,11 +114,14 @@
 ;; Highlight nested parentheses
 (use-package highlight-parentheses
   :custom
+  (hl-paren-highlight-adjacent t "like show-paren-mode")
   (hl-paren-delay 0.2 "delay of parentheses highlight")
-  (hl-paren-colors '("Springgreen3"
-                      "IndianRed1"
-                      "IndianRed3"
-                      "IndianRed4") "colors from inside to outside")
+  (hl-paren-colors '("IndianRed3"
+                     "goldenrod3"
+                     "Springgreen3"
+                     "DeepSkyBlue3"
+                     "RoyalBlue3"
+                     "DarkViolet") "colors from inside to outside")
   :custom-face
   (hl-paren-face ((nil (:weight ultra-bold))))
   :hook
