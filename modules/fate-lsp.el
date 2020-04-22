@@ -61,7 +61,8 @@
   (require 'lsp-clients)
   :custom
   (lsp-prefer-flymake nil "prefer using flycheck")
-  (lsp-enable-snippet nil "not yet configured"))
+  (lsp-enable-snippet nil "not yet configured")
+  (lsp-prefer-capf t "prefer using company-capf instead of company-lsp"))
 
 (use-package lsp-ui
   :hook
@@ -76,13 +77,6 @@
   (lsp-ui-doc-enable nil "Disable lsp doc for now as size is not property handled ")
   (lsp-ui-peek-always-show t "Show peek even only one matching")
   (lsp-session-file (concat fate-cache-directory "lsp-session-v1")))
-
-(use-package company-lsp
-  :after company lsp-mode
-  :init
-  (push 'company-lsp company-backends)
-  :custom
-  (company-lsp-cache-candidates 'auto))
 
 (use-package lsp-treemacs
   :after lsp
