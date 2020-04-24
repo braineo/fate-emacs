@@ -60,13 +60,13 @@
   :config
   (require 'lsp-clients)
   :custom
-  (lsp-prefer-flymake nil "prefer using flycheck")
   (lsp-enable-snippet nil "not yet configured")
-  (lsp-prefer-capf t "prefer using company-capf instead of company-lsp"))
+  (lsp-prefer-capf t "prefer using company-capf instead of company-lsp")
+  (lsp-flycheck-live-reporting nil)
+  (lsp-session-file (concat fate-cache-directory "lsp-session-v1")))
 
 (use-package lsp-ui
-  :hook
-  (lsp-mode . lsp-ui-mode)
+  :defer t
   :bind
   (:map lsp-ui-mode-map
         ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
@@ -75,8 +75,7 @@
   :custom
   (lsp-ui-sideline-enable nil "Hide sideline")
   (lsp-ui-doc-enable nil "Disable lsp doc for now as size is not property handled ")
-  (lsp-ui-peek-always-show t "Show peek even only one matching")
-  (lsp-session-file (concat fate-cache-directory "lsp-session-v1")))
+  (lsp-ui-peek-always-show t "Show peek even only one matching"))
 
 (use-package lsp-treemacs
   :after lsp

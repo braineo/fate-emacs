@@ -34,7 +34,8 @@
        (window-height   . 0.33)))
   :custom
   (flycheck-indication-mode 'right-fringe)
-  (flycheck-emacs-lisp-load-path 'inherit))
+  (flycheck-emacs-lisp-load-path 'inherit)
+  (flycheck-check-syntax-automatically '(save idle-change mode-enabled)))
 
 (use-package flycheck-pos-tip
   :after flycheck
