@@ -199,12 +199,12 @@ if `n' is 9, return root dir + repo path."
       (unless (or buffer-file-name (projectile-project-root))
         (easy-kill-echo "No `buffer-file-name'")
         (return))
-      (let ((repo-buffer-name (substring buffer-file-name (length (projectile-project-root))))
-             (repo-root-dir-name (car (last (split-string (projectile-project-root) "/" t)))))
-        (let ((text (pcase n
+      (let* ((repo-buffer-name (substring buffer-file-name (length (projectile-project-root))))
+             (repo-root-dir-name (car (last (split-string (projectile-project-root) "/" t))))
+             (text (pcase n
                       (`8 repo-buffer-name)
-                      (`9 (concat repo-root-dir-name "/" repo-buffer-name)))))
-          (easy-kill-adjust-candidate 'buffer-file-name text))))
+                      (`9 (concat repo-root-dir-name "/" repo-buffer-name ":" (format-mode-line "%l"))))))
+        (easy-kill-adjust-candidate 'buffer-file-name text)))
     (advice-add 'easy-kill-on-buffer-file-name :after #'fate/easy-kill-on-buffer-file-name)))
 
 ;; Core package expand-region. Increase selected region by semantic units
