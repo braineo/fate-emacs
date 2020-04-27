@@ -26,7 +26,8 @@
 (eval-when-compile
   (require 'core-load-paths))
 
-(use-package hydra)
+(use-package hydra
+  :commands (hydra-default-pre hydra-keyboard-quit hydra--call-interactively-remap-maybe hydra-show-hint hydra-set-transient-map))
 
 ;; Death to the tabs!  However, tabs historically indent to the next
 ;; 8-character offset; specifying anything else will cause *mass*
@@ -87,6 +88,7 @@
 
 ;; Perl regular expression search and replace
 (use-package evil
+  :commands evil-set-initial-state
   :custom
   (evil-disable-insert-state-bindings t "Leave emacs unchange insert mode")
   (evil-default-state 'insert)
@@ -113,6 +115,7 @@
 ;; Core package Projectile
 (use-package projectile
   :diminish
+  :commands projectile-project-root
   :bind
   (:map projectile-mode-map
         ("C-," . projectile-find-file)
@@ -191,6 +194,7 @@
 (use-package easy-kill
   :bind
   ([remap kill-ring-save] . easy-kill)
+  :commands (easy-kill-echo easy-kill-adjust-candidate)
   :config
   (progn
     (defun fate/easy-kill-on-buffer-file-name (n)
