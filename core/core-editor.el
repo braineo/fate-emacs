@@ -204,10 +204,13 @@ if `n' is 9, return root dir + repo path."
         (easy-kill-echo "No `buffer-file-name'")
         (return))
       (let* ((repo-buffer-name (substring buffer-file-name (length (projectile-project-root))))
-             (repo-root-dir-name (car (last (split-string (projectile-project-root) "/" t))))
+             (repo-root-dir-name (car (last (split-string (or (projectile-project-root) "") "/" t))))
+             (repo-dir-file-name (concat (if repo-root-dir-name
+                                             (concat repo-root-dir-name
+                                                     "/") repo-root-dir-name) repo-buffer-name))
              (text (pcase n
-                      (`8 repo-buffer-name)
-                      (`9 (concat repo-root-dir-name "/" repo-buffer-name ":" (format-mode-line "%l"))))))
+                      (`8 (concat repo-dir-file-name ":" (format-mode-line "%l")))
+                      (`9 repo-dir-file-name))))
         (easy-kill-adjust-candidate 'buffer-file-name text)))
     (advice-add 'easy-kill-on-buffer-file-name :after #'fate/easy-kill-on-buffer-file-name)))
 
