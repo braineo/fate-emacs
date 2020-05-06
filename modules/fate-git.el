@@ -49,6 +49,7 @@
   :custom
   (transient-history-file (concat fate-cache-directory "transient/history.el"))
   (transient-values-file (concat fate-cache-directory "transient/values.el"))
-  (transient-levels-file (concat fate-cache-directory "transient/levels.el")))
+  (transient-levels-file (concat fate-cache-directory "transient/levels.el"))
+  (magit-diff-refine-hunk t "Show fine differences for the current diff hunk only."))
 (provide 'fate-git)
 ;;; fate-git.el ends here
