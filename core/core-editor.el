@@ -94,6 +94,8 @@
   (evil-default-state 'insert)
   :config
   (evil-set-initial-state 'help-mode 'emacs)
+  (evil-set-initial-state 'Info-mode 'emacs)
+  (evil-set-initial-state 'Man-mode 'emacs)
   :hook (prog-mode . evil-mode))
 
 (use-package dired
