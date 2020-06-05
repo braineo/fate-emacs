@@ -58,12 +58,17 @@
   :hook (js-mode . fate/prettier-minor-mode))
 
 (use-package typescript-mode
-  :mode ("\\.ts[x]?\\'")
+  :mode ("\\.ts\\'")
   :hook (typescript-mode . fate/prettier-minor-mode))
 
 (use-package web-mode
-  :mode ("\\.ejs\\'"
-         "\\.html\\'"))
+  :mode ("\\.tsx\\'"
+          "\\.ejs\\'"
+          "\\.html\\'")
+  :hook (web-mode . fate/prettier-minor-mode))
+
+(use-package graphql-mode
+  :mode ("\\.graphql\\'"))
 
 (provide 'fate-web)
 ;;; fate-web.el ends here
