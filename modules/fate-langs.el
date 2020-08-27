@@ -40,7 +40,9 @@
 
 (use-package go-mode
   :mode (("\\.go\\'" . go-mode))
-  :hook (before-save . gofmt-before-save))
+  :hook (before-save . gofmt-before-save)
+  :custom
+  (gofmt-command "goreturns"))
 
 (use-package cmake-mode
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)
