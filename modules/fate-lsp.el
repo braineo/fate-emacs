@@ -53,8 +53,8 @@
    ((sh-mode c-mode c++-mode
       html-mode web-mode json-mode
       css-mode less-mode sass-mode scss-mode
-      js2-mode typescript-mode
-      groovy-mode) . lsp))
+      js2-mode typescript-mode go-mode
+      groovy-mode) . lsp-deferred))
   :init
   (setq lsp-auto-guess-root t)       ; Detect project root
   :config

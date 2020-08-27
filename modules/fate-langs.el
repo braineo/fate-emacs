@@ -38,6 +38,10 @@
 (use-package swift-mode
   :mode (("\\.swift\\'" . swift-mode)))
 
+(use-package go-mode
+  :mode (("\\.go\\'" . go-mode))
+  :hook (before-save . gofmt-before-save))
+
 (use-package cmake-mode
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)
          ("\\.cmake\\'" . cmake-mode)))
