@@ -57,8 +57,6 @@
       groovy-mode) . lsp-deferred))
   :init
   (setq lsp-auto-guess-root t)       ; Detect project root
-  :config
-  (require 'lsp-clients)
   :custom
   (lsp-enable-snippet nil "not yet configured")
   (lsp-prefer-capf t "prefer using company-capf instead of company-lsp")
