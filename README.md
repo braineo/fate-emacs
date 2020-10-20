@@ -65,7 +65,7 @@ brew install ripgrep
 | Name            | Description                 | Installation command                                                                |
 | --------------- | --------------------------- | ----------------------------------------------------------------------------------- |
 | flake8          | pip install flake8          | Flake8 is a wrapper around PyFlakes, pycodestyle and Ned Batchelder’s McCabe script |
-| python-black    | pip install flake8          | Black is the uncompromising Python code formatter                                   |
+| python-black    | pip install black           | Black is the uncompromising Python code formatter                                   |
 | black-macchiato | pip install black-macchiato | Enable formatting of partial files using black                                      |
 
 ### all-the-icons
@@ -119,6 +119,8 @@ Optional configuration, take a look at my [configs](https://github.com/braineo/c
 
 ## Language servers
 
+Lsp has a good website documenting usage of [lsp-mode](https://emacs-lsp.github.io/lsp-mode/)
+
 | Language              | Installation command                                     |
 | --------------------- | -------------------------------------------------------- |
 | TypeScript/JavaScript | npm i -g typescript-language-server; npm i -g typescript |
@@ -160,6 +162,17 @@ Because Microsoft’s Python language server does not ship with a linter, need t
 ``` shell
 pip install flake8
 ```
+
+``` emacs-lisp
+;; Configure extra search path
+(setq lsp-python-ms-extra-paths
+  '("path1"
+    "path2"))
+
+;; If you need to work on some python2 projects, make sure use a right flake8
+(setq (flycheck-python-flake8-executable "python2"))
+```
+
 
 ## Useful links
 

@@ -33,12 +33,15 @@
   (progn
     (require 'lsp-python-ms)
     (lsp)
+    ;; https://github.com/flycheck/flycheck/issues/1762#issuecomment-626210720
+    ;; Do not let lsp hijack flycheck
+    (setq-local lsp-diagnostics-provider :none)
     (setq-local flycheck-checker 'python-flake8)))
 
 (defun fate-lsp-setup-js ()
   "Do not start lsp when major mode is qml which derives from `js-mode'."
   (unless (member major-mode '(qml-mode))
-    (lsp)))
+    (lsp-deferred)))
 
 (use-package lsp-python-ms
   :defer t
@@ -47,6 +50,7 @@
 
 (use-package lsp-mode
   :diminish lsp-mode
+  :commands (lsp lsp-deferred)
   :hook
   ((python-mode . fate-lsp-setup-python)
    (js-mode . fate-lsp-setup-js)
@@ -54,14 +58,21 @@
       html-mode web-mode json-mode
       css-mode less-mode sass-mode scss-mode
       js2-mode typescript-mode go-mode
-      groovy-mode) . lsp-deferred))
+      groovy-mode) . lsp-deferred)
+   (lsp-mode . lsp-headerline-breadcrumb-mode))
   :init
   (setq lsp-auto-guess-root t)       ; Detect project root
+  ;; Increase the amount of data which Emacs reads from the process 1mb
+  ;; default is 4k while some of the language server responses are in 800k - 3M range
+  (setq read-process-output-max (* 1024 1024))
   :custom
   (lsp-enable-snippet nil "not yet configured")
+  (lsp-completion-provider :capf)
   (lsp-prefer-capf t "prefer using company-capf instead of company-lsp")
   (lsp-flycheck-live-reporting nil)
-  (lsp-session-file (concat fate-cache-directory "lsp-session-v1")))
+  (lsp-session-file (concat fate-cache-directory "lsp-session-v1"))
+  (lsp-headerline-breadcrumb-segments '(file symbols)))
+
 
 (use-package lsp-ui
   :defer t
