@@ -31,7 +31,7 @@
 (defun fate-lsp-setup-python ()
   "Microsoft Python Language Server does not have a syntax checker, setup one for it."
   (progn
-    (require 'lsp-python-ms)
+    (require 'lsp-pyright)
     (lsp)
     ;; https://github.com/flycheck/flycheck/issues/1762#issuecomment-626210720
     ;; Do not let lsp hijack flycheck
@@ -43,10 +43,8 @@
   (unless (member major-mode '(qml-mode))
     (lsp-deferred)))
 
-(use-package lsp-python-ms
-  :defer t
-  :custom
-  (lsp-python-ms-cache-dir (concat fate-cache-directory ".lsp-python")))
+(use-package lsp-pyright
+  :defer t)
 
 (use-package lsp-mode
   :diminish lsp-mode
