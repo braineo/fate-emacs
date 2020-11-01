@@ -48,12 +48,15 @@
 ;; highlight the current line
 (global-hl-line-mode t)
 
-(add-to-list 'default-frame-alist '(height . 80))
-(add-to-list 'default-frame-alist '(width . 160))
-(add-to-list 'default-frame-alist '(alpha 95 95))
-
-;; Transparent frame
-(set-frame-parameter (selected-frame) 'alpha '(95 95))
+;; Initial size to be full screen height, half screen width and in the middle
+(when (display-graphic-p)
+  (let ((frame (selected-frame)))
+    (set-frame-width frame (/ (display-pixel-width) 2) nil 'pixelwise)
+    (set-frame-height frame (display-pixel-height) nil 'pixelwise)
+    (set-frame-position frame (/ (display-pixel-width) 4) 0)
+    ;; A little transparency
+    (set-frame-parameter frame 'alpha '(95 95))
+    (add-to-list 'default-frame-alist '(alpha 95 95))))
 
 ;; right border takes 1 pixel on right splited buffer, make fringe visible
 (setq-default window-divider-default-places t
