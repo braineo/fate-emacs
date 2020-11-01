@@ -65,6 +65,13 @@
 (when (and IS-MAC (>= emacs-major-version 26))
   (setq default-frame-alist '((ns-transparent-titlebar . t) (ns-appearance . dark))))
 
+;; Tree sitter for better syntax highlight
+(use-package tree-sitter-langs)
+
+(use-package tree-sitter
+  :hook ((prog-mode . global-tree-sitter-mode))
+        (tree-sitter-after-on . tree-sitter-hl-mode))
+
 ;; Theme
 (use-package doom-themes
   :config
