@@ -69,7 +69,8 @@
   (lsp-prefer-capf t "prefer using company-capf instead of company-lsp")
   (lsp-flycheck-live-reporting nil)
   (lsp-session-file (concat fate-cache-directory "lsp-session-v1"))
-  (lsp-headerline-breadcrumb-segments '(file symbols)))
+  (lsp-headerline-breadcrumb-segments '(file symbols))
+  (lsp-enable-file-watchers nil "disable warnings about watching huge repos"))
 
 
 (use-package lsp-ui
