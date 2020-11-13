@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.com/braineo/fate-emacs.svg?branch=master)](https://travis-ci.com/braineo/fate-emacs)
+![GitHub](https://img.shields.io/github/license/braineo/fate-emacs)
 
   - [Get Started](#get-started)
       - [Backup](#backup)
