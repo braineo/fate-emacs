@@ -3,7 +3,7 @@ sudo: false
 
 env:
   global:
-    - PATH="/home/travis/.evm/bin:/home/travis/.cask/bin"
+    - PATH="/home/travis/.evm/bin:/home/travis/.cask/bin:$PATH"
   jobs:
     - EVM_EMACS=emacs-26.3-travis-linux-xenial
     - EVM_EMACS=emacs-27.1-travis-linux-xenial
