@@ -47,7 +47,10 @@
 (use-package magit-delta
   :if (executable-find "delta")
   :hook
-  ((magit-mode . (lambda () (magit-delta-mode +1)))))
+  ((magit-mode . (lambda () (magit-delta-mode +1))))
+  :config
+  ;; Cannot use line number feature of delta in magit. refer to https://github.com/dandavison/magit-delta/issues/13
+  (setq magit-delta-delta-args (append magit-delta-delta-args '("--features" "magit-delta"))))
 
 (use-package transient
   :after magit
