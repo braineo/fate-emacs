@@ -44,6 +44,11 @@
     ;; There's no fringe when Emacs is running in the console
     (diff-hl-margin-mode 1)))
 
+(use-package magit-delta
+  :if (executable-find "delta")
+  :hook
+  ((magit-mode . (lambda () (magit-delta-mode +1)))))
+
 (use-package transient
   :after magit
   :custom
