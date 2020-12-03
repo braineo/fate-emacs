@@ -45,6 +45,7 @@
     (diff-hl-margin-mode 1)))
 
 (use-package magit-delta
+  :disabled
   :if (executable-find "delta")
   :hook
   ((magit-mode . (lambda () (magit-delta-mode +1))))
