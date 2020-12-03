@@ -51,6 +51,9 @@
   (:map json-mode-map
     ("C-c C-l" . fate/json-prettier)))
 
+(use-package less-css-mode
+  :hook (less-css-mode . fate/prettier-minor-mode))
+
 (use-package js-mode
   :ensure nil
   :mode ("\\.js\\'"
