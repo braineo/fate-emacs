@@ -174,6 +174,12 @@ pip install flake8
 (setq (flycheck-python-flake8-executable "python2"))
 ```
 
+### Clangd
+
+`clangd` needs `compile_commands.json` to know the compiler flags that are used to build the project, when some custom paths are used.
+
+For cmake project, passing `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON` to `cmake` can generate `compile_commands.json`. If it is not a cmake project,
+[bear](https://github.com/rizsotto/Bear) is a right tool to generate it.
 
 ## Useful links
 
