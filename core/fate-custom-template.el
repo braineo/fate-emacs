@@ -23,6 +23,10 @@
 ;; (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin")))
 ;; (setq exec-path (append '("/usr/local/bin") exec-path))
 
+;; GO related env vars
+;; (setenv "GOPATH" "/home/user/.go")
+;; (setenv "GO111MODULE" "auto")
+
 ;; Open from mac
 (setenv "LANG" "en_US.UTF-8")
 
