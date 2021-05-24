@@ -213,13 +213,17 @@ EXTRACTED-TEXT is output from copy-as-format--extract-text."
   (if (use-region-p)
     (save-excursion
       (goto-char (region-beginning))
-      (let* ((file-name-linenum (concat (fate/repo-dir-file-name) ":" (format-mode-line "%l"))))
+      (let* ((file-name-linenum (concat (fate/repo-dir-file-name) ":" (format-mode-line "%l")))
+             (mode (buffer-local-value 'major-mode (current-buffer))))
         (with-temp-buffer
+          (funcall mode)
           (insert file-name-linenum)
-          (newline)
+          (comment-line 1)
+          (goto-char (point-max))
+          (dotimes (number 2)
+            (newline))
           (insert extracted-text)
           (buffer-string))))))
-
 
 ;; Core package easy kill. easy to copy the buffer name/path
 (use-package easy-kill
