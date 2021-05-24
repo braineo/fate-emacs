@@ -127,8 +127,8 @@
   :init
   (setq projectile-sort-order 'recentf
         projectile-cache-file (concat fate-cache-directory "projectile.cache")
-        projectile-known-projects-file (concat fate-cache-directory
-                                               "projectile-bookmarks.eld")))
+        projectile-known-projects-file (concat fate-cache-directory "projectile-bookmarks.eld")))
+
 (use-package recentf
   :hook
   (after-init . recentf-mode)
@@ -193,9 +193,33 @@
   :bind
   ([remap comment-dwim] . comment-dwim-2))
 
+(defun fate/repo-dir-file-name()
+  "Get file path relative to project root."
+  (let* ((repo-buffer-name (substring buffer-file-name (length (projectile-project-root))))
+         (repo-root-dir-name (car (last (split-string (or (projectile-project-root) "") "/" t)))))
+    (concat (if repo-root-dir-name
+              (concat repo-root-dir-name
+                "/") repo-root-dir-name) repo-buffer-name)))
+
 (use-package copy-as-format
   :bind
-  ("C-c w g" . copy-as-format-github))
+  ("C-c w g" . copy-as-format-github)
+  :config
+  (advice-add 'copy-as-format--extract-text :filter-return #'fate/copy-as-format--extract-text))
+
+(defun fate/copy-as-format--extract-text (extracted-text)
+  "Extends copy-as-format--extract-text to insert line number to extracted text.
+EXTRACTED-TEXT is output from copy-as-format--extract-text."
+  (if (use-region-p)
+    (save-excursion
+      (goto-char (region-beginning))
+      (let* ((file-name-linenum (concat (fate/repo-dir-file-name) ":" (format-mode-line "%l"))))
+        (with-temp-buffer
+          (insert file-name-linenum)
+          (newline)
+          (insert extracted-text)
+          (buffer-string))))))
+
 
 ;; Core package easy kill. easy to copy the buffer name/path
 (use-package easy-kill
@@ -209,16 +233,13 @@
 if `n' is 9, return root dir + repo path."
       (unless (or buffer-file-name (projectile-project-root))
         (easy-kill-echo "No `buffer-file-name'")
-        (return))
-      (let* ((repo-buffer-name (substring buffer-file-name (length (projectile-project-root))))
-             (repo-root-dir-name (car (last (split-string (or (projectile-project-root) "") "/" t))))
-             (repo-dir-file-name (concat (if repo-root-dir-name
-                                             (concat repo-root-dir-name
-                                                     "/") repo-root-dir-name) repo-buffer-name))
-             (text (pcase n
-                      (`8 (concat repo-dir-file-name ":" (format-mode-line "%l")))
-                      (`9 repo-dir-file-name))))
-        (easy-kill-adjust-candidate 'buffer-file-name text)))
+        (cl-return))
+
+      (easy-kill-adjust-candidate 'buffer-file-name
+        (pcase n
+          (`8 (concat (fate/repo-dir-file-name) ":" (format-mode-line "%l")))
+          (`9 (fate/repo-dir-file-name)))))
+
     (advice-add 'easy-kill-on-buffer-file-name :after #'fate/easy-kill-on-buffer-file-name)))
 
 ;; Core package expand-region. Increase selected region by semantic units
