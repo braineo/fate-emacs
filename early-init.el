@@ -24,16 +24,31 @@
 
 ;;; Code:
 
-;; reduce the frequency of garbage collection by making it happen on
-;; each 50MB of allocated data (the default is on every 0.76MB)
-(setq gc-cons-threshold 90000000)
+;; Speed up initialization. Suggestions taken from Doom emacs configs.
+(setq gc-cons-threshold most-positive-fixnum ;; 2^61 bytes
+  gc-cons-percentage 0.6)
 
-(setq package-enable-at-startup nil)
+(defvar custom--file-name-handler-alist file-name-handler-alist)
+(setq file-name-handler-alist nil)
+
+(add-hook 'emacs-startup-hook
+  (lambda ()
+    (progn
+      (setq gc-cons-threshold 16777216 ;; 16mb
+        gc-cons-percentage 0.1)
+      (setq file-name-handler-alist custom--file-name-handler-alist))))
+
+(setq package-enable-at-startup nil) ;; don't auto-initialize!
 
 (push '(menu-bar-lines . 0) default-frame-alist)
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars . 0) default-frame-alist)
 (push '(horizontal-scroll-bars. 0) default-frame-alist)
+
+;; Always load newest byte code
+(setq load-prefer-newer t)
+
+(setq initial-scratch-message "")
 
 (provide 'early-init)
 ;;; early-init.el ends here
