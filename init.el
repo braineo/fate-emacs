@@ -49,7 +49,6 @@
 (require 'fate-company)
 (require 'fate-python)
 (require 'fate-web)
-(require 'fate-lisp)
 (require 'fate-langs)
 (require 'fate-flycheck)
 (require 'fate-lsp)

@@ -115,7 +115,7 @@
            (,(when (display-graphic-p)
                (all-the-icons-material "update" :height 1.35 :v-adjust -0.24))
              "Update" "Update Fate Emacs"
-              (lambda (&rest _) (fate-update)))))))
+             (lambda (&rest _) (fate-update)))))))
 
 (use-package all-the-icons
   :if (display-graphic-p)

@@ -24,6 +24,21 @@
 
 ;;; Code:
 
+
+;; Lisp
+
+(defun fate-init-parinfer-mode ()
+  "Disable some minor modes having troubles with parinfer-rus-mode."
+  (progn
+    (electric-pair-local-mode -1)
+    (parinfer-rust-mode)))
+
+(use-package parinfer-rust-mode
+  :hook
+  ((emacs-lisp-mode scheme-mode) . fate-init-parinfer-mode)
+  :init
+  (setq parinfer-rust-auto-download t))
+
 ;; Markdown
 (use-package markdown-mode
   :mode (("\\.md\\'" . gfm-mode)
