@@ -271,6 +271,11 @@ if `N' is 9, return root dir + repo path."
   ("M-7" . winum-select-window-7)
   ("M-8" . winum-select-window-8))
 
+(use-package ibuffer
+  :ensure nil
+  :bind
+  ([remap list-buffers] . ibuffer))
+
 ;; Avy. Jump to anywhere like a sniper
 (use-package avy
   :ensure t
