@@ -220,10 +220,24 @@ EXTRACTED-TEXT is output from copy-as-format--extract-text."
           (insert file-name-linenum)
           (comment-line 1)
           (goto-char (point-max))
-          (dotimes (number 2)
+          (dotimes (_number 2)
             (newline))
           (insert extracted-text)
           (buffer-string))))))
+
+
+(defun fate/easy-kill-on-buffer-file-name (n)
+  "Extends buffer file name kill function.
+if `N' is 8, return the path in repo.
+if `N' is 9, return root dir + repo path."
+  (unless (or buffer-file-name (projectile-project-root))
+    (easy-kill-echo "No `buffer-file-name'")
+    (cl-return))
+
+  (easy-kill-adjust-candidate 'buffer-file-name
+    (pcase n
+      (`8 (concat (fate/repo-dir-file-name) ":" (format-mode-line "%l")))
+      (`9 (fate/repo-dir-file-name)))))
 
 ;; Core package easy kill. easy to copy the buffer name/path
 (use-package easy-kill
@@ -231,20 +245,7 @@ EXTRACTED-TEXT is output from copy-as-format--extract-text."
   ([remap kill-ring-save] . easy-kill)
   :commands (easy-kill-echo easy-kill-adjust-candidate)
   :config
-  (progn
-    (defun fate/easy-kill-on-buffer-file-name (n)
-      "extends buffer file name kill function. if `n' is 8, return the path in repo
-if `n' is 9, return root dir + repo path."
-      (unless (or buffer-file-name (projectile-project-root))
-        (easy-kill-echo "No `buffer-file-name'")
-        (cl-return))
-
-      (easy-kill-adjust-candidate 'buffer-file-name
-        (pcase n
-          (`8 (concat (fate/repo-dir-file-name) ":" (format-mode-line "%l")))
-          (`9 (fate/repo-dir-file-name)))))
-
-    (advice-add 'easy-kill-on-buffer-file-name :after #'fate/easy-kill-on-buffer-file-name)))
+  (advice-add 'easy-kill-on-buffer-file-name :after #'fate/easy-kill-on-buffer-file-name))
 
 ;; Core package expand-region. Increase selected region by semantic units
 (use-package expand-region
