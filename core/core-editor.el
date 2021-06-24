@@ -90,8 +90,9 @@
 ;; Perl regular expression search and replace
 (use-package evil
   :commands evil-set-initial-state
+  :init
+  (setq evil-disable-insert-state-bindings t) ;; "Leave emacs binding unchanged in insert mode"
   :custom
-  (evil-disable-insert-state-bindings t "Leave emacs unchange insert mode")
   (evil-default-state 'insert)
   :config
   (evil-set-initial-state 'help-mode 'emacs)
