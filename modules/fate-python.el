@@ -38,13 +38,13 @@ Argument ARG is ignored."
           "\\s-*\\_<\\(?:def\\|class\\|if\\|elif\\|else\\|for\\|try\\|except\\|with\\)\\_>" "" "#"
           fate/python-hideshow-forward-sexp-function
           nil)))
-    (setq hs-special-modes-alist (remove-if #'(lambda (x) (eq (car x) 'python-mode)) hs-special-modes-alist))
+    (setq hs-special-modes-alist (cl-remove-if #'(lambda (x) (eq (car x) 'python-mode)) hs-special-modes-alist))
     (add-to-list 'hs-special-modes-alist python-mode-hs-info)
     (hs-grok-mode-type)))
 
 (use-package python
-  :defer t
   :defines gud-pdb-command-name pdb-path
+  :functions python-nav-end-of-block
   :config
   ;; Disable readline based native completion
   (setq python-shell-completion-native-enable nil)
