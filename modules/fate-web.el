@@ -68,6 +68,8 @@
   :mode ("\\.tsx\\'"
           "\\.ejs\\'"
           "\\.html\\'")
+  :custom
+  (web-mode-auto-quote-style 3)
   :hook (web-mode . fate/prettier-minor-mode))
 
 (use-package graphql-mode
