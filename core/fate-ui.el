@@ -71,7 +71,12 @@
 ;; Tree sitter for better syntax highlight
 
 (when (functionp (quote module-load))
-  (use-package tree-sitter-langs)
+  (use-package tree-sitter-langs
+    :after tree-sitter
+    :config
+    (tree-sitter-require 'tsx)
+    (add-to-list 'tree-sitter-major-mode-language-alist '(typescript-tsx-mode . tsx)))
+
   (use-package tree-sitter
     :hook ((prog-mode . global-tree-sitter-mode))
           (tree-sitter-after-on . tree-sitter-hl-mode)))
