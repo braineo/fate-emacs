@@ -64,18 +64,12 @@
   :mode ("\\.ts\\'")
   :hook (typescript-mode . fate/prettier-minor-mode))
 
-
-(define-derived-mode typescript-tsx-mode web-mode "TSX"
-  "Derived mode for better syntax highlight and linter config."
-  ;; Workaround issue caused by web-mode font lock see following issue
-  ;; https://github.com/ubolonton/emacs-tree-sitter/issues/66#issuecomment-832815710
-  (setq-local tree-sitter-hl-use-font-lock-keywords nil))
-
+(define-derived-mode typescript-tsx-mode typescript-mode "TSX"
+  "Derived mode for better syntax highlight and linter config.")
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-tsx-mode))
 
 (use-package web-mode
-  :mode ("\\.tsx\\'"
-          "\\.ejs\\'"
+  :mode ("\\.ejs\\'"
           "\\.html\\'")
   :custom
   (web-mode-enable-auto-indentation nil "Use prettier on save instead")
