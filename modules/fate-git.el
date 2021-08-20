@@ -24,6 +24,12 @@
   (("C-x g" . magit-status)
    ("s-m" . magit-file-dispatch)))
 
+(use-package forge
+  :after magit
+  :config
+  (if 'fate/forge-alist
+    (add-to-list 'forge-alist fate/forge-alist)))
+
 (use-package gitattributes-mode
   :defer t)
 

@@ -2,7 +2,9 @@
 
 
 ;;; Commentary:
-
+;;; This file is used for custom setting in different environment, private settings should not go to main repo
+;;; For executable path/versions you can find following examples on how to setup.
+;;; Alternatively you can use `purcell/exec-path-from-shell`, but it is very slow on Mac.
 
 ;;; Code:
 
@@ -29,5 +31,9 @@
 
 ;; Open from mac
 (setenv "LANG" "en_US.UTF-8")
+
+
+;;; Forge
+;; (setq fate/forge-alist '(("git.site.com" "git.site.com/api/v4" "ssh://git@git.site.com" forge-github-repository)))
 
 ;;; fate-custom.el ends here
