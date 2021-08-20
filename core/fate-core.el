@@ -27,6 +27,7 @@
 (require 'core-packages)
 (require 'core-editor)
 (require 'fate-ui)
+(require 'fate-custom)
 
 (provide 'fate-core)
 ;;; fate-core.el ends here
