@@ -29,6 +29,7 @@
   (after-init . global-company-mode)
   :bind
   (("C-M-/" . company-complete)
+   ([remap indent-for-tab-command] . company-indent-or-complete-common)
    :map company-active-map
    ("C-p" . company-select-previous)
    ("C-n" . company-select-next)

@@ -68,9 +68,6 @@
   (setq read-process-output-max (* 1024 1024))
   :custom
   (lsp-enable-snippet nil "not yet configured")
-  (lsp-completion-provider :capf)
-  (lsp-prefer-capf t "prefer using company-capf instead of company-lsp")
-  (lsp-flycheck-live-reporting nil)
   (lsp-session-file (concat fate-cache-directory "lsp-session-v1"))
   (lsp-headerline-breadcrumb-segments '(file symbols)))
 
