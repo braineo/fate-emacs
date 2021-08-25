@@ -55,9 +55,10 @@
 
 (use-package go-mode
   :mode (("\\.go\\'" . go-mode))
-  :hook (before-save . gofmt-before-save)
+  :hook ((before-save . lsp-format-buffer)
+         (before-save . lsp-organize-imports))
   :custom
-  (gofmt-command "goreturns"))
+  (gofmt-command "gofumpt"))
 
 (use-package cmake-mode
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)
