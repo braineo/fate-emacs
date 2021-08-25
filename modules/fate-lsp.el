@@ -26,7 +26,8 @@
 
 (eval-when-compile
   (require 'core-load-paths)
-  (require 'flycheck))
+  (require 'flycheck)
+  (require 'fate-lsp-gql))
 
 (defun fate-lsp-setup-python ()
   "Microsoft Python Language Server does not have a syntax checker, setup one for it."
@@ -58,7 +59,7 @@
       html-mode web-mode json-mode
       css-mode less-mode sass-mode scss-mode
       js2-mode typescript-mode go-mode
-      groovy-mode) . lsp-deferred)
+      groovy-mode graphql-mode) . lsp-deferred)
    (lsp-mode . lsp-headerline-breadcrumb-mode))
   :init
   (setq lsp-auto-guess-root t)       ; Detect project root
