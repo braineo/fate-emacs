@@ -31,10 +31,12 @@ Gate of Babylon
 [_h_]ighlight
 te[_x_]t
 [_m_]ulti-cursor
+[_l_]anguage server
 "
   ("h" hydra-symbol-overlay/body)
   ("x" hydra-align-text/body)
-  ("m" hydra-multiple-cursors/body))
+  ("m" hydra-multiple-cursors/body)
+  ("l" hydra-lsp/body))
 
 (global-set-key (kbd "M-m") 'fate-hydra/body)
 

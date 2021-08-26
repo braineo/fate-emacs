@@ -99,5 +99,9 @@
   :custom-face
   (helm-rg-preview-line-highlight ((t (:inherit highlight :distant-foreground "black")))))
 
+(use-package helm-lsp
+  :after (helm lsp helm-imenu)
+  :bind(([remap xref-find-apropos] . helm-lsp-workspace-symbol)))
+
 (provide 'fate-helm)
 ;;; fate-helm.el ends here
