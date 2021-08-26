@@ -55,9 +55,10 @@
                            error-callback))
     :activation-fn (lambda (filename &optional _)
                      (or (string-match-p (rx (one-or-more anything) "."
-                                             (or "ts" "js" "jsx" "tsx" "html" "vue" "svelte" "graphql" "gql")eos)
-                                         filename)
-                         (derived-mode-p 'js-mode 'js2-mode 'typescript-mode 'html-mode 'svelte-mode)))))
+                                           (or "ts" "js" "jsx" "tsx" "html" "vue" "svelte" "graphql" "gql")eos)
+                           filename)
+                       (and (derived-mode-p 'js-mode 'js2-mode 'typescript-mode 'html-mode 'svelte-mode)
+                         (not (string-match-p "\\.json\\'" filename)))))))
 
 
 (provide 'fate-lsp-gql)

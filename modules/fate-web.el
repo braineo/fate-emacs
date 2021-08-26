@@ -77,7 +77,8 @@
   :hook (web-mode . fate/prettier-minor-mode))
 
 (use-package graphql-mode
-  :mode ("\\.graphql\\'"))
+  :mode ("\\.graphql\\'")
+  :hook (graphql-mode . prettier-js-mode))
 
 (provide 'fate-web)
 ;;; fate-web.el ends here
