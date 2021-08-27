@@ -55,8 +55,9 @@
 
 (use-package go-mode
   :mode (("\\.go\\'" . go-mode))
-  :hook ((before-save . lsp-format-buffer)
-         (before-save . lsp-organize-imports))
+  :init
+  (add-hook 'before-save-hook #'lsp-format-buffer nil t)
+  (add-hook 'before-save-hook #'lsp-organize-imports nil t)
   :custom
   (gofmt-command "gofumpt"))
 
