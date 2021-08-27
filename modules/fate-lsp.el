@@ -63,6 +63,14 @@
     (setq-local lsp-diagnostics-provider :none)
     (setq-local flycheck-checker 'python-flake8)))
 
+(defun fate-lsp-setup-go ()
+  "Use gopls for format and import sorting."
+  (progn
+    (require 'lsp)
+    (lsp)
+    (add-hook 'before-save-hook #'lsp-format-buffer nil t)
+    (add-hook 'before-save-hook #'lsp-organize-imports nil t)))
+
 (defun fate-lsp-setup-js ()
   "Do not start lsp when major mode is qml which derives from `js-mode'."
   (unless (member major-mode '(qml-mode))
@@ -78,6 +86,7 @@
   :commands (lsp lsp-deferred)
   :hook
   ((python-mode . fate-lsp-setup-python)
+   (go-mode . fate-lsp-setup-go)
    (js-mode . fate-lsp-setup-js)
    ((sh-mode c-mode c++-mode
       html-mode web-mode json-mode
