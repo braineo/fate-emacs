@@ -70,5 +70,17 @@
   (transient-values-file (concat fate-cache-directory "transient/values.el"))
   (transient-levels-file (concat fate-cache-directory "transient/levels.el"))
   (transient-display-buffer-action '(display-buffer-below-selected)))
+
+(use-package winner-mode
+  :ensure nil
+  :hook (after-init . winner-mode))
+
+(use-package ediff
+  :ensure nil
+  :custom
+  (ediff-window-setup-function 'ediff-setup-windows-plain)
+  (ediff-split-window-function 'split-window-horizontally)
+  :hook (ediff-quit . winner-undo))
+
 (provide 'fate-git)
 ;;; fate-git.el ends here
