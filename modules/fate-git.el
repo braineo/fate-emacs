@@ -28,7 +28,9 @@
   :after magit
   :config
   (if 'fate/forge-alist
-    (add-to-list 'forge-alist fate/forge-alist)))
+    (add-to-list 'forge-alist fate/forge-alist))
+  :custom
+  (forge-database-file (concat fate-cache-directory "forge-database.sqlite")))
 
 (use-package gitattributes-mode
   :defer t)
