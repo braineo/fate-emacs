@@ -37,7 +37,9 @@
   :hook
   ((emacs-lisp-mode scheme-mode) . fate-init-parinfer-mode)
   :init
-  (setq parinfer-rust-auto-download t))
+  (setq parinfer-rust-auto-download t)
+  :custom
+  (parinfer-rust-library-directory (concat fate-cache-directory "parinfer-rust/")))
 
 ;; Markdown
 (use-package markdown-mode
