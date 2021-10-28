@@ -32,8 +32,11 @@
 (defun fate/prettier-minor-mode ()
   "Enable minor mdoe for certain extensions."
   (when (buffer-file-name)
-    (cl-dolist (extension '("\\.js[x]?\\'" "\\.ts[x]?\\'" "\\.[s]?css\\'" "\\.less\\'" "\\.vue\\'" "\\.json\\'" "\\.gql\\'" "\\.md\\'"))
-      (when (string-match-p extension buffer-file-name)
+    (cl-dolist (extension '("\\.js[x]?\\'" "\\.ts[x]?\\'" "\\.[s]?css\\'" "\\.less\\'"
+                             "\\.vue\\'" "\\.json\\'" "\\.gql\\'" "\\.graphql\\'" "\\.md\\'"))
+      (when (and (string-match-p extension buffer-file-name)
+              ;; Do not auto format anything inside node_modules
+              (not (string-match-p "node_modules" buffer-file-name)))
         (prettier-js-mode)
         (cl-return)))))
 
