@@ -26,8 +26,7 @@
 
 (eval-when-compile
   (require 'core-load-paths)
-  (require 'flycheck)
-  (require 'fate-lsp-gql))
+  (require 'fate-flycheck))
 
 
 
@@ -77,6 +76,8 @@
   ;; Increase the amount of data which Emacs reads from the process 1mb
   ;; default is 4k while some of the language server responses are in 800k - 3M range
   (setq read-process-output-max (* 1024 1024))
+  (with-eval-after-load 'lsp
+     (require 'fate-lsp-gql))
   (with-eval-after-load 'hydra
    (defhydra hydra-lsp (:exit t :hint nil)
      "
