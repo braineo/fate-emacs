@@ -24,8 +24,9 @@
 
 ;;; Code:
 
-(require 'lsp-mode)
-(require 'lsp-completion)
+(eval-when-compile
+  (require 'lsp-mode)
+  (require 'lsp-completion))
 
 (lsp-dependency 'graphql-language-service-cli
                 '(:npm :package "graphql-language-service-cli"

@@ -32,13 +32,8 @@
   :custom
   (forge-database-file (concat fate-cache-directory "forge-database.sqlite")))
 
-(use-package gitattributes-mode
-  :defer t)
 
-(use-package gitconfig-mode
-  :defer t)
-
-(use-package gitignore-mode
+(use-package git-modes
   :defer t)
 
 (use-package diff-hl
