@@ -34,6 +34,7 @@
     (parinfer-rust-mode)))
 
 (use-package parinfer-rust-mode
+  :if (string-match-p "MODULES" system-configuration-features)
   :hook
   ((emacs-lisp-mode scheme-mode) . fate-init-parinfer-mode)
   :init
