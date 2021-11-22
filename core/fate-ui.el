@@ -107,6 +107,7 @@
   (dashboard-set-heading-icons t)
   (dashboard-set-file-icons t)
   (dashboard-set-init-info t)
+  (dashboard-projects-switch-function 'find-file)
   :config
   (setq dashboard-items '((recents  . 10)
                           (projects . 10))
