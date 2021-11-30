@@ -298,6 +298,9 @@ if `N' is 9, return root dir + repo path."
   ("M-S-<up>" . move-text-up)
   ("M-S-<down>" . move-text-down))
 
+(use-package string-inflection
+  :defer t)
+
 (use-package multiple-cursors
   :diminish
   :init
@@ -349,6 +352,15 @@ _h_ ^+^ _l_ |
    ("<C-f2>" . bm-toggle))
   :custom
   (bm-buffer-persistence nil "Do not save bookmarks"))
+
+(defun fate/kill-buffer-in-path (path-pattern)
+  (interactive "spath pattern: ")
+  (when path-pattern
+    (cl-dolist (buffer (buffer-list))
+      (let* ((file-name (buffer-file-name buffer)))
+        (when (and file-name
+                   (string-match path-pattern file-name))
+          (kill-buffer buffer))))))
 
 (require 'fate-auto-complete)
 (require 'fate-align-text)
