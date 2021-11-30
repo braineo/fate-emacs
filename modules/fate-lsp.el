@@ -105,8 +105,8 @@
   :custom
   (lsp-enable-snippet nil "not yet configured")
   (lsp-session-file (concat fate-cache-directory "lsp-session-v1"))
-  (lsp-headerline-breadcrumb-segments '(file symbols)))
-
+  (lsp-headerline-breadcrumb-segments '(file symbols))
+  (lsp-clients-typescript-init-opts '(importModuleSpecifierPreference "relative")))
 
 (use-package lsp-ui
   :defer t
