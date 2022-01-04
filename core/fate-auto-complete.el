@@ -24,6 +24,14 @@
 
 ;;; Code:
 
+(use-package yasnippet
+  :commands (yas-reload-all)
+  :config (yas-reload-all)
+  :hook (prog-mode . yas-minor-mode))
+
+(use-package yasnippet-snippets
+  :after yasnippet)
+
 (global-set-key (kbd "M-/") 'hippie-expand)
 
 (setq hippie-expand-try-functions-list
