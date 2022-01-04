@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: jsdocCommentTemplate
+# key: jsdoc
+# type: command
+# --
+
+(tide-jsdoc-template)

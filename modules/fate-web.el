@@ -71,6 +71,11 @@
   "Derived mode for better syntax highlight and linter config.")
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-tsx-mode))
 
+(use-package tide
+  :after typescript-mode
+  :init (tide-start-server-if-nonexistent)
+  :commands (tide-current-server tide-start-server-if-nonexistent tide-jsdoc-template))
+
 (use-package web-mode
   :mode ("\\.ejs\\'"
           "\\.html\\'")
