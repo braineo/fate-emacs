@@ -9,11 +9,9 @@
 ;;; Code:
 
 ;; Font
-(when window-system
+(when (display-graphic-p)
   (when (and (x-list-fonts "Operator Mono"))
-    (let ((font "Operator Mono:weight=light:style=book:pixelsize=12"))
-      ;; (set-frame-font font)
-      (add-to-list 'default-frame-alist `(font . ,font))))
+    (set-face-attribute 'default nil :font "Operator Mono" :height 80 :weight 'light))
 
   (when (x-list-fonts "Noto Sans")
     (set-fontset-font t 'han "Noto Sans CJK SC Regular")
