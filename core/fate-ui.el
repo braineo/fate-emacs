@@ -53,10 +53,8 @@
   (let ((frame (selected-frame)))
     (set-frame-width frame (/ (display-pixel-width) 2) nil 'pixelwise)
     (set-frame-height frame (display-pixel-height) nil 'pixelwise)
-    (set-frame-position frame (/ (display-pixel-width) 4) 0)
-    ;; A little transparency
-    (set-frame-parameter frame 'alpha '(95 95))
-    (add-to-list 'default-frame-alist '(alpha 95 95))))
+    (set-frame-position frame (/ (display-pixel-width) 4) 0)))
+
 
 ;; right border takes 1 pixel on right splited buffer, make fringe visible
 (setq-default window-divider-default-places t
