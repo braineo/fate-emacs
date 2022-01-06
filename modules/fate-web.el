@@ -88,5 +88,8 @@
   :mode ("\\.graphql\\'")
   :hook (graphql-mode . prettier-js-mode))
 
+(use-package jest
+  :defer t)
+
 (provide 'fate-web)
 ;;; fate-web.el ends here

@@ -24,6 +24,9 @@
   (("C-x g" . magit-status)
    ("s-m" . magit-file-dispatch)))
 
+(use-package magit-todos
+  :after magit)
+
 (use-package forge
   :after magit
   :config
@@ -31,7 +34,6 @@
     (add-to-list 'forge-alist fate/forge-alist))
   :custom
   (forge-database-file (concat fate-cache-directory "forge-database.sqlite")))
-
 
 (use-package git-modes
   :defer t)
