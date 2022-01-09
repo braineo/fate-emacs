@@ -55,6 +55,7 @@
 (require 'fate-hydra)
 (require 'fate-docker)
 (require 'fate-treemacs)
+(require 'fate-vterm)
 
 (when IS-MAC
   (require 'fate-macos))
