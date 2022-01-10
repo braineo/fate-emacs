@@ -50,9 +50,9 @@
 
 (use-package vterm-toggle
   :bind
-  (("<f3>" . vterm-toggle)
+  (("<f3>" . vterm-toggle-cd)
    (:map vterm-mode-map
-         ("<f3>" . vterm-toggle))))
+         ("<f3>" . vterm-toggle-cd))))
 
 
 
