@@ -128,7 +128,8 @@
   :init
   (setq projectile-sort-order 'recentf
         projectile-cache-file (concat fate-cache-directory "projectile.cache")
-        projectile-known-projects-file (concat fate-cache-directory "projectile-bookmarks.eld")))
+        projectile-known-projects-file (concat fate-cache-directory "projectile-bookmarks.eld"))
+  :custom projectile-switch-project-action 'projectile-dired)
 
 (use-package recentf
   :hook
