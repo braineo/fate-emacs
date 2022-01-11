@@ -118,9 +118,13 @@ Optional configuration, take a look at my [configs](https://github.com/braineo/c
 
 [More](https://editorconfig.org/)
 
-## Language servers
+## Install and Update Language Servers
 
 Lsp has a good website documenting usage of [lsp-mode](https://emacs-lsp.github.io/lsp-mode/)
+
+### Language servers implemented in NodeJS
+
+Language servers implemented in NodeJS can obtain directly by doing `lsp-install-server`. For updating installed servers do `C-0` then `lsp-install-server`.
 
 | Language              | Installation command                                     |
 | --------------------- | -------------------------------------------------------- |
@@ -130,7 +134,15 @@ Lsp has a good website documenting usage of [lsp-mode](https://emacs-lsp.github.
 | HTML                  | npm install -g vscode-html-languageserver-bin            |
 | Dockerfile            | npm install -g dockerfile-language-server-nodejs         |
 
-### MicroSoft Python Language Server
+### Go
+
+Install `gopls`
+
+``` shell
+GO111MODULE=on go get gopls
+```
+
+### Python (MicroSoft Python Language Server)
 
 `lsp-python-ms` now downloads language server binary automatically, or you can build latest Microsoft Python Lanugage Server by yourself
 
