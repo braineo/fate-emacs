@@ -52,7 +52,10 @@ ripgrep is basically a fast grep written in Rust.
 Download ripgrep release from https://github.com/BurntSushi/ripgrep/releases
 
 ``` shell
+# example
 wget https://github.com/BurntSushi/ripgrep/releases/download/0.10.0/ripgrep_0.10.0_amd64.deb && dpkg -i ripgrep_0.10.0_amd64.deb
+# or
+apt install ripgrep
 ```
 
 for masOS
@@ -60,6 +63,15 @@ for masOS
 ``` shell
 brew install ripgrep
 ```
+
+### fd
+
+`fd` is a replacement for `find`
+
+``` shell
+sudo apt install fd-find
+```
+
 
 ### Tools configured for Python
 

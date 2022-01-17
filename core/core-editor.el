@@ -114,7 +114,10 @@
   (setq dired-dwim-target t)
   :bind
   (:map dired-mode-map
-   ("RET" . dired-find-alternate-file)))
+    ("RET" . dired-find-alternate-file))
+
+  :custom
+  (dired-listing-switches "-alh" "show humna readable size"))
 
 ;; Core package Projectile
 (use-package projectile
