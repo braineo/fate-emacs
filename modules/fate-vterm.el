@@ -45,8 +45,9 @@
   :hook (vterm-mode . (lambda()
                         (setq-local global-hl-line-mode nil)))
   :bind (:map vterm-mode-map
-              ("C-x 3" . fate/vterm-split-right)
-              ("C-x 2" . fate/vterm-split-below)))
+          ("C-x 3" . fate/vterm-split-right)
+          ("C-x 2" . fate/vterm-split-below))
+  :custom (vterm-buffer-name-string "vterm %s"))
 
 (use-package vterm-toggle
   :bind
