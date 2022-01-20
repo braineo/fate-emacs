@@ -285,7 +285,35 @@ if `N' is 9, return root dir + repo path."
 (use-package avy
   :ensure t
   :bind
-  ("C-c j" . avy-goto-word-or-subword-1)
+  ("C-c j" . hydra-avy/body)
+  :init
+  (with-eval-after-load 'hydra
+    (defhydra hydra-avy (:hint nil :exit t)
+      "
+Goto:
+^Char^              ^Word^
+^^^^^^^^--------------------------------
+_c_: 2 chars        _w_: word by char
+_C_: char           _W_: some word
+_l_: char in line   _s_: subword by char
+^  ^                _S_: some subword
+----------------------------------------
+_L_: avy-goto-line
+_j_: word-or-subword
+"
+      ("c" avy-goto-char)
+      ("C" avy-goto-char-2)
+      ("L" avy-goto-char-in-line)
+      ("w" avy-goto-word-1)
+      ;; jump to beginning of some word
+      ("W" avy-goto-word-0)
+       ;; jump to subword starting with a char
+      ("s" avy-goto-subword-1)
+        ;; jump to some subword
+      ("S" avy-goto-subword-0)
+      ("l" avy-goto-line)
+      ("j" avy-goto-word-or-subword-1)
+      ("q" nil :color blue)))
   :config
   (avy-setup-default)
   :custom

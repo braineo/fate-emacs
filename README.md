@@ -205,6 +205,19 @@ pip install flake8
 For cmake project, passing `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON` to `cmake` can generate `compile_commands.json`. If it is not a cmake project,
 [bear](https://github.com/rizsotto/Bear) is a right tool to generate it.
 
+## Vterm
+
+To make vterm handy, you need some shell-side configuration, add following to `.zshrc` or `.bashrc`
+
+``` shell
+if [[ "$INSIDE_EMACS" = 'vterm' ]] \
+    && [[ -n ${EMACS_VTERM_PATH} ]] \
+    && [[ -f ${EMACS_VTERM_PATH}/etc/emacs-vterm-zsh.sh ]]; then
+	source ${EMACS_VTERM_PATH}/etc/emacs-vterm-zsh.sh
+fi
+```
+
+
 ## Useful links
 
   - [How to change fonts](https://www.gnu.org/software/emacs/manual/html_node/emacs/Fonts.html)
