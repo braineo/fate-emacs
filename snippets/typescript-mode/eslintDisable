@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: eslint-ts-ignore
+# key: esignore
+# --
+
+// eslint-disable-next-line
+// @ts-ignore
