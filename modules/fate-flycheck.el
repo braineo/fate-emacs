@@ -30,8 +30,11 @@
   ;; Fix error list to bottom of window
   (add-to-list 'display-buffer-alist
     `(,(rx bos "*Flycheck errors*" eos)
-       (display-buffer-reuse-window display-buffer-at-bottom)
-       (window-height   . 0.33)))
+       (display-buffer-reuse-window
+         display-buffer-in-side-window)
+       (side            . bottom)
+       (reusable-frames . visible)
+       (window-height   . 0.2)))
   :custom
   (flycheck-indication-mode 'right-fringe)
   (flycheck-emacs-lisp-load-path 'inherit)

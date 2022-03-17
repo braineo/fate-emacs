@@ -213,7 +213,7 @@
   (advice-add 'copy-as-format--extract-text :filter-return #'fate/copy-as-format--extract-text))
 
 (defun fate/copy-as-format--extract-text (extracted-text)
-  "Extends copy-as-format--extract-text to insert line number to extracted text.
+  "Extend copy-as-format--extract-text to insert line number to extracted text.
 EXTRACTED-TEXT is output from copy-as-format--extract-text."
   (if (use-region-p)
     (save-excursion
@@ -232,7 +232,7 @@ EXTRACTED-TEXT is output from copy-as-format--extract-text."
 
 
 (defun fate/easy-kill-on-buffer-file-name (n)
-  "Extends buffer file name kill function.
+  "Extend buffer file name kill function.
 if `N' is 8, return the path in repo.
 if `N' is 9, return root dir + repo path."
   (unless (or buffer-file-name (projectile-project-root))
@@ -385,11 +385,16 @@ _h_ ^+^ _l_ |
   :custom
   (bm-buffer-persistence nil "Do not save bookmarks"))
 
-(defun fate/kill-buffer-in-path (path-pattern)
-  (interactive "spath pattern: ")
+(defun fate/kill-buffer (prefix path-pattern)
+  "Kill buffer with patterns.  PATH-PATTERN is pattern to compare with buffer name.
+PREFIX determines whether to match file name or buffer name."
+  (interactive "P\nsbuffer name pattern: ")
   (when path-pattern
     (cl-dolist (buffer (buffer-list))
-      (let* ((file-name (buffer-file-name buffer)))
+      (let* ((file-name (cond
+                          ((not prefix) (buffer-file-name buffer))
+                          ((equal prefix 0) (buffer-name buffer)))))
+        (message file-name)
         (when (and file-name
                    (string-match path-pattern file-name))
           (kill-buffer buffer))))))
