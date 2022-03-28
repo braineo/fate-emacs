@@ -88,13 +88,23 @@
   :bind
   (("C-." . fate-helm-rg)))
 
+(use-package color-rg
+  :load-path "site-lisp/color-rg")
+
 (use-package helm-rg
   :after (helm)
+  :config
+  (defun fate/helm-to-color-rg ()
+    (interactive)
+    (message helm-rg--glob-string)
+    (helm-run-after-exit
+     (lambda ()
+       (color-rg-search-input helm-pattern (color-rg-project-root-dir)))))
   :bind
   (:map helm-rg-map
     ("M-b" . nil)
     ("M-d" . nil)
-    ("M-i" . helm-rg--bounce)
+    ("M-i" . fate/helm-to-color-rg)
     ("M-o" . helm-rg--set-dir))
   :custom-face
   (helm-rg-preview-line-highlight ((t (:inherit highlight :distant-foreground "black")))))
