@@ -189,7 +189,9 @@
 ;; Show color of color text #FFE4C4
 (use-package rainbow-mode
   :hook
-  (prog-mode text-mode))
+  (prog-mode text-mode)
+  :custom
+  (rainbow-html-colors-major-mode-list '(html-mode css-mode php-mode nxml-mode xml-mode typescript-mode)))
 
 ;; Show whitespaces
 (use-package whitespace
