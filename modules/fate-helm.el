@@ -91,7 +91,19 @@
 (use-package color-rg
   :load-path "site-lisp/color-rg"
   :custom
-  (color-rg-search-no-ignore-file nil))
+  (color-rg-search-no-ignore-file nil)
+  :config
+  (custom-set-faces
+   `(color-rg-font-lock-header-line-text ((t (:foreground ,(doom-color 'base7)))))
+   `(color-rg-font-lock-header-line-keyword ((t (:foreground ,(doom-color 'red)))))
+   `(color-rg-font-lock-header-line-directory ((t (:foreground ,(doom-color 'blue)))))
+   `(color-rg-font-lock-header-line-edit-mode ((t (:foreground ,(doom-color 'magenta)))))
+   `(color-rg-font-lock-command ((t (:background ,(doom-color 'modeline-bg) :foreground ,(doom-color 'comments)))))
+   `(color-rg-font-lock-file ((t (:foreground ,(doom-color 'blue)))))
+   `(color-rg-font-lock-line-number ((t (:foreground ,(doom-color 'comments)))))
+   `(color-rg-font-lock-column-number ((t (:foreground ,(doom-color 'comments)))))
+   `(color-rg-font-lock-match ((t (:foreground ,(doom-color 'red)))))))
+
 
 (use-package helm-rg
   :after (helm)
