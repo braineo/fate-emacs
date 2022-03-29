@@ -89,7 +89,9 @@
   (("C-." . fate-helm-rg)))
 
 (use-package color-rg
-  :load-path "site-lisp/color-rg")
+  :load-path "site-lisp/color-rg"
+  :custom
+  (color-rg-search-no-ignore-file nil))
 
 (use-package helm-rg
   :after (helm)
