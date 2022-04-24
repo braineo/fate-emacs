@@ -29,7 +29,6 @@
   (require 'fate-flycheck))
 
 
-
 (defun fate-lsp-setup-python ()
   "Microsoft Python Language Server does not have a syntax checker, setup one for it."
   (progn
@@ -46,7 +45,8 @@
     (require 'lsp)
     (lsp)
     (add-hook 'before-save-hook #'lsp-format-buffer nil t)
-    (add-hook 'before-save-hook #'lsp-organize-imports nil t)))
+    (add-hook 'before-save-hook #'lsp-organize-imports nil t)
+    (setq lsp-go-use-gofumpt t)))
 
 (defun fate-lsp-setup-js ()
   "Do not start lsp when major mode is qml which derives from `js-mode'."
@@ -68,7 +68,7 @@
    ((sh-mode c-mode c++-mode
       html-mode web-mode json-mode
       css-mode less-mode sass-mode scss-mode
-      js2-mode typescript-mode go-mode
+      js2-mode typescript-mode rust-mode
       groovy-mode graphql-mode) . lsp-deferred)
    (lsp-mode . lsp-headerline-breadcrumb-mode))
   :init
@@ -76,8 +76,6 @@
   ;; Increase the amount of data which Emacs reads from the process 1mb
   ;; default is 4k while some of the language server responses are in 800k - 3M range
   (setq read-process-output-max (* 1024 1024))
-  (with-eval-after-load 'lsp
-     (require 'fate-lsp-gql))
   (with-eval-after-load 'hydra
    (defhydra hydra-lsp (:exit t :hint nil)
      "

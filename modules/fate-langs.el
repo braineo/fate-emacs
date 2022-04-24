@@ -57,9 +57,15 @@
   :mode (("\\.swift\\'" . swift-mode)))
 
 (use-package go-mode
-  :mode (("\\.go\\'" . go-mode))
-  :custom
-  (gofmt-command "gofumpt"))
+  :mode (("\\.go\\'" . go-mode)))
+
+(use-package rust-mode
+  :mode (("\\.rs\\'" . rust-mode))
+  :custom (rust-format-on-save t))
+
+(use-package cargo-mode
+  :after rust-mode
+  :hook (rust-mode . cargo-minor-mode))
 
 (use-package cmake-mode
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)
