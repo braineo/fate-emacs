@@ -89,7 +89,7 @@
   (("C-." . fate-helm-rg)))
 
 (use-package color-rg
-  :load-path "site-lisp/color-rg"
+  :straight (:host github :repo "manateelazycat/color-rg")
   :custom
   (color-rg-search-no-ignore-file nil)
   :config

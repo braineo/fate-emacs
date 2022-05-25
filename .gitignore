@@ -57,3 +57,7 @@ eclipse.jdt.ls
 # lsp related
 .lsp-python
 mspyls/
+
+# package specific
+straight/
+parinfer-rust/
