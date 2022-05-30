@@ -102,7 +102,6 @@
      ("S" lsp-shutdown-workspace)))
   :custom
   (lsp-enable-snippet nil "not yet configured")
-  (lsp-session-file (concat fate-cache-directory "lsp-session-v1"))
   (lsp-headerline-breadcrumb-segments '(file symbols))
   (lsp-clients-typescript-init-opts '(importModuleSpecifierPreference "relative"))
   (lsp-keep-workspace-alive nil "close session when porject is closed"))

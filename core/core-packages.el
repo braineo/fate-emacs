@@ -43,6 +43,7 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;; bootstrap `straight`
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -68,9 +69,9 @@
 (use-package auto-package-update
   :custom
   (auto-package-update-delete-old-versions t)
-  (auto-package-update-hide-results t)
-  (auto-package-update-last-update-day-filename
-   (concat fate-cache-directory "auto-package-last-update-day")))
+  (auto-package-update-hide-results t))
+  ;; (auto-package-update-last-update-day-filename
+  ;;  (concat fate-cache-directory "auto-package-last-update-day")))
 
 
 (defun fate-update ()
@@ -81,6 +82,9 @@
       (call-process-shell-command "cd ~/.emacs.d && git pull" nil nil t)))
   (print "Pulling configuration update from git")
   (auto-package-update-now))
+
+
+(use-package no-littering)
 
 (provide 'core-packages)
 ;;; core-packages.el ends here
