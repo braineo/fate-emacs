@@ -51,19 +51,6 @@
     (helm-autoresize-mode t))
   :hook (after-init . helm-mode))
 
-(use-package helm-swoop
-  :disabled
-  :defer t
-  :custom
-  (helm-swoop-split-with-multiple-windows t)
-  (helm-swoop-split-direction 'split-window-vertically)
-  (helm-swoop-speed-or-color t)
-  :config
-  (progn
-    (setq helm-swoop-split-window-function 'helm-default-display-buffer))
-  :bind (:map isearch-mode-map
-         ("M-i" . helm-swoop-from-isearch)))
-
 (use-package helm-projectile
   :after (helm projectile)
   :commands (helm-projectile-switch-to-buffer
