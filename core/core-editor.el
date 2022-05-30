@@ -129,9 +129,7 @@
         ("C-c p" . projectile-command-map))
   :hook (after-init . projectile-mode)
   :init
-  (setq projectile-sort-order 'recentf
-        projectile-cache-file (concat fate-cache-directory "projectile.cache")
-        projectile-known-projects-file (concat fate-cache-directory "projectile-bookmarks.eld"))
+  (setq projectile-sort-order 'recentf)
   :custom projectile-switch-project-action 'projectile-dired)
 
 (use-package recentf
@@ -139,14 +137,16 @@
   (after-init . recentf-mode)
   :config
   (progn
-    (setq recentf-save-file (concat fate-cache-directory "recentf")
+    (setq
         recentf-max-saved-items 500
         recentf-max-menu-items 15
         ;; disable recentf-cleanup on Emacs start, because it can cause
         ;; problems with remote files
         recentf-auto-cleanup 'never)
     (add-to-list 'recentf-exclude (recentf-expand-file-name fate-cache-directory))
-    (add-to-list 'recentf-exclude (recentf-expand-file-name package-user-dir))))
+    (add-to-list 'recentf-exclude (recentf-expand-file-name package-user-dir))
+    (add-to-list 'recentf-exclude no-littering-var-directory)
+    (add-to-list 'recentf-exclude no-littering-etc-directory)))
 
 ;; Power package visualizing undo redo history
 (use-package undo-tree
@@ -154,7 +154,6 @@
   :hook (after-init . global-undo-tree-mode)
   :custom
   ;; autosave the undo-tree history
-  (undo-tree-history-directory-alist `((".*" . ,fate-cache-directory)))
   (undo-tree-auto-save-history t)
   (undo-tree-enable-undo-in-region nil "Known to be problematic so disable it https://debbugs.gnu.org/cgi/bugreport.cgi?bug=16377"))
 

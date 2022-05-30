@@ -31,9 +31,7 @@
   :after magit
   :config
   (if 'fate/forge-alist
-    (add-to-list 'forge-alist fate/forge-alist))
-  :custom
-  (forge-database-file (concat fate-cache-directory "forge-database.sqlite")))
+    (add-to-list 'forge-alist fate/forge-alist)))
 
 (use-package git-modes
   :defer t)
@@ -59,14 +57,6 @@
   :config
   ;; Cannot use line number feature of delta in magit. refer to https://github.com/dandavison/magit-delta/issues/13
   (setq magit-delta-delta-args (append magit-delta-delta-args '("--features" "magit-delta"))))
-
-(use-package transient
-  :after magit
-  :custom
-  (transient-history-file (concat fate-cache-directory "transient/history.el"))
-  (transient-values-file (concat fate-cache-directory "transient/values.el"))
-  (transient-levels-file (concat fate-cache-directory "transient/levels.el"))
-  (transient-display-buffer-action '(display-buffer-below-selected)))
 
 (use-package winner-mode
   :ensure nil
