@@ -34,7 +34,8 @@
   (setq tree-sitter-hl-default-patterns
         [(pair key: (_) @keyword)
          (number) @number
-         (string) @string])
+         (string) @string
+         [(true) (false) (null)] @variable.builtin])
   (tree-sitter-hl-mode))
 
 
