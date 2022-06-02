@@ -86,5 +86,8 @@
 
 (use-package no-littering)
 
+(when (native-comp-available-p)
+  (setq native-comp-async-report-warnings-errors 'silent))
+
 (provide 'core-packages)
 ;;; core-packages.el ends here
