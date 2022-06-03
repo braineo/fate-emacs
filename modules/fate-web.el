@@ -42,24 +42,7 @@
         (cl-return)))))
 
 
-
 (use-package json-mode
-  :disabled
-  :mode "\\.json?\\'"
-  :config
-  (defun fate/json-prettier ()
-    "Tell prettier the content is to be parsed as JSON regardless of any file extensions."
-    (interactive)
-    (setq-local prettier-js-args '("--parser=json"))
-    (prettier-js))
-  :hook
-  (json-mode . fate/prettier-minor-mode)
-  :bind
-  (:map json-mode-map
-    ("C-c C-l" . fate/json-prettier)
-    ("C-c C-p" . fate/json-print-path-js)))
-
-(use-package fate-json-mode
   :load-path "modules/fate-json-mode")
 
 (use-package less-css-mode
