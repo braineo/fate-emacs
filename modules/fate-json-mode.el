@@ -104,6 +104,8 @@ OUTPUT is parsed path list."
 
   (setq-local jq-foramt-args '()))
 
+(define-key json-mode-map (kbd "C-c C-l") 'fate/json-pretty-print)
+
 (reformatter-define json-jq
   :program (executable-find "jq")
   :args jq-foramt-args
