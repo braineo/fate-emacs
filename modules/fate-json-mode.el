@@ -23,9 +23,11 @@
 ;; 
 
 ;;; Code:
-
+(require 'reformatter)
 (require 'tree-sitter)
 (require 'tree-sitter-hl)
+
+(defvar-local jq-foramt-args '())
 
 ;;;###autoload
 (define-derived-mode json-mode prog-mode "JSON"
@@ -35,7 +37,8 @@
         [(pair key: (_) @keyword)
          (number) @number
          (string) @string
-         [(true) (false) (null)] @variable.builtin])
+         [(true) (false) (null)] @variable.builtin
+         (escape_sequence) @escape])
   (tree-sitter-hl-mode))
 
 
@@ -63,7 +66,7 @@ OUTPUT is parsed path list."
 
 ;;;###autoload
 (defun fate/json-print-path-js ()
-  "Copy json path in JavaScript format."
+  "Show json path in minibuffer in JavaScript, jq format."
   (interactive)
   (let (json-path)
     (dolist (elt (fate/json-get-path (tree-sitter-node-at-pos) '()) json-path)
@@ -76,6 +79,35 @@ OUTPUT is parsed path list."
         (setq json-path (concat json-path "[" (number-to-string elt) "]"))))
     (message json-path)
     (kill-new json-path)))
+
+(define-key json-mode-map (kbd "C-c P") 'fate/json-print-path-js)
+
+;;;###autoload
+(defun fate/json-kill-path-js ()
+  "Save json path to kill ring."
+  (interactive)
+  (kill-new (fate/json-print-path-js)))
+
+(define-key json-mode-map (kbd "C-c C-p") 'fate/json-kill-path-js)
+
+;;;###autoload
+(defun fate/json-pretty-print (&optional minimize)
+  "Pretty-print current buffer.  when MINIMIZE is set, minimize JSON document."
+  (interactive "P")
+  (if minimize
+    (setq-local jq-foramt-args '("-c")))
+  (when (use-region-p)
+    (cond ((executable-find "jq") (json-jq-region (region-beginning) (region-end) nil))
+          (t (json-pretty-print (region-beginning) (region-end) minimize))))
+  (cond ((executable-find "jq") (json-jq-buffer nil))
+        (t (json-pretty-print (point-min) (point-max) minimize)))
+
+  (setq-local jq-foramt-args '()))
+
+(reformatter-define json-jq
+  :program (executable-find "jq")
+  :args jq-foramt-args
+  :lighter " jq")
 
 ;;;###autoload
 (progn
