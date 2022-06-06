@@ -100,11 +100,14 @@
      ("M-s" lsp-describe-session)
      ("M-r" lsp-restart-workspace)
      ("S" lsp-shutdown-workspace)))
+  (defun fate-lsp-graphql-activate-p (filename &optional _)
+    (derived-mode-p 'graphql-mode))
+  (advice-add 'lsp-graphql-activate-p :override #'fate-lsp-graphql-activate-p)
   :custom
   (lsp-enable-snippet nil "not yet configured")
   (lsp-headerline-breadcrumb-segments '(file symbols))
   (lsp-clients-typescript-init-opts '(importModuleSpecifierPreference "relative"))
-  (lsp-keep-workspace-alive nil "close session when porject is closed"))
+  (lsp-keep-workspace-alive nil "close session when project is closed"))
 
 (use-package lsp-ui
   :defer t
