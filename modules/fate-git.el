@@ -48,6 +48,10 @@
     ;; There's no fringe when Emacs is running in the console
     (diff-hl-margin-mode 1)))
 
+(use-package blamer
+  :bind (("C-c i" . blamer-show-posframe-commit-info))
+  :defer t)
+
 ;; Has some serious performance issue for diff > 2000 line changes, disable for now.
 (use-package magit-delta
   :disabled
