@@ -34,7 +34,6 @@
    ("C-i" . helm-execute-persistent-action)
    ("C-z" . helm-select-action))
   :custom
-  (helm-buffers-fuzzy-matching t)
   (helm-prevent-escaping-from-minibuffer t)
   (helm-bookmark-show-location t)
   (helm-display-header-line nil)
@@ -64,7 +63,9 @@
              helm-projectile
              helm-projectile-switch-project
              fate-helm-rg)
-  :init (helm-projectile-on)
+  :init
+  (setq helm-projectile-fuzzy-match nil)
+  (helm-projectile-on)
   :config
   (defun fate-helm-rg ()
     "Run projectile-rg if in a project, otherwise rg current directory."
