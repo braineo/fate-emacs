@@ -30,7 +30,7 @@
 (defvar-local jq-foramt-args '())
 
 ;;;###autoload
-(define-derived-mode json-mode prog-mode "JSON"
+(define-derived-mode fate-json-mode prog-mode "JSON"
   ;; It's up to the major mode to set this. It plays a role similar to that of
   ;; `font-lock-defaults'.
   (setq tree-sitter-hl-default-patterns
@@ -80,7 +80,7 @@ OUTPUT is parsed path list."
     (message json-path)
     (kill-new json-path)))
 
-(define-key json-mode-map (kbd "C-c P") 'fate/json-print-path-js)
+(define-key fate-json-mode-map (kbd "C-c P") 'fate/json-print-path-js)
 
 ;;;###autoload
 (defun fate/json-kill-path-js ()
@@ -88,7 +88,7 @@ OUTPUT is parsed path list."
   (interactive)
   (kill-new (fate/json-print-path-js)))
 
-(define-key json-mode-map (kbd "C-c C-p") 'fate/json-kill-path-js)
+(define-key fate-json-mode-map (kbd "C-c C-p") 'fate/json-kill-path-js)
 
 ;;;###autoload
 (defun fate/json-pretty-print (&optional minimize)
@@ -104,7 +104,7 @@ OUTPUT is parsed path list."
 
   (setq-local jq-foramt-args '()))
 
-(define-key json-mode-map (kbd "C-c C-l") 'fate/json-pretty-print)
+(define-key fate-json-mode-map (kbd "C-c C-l") 'fate/json-pretty-print)
 
 (reformatter-define json-jq
   :program (executable-find "jq")
@@ -114,8 +114,8 @@ OUTPUT is parsed path list."
 ;;;###autoload
 (progn
   ;; Register the association with `tree-sitter-mode'.
-  (add-to-list 'tree-sitter-major-mode-language-alist '(json-mode . json))
-  (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode)))
+  (add-to-list 'tree-sitter-major-mode-language-alist '(fate-json-mode . json))
+  (add-to-list 'auto-mode-alist '("\\.json\\'" . fate-json-mode)))
 
 (provide 'fate-json-mode)
 ;;; fate-json-mode.el ends here

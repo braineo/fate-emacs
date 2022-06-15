@@ -42,7 +42,8 @@
         (cl-return)))))
 
 
-(use-package json-mode
+(use-package fate-json-mode
+  :mode ("\\.json\\'")
   :load-path "modules/fate-json-mode")
 
 (use-package less-css-mode
