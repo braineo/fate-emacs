@@ -75,11 +75,34 @@ sudo apt install fd-find
 
 ### Tools configured for Python
 
-| Name            | Description                 | Installation command                                                                |
-| --------------- | --------------------------- | ----------------------------------------------------------------------------------- |
+| Name            | Installation command        | Description                                                                         |
+|-----------------|-----------------------------|-------------------------------------------------------------------------------------|
 | flake8          | pip install flake8          | Flake8 is a wrapper around PyFlakes, pycodestyle and Ned Batchelder’s McCabe script |
 | python-black    | pip install black           | Black is the uncompromising Python code formatter                                   |
 | black-macchiato | pip install black-macchiato | Enable formatting of partial files using black                                      |
+
+### Tools configured for Go
+
+| Name    | Installation command                       | Description                                    |
+|---------|--------------------------------------------|------------------------------------------------|
+| gopls   | go install golang.org/x/tools/gopls@latest | Go language server                             |
+| gofumpt | go install mvdan.cc/gofumpt@latest         | Go formater, sometimes works better than gopls |
+
+### Tools configured for JavaScript/JSON
+
+| Name     | Installation command | Description                                              |
+|----------|----------------------|----------------------------------------------------------|
+| prettier | npm i -g prettier    | Formater for JavaScript, TypeScript, CSS, JSON, and more |
+
+
+### Tools configured for shell script
+
+
+| Name       | Installation command                       | Description                                           |
+|------------|--------------------------------------------|-------------------------------------------------------|
+| shellcheck | apt install shellcheck                     | A great teacher helping you write better shell script |
+| shfmt      | go install mvdan.cc/sh/v3/cmd/shfmt@latest | A shell script formater                               |
+
 
 ### all-the-icons
 
