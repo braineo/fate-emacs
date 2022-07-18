@@ -27,14 +27,30 @@
 (use-package flycheck
   :hook (after-init . global-flycheck-mode)
   :config
-  ;; Fix error list to bottom of window
-  (add-to-list 'display-buffer-alist
-    `(,(rx bos "*Flycheck errors*" eos)
-       (display-buffer-reuse-window
-         display-buffer-in-side-window)
-       (side            . bottom)
-       (reusable-frames . visible)
-       (window-height   . 0.2)))
+  (progn
+    ;; Fix error list to bottom of window
+    (add-to-list 'display-buffer-alist
+      `(,(rx bos "*Flycheck errors*" eos)
+         (display-buffer-reuse-window
+           display-buffer-in-side-window)
+         (side            . bottom)
+         (reusable-frames . visible)
+         (window-height   . 0.2)))
+    (flycheck-define-checker fate-json-jq
+      "JSON checker using the jq tool.
+This checker accepts multiple consecutive JSON values in a
+single input, which is useful for jsonlines data.
+See URL `https://stedolan.github.io/jq/'."
+      :command ("jq" "." source null-device)
+      ;; Example error message:
+      ;;   parse error: Expected another key-value pair at line 3, column 1
+      :error-patterns
+      ((error line-start
+              (optional "parse error: ")
+              (message) "at line " line ", column " column
+              (zero-or-more not-newline) line-end))
+      :modes fate-json-mode)
+    (add-to-list 'flycheck-checkers 'fate-json-jq))
   :custom
   (flycheck-indication-mode 'right-fringe)
   (flycheck-emacs-lisp-load-path 'inherit)
