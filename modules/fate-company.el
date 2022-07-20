@@ -25,6 +25,7 @@
 ;;; Code:
 
 (use-package company
+  :disabled
   :hook
   (after-init . global-company-mode)
   :bind
