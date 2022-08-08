@@ -47,7 +47,10 @@
   :mode (("\\.md\\'" . gfm-mode)
          ("\\.markdown\\'" . gfm-mode))
   :config
-  (setq markdown-fontify-code-blocks-natively t))
+  (setq markdown-fontify-code-blocks-natively t)
+  :hook (markdown-mode . (lambda()
+                           (setq-local prettier-js-args
+                            '("--parser" "markdown")))))
 
 (use-package yaml-mode
   :mode (("\\.yaml\\'" . yaml-mode)
