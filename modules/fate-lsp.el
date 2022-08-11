@@ -33,7 +33,7 @@
   :straight (:host github
              :repo "manateelazycat/lsp-bridge"
              :files ("*" (:exclude ".git")))
-  :hook (after-init. global-lsp-bridge-mode))
+  :hook (after-init . global-lsp-bridge-mode))
 
 (provide 'fate-lsp)
 ;;; fate-lsp.el ends here
