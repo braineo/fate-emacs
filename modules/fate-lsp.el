@@ -33,7 +33,30 @@
   :straight (:host github
              :repo "manateelazycat/lsp-bridge"
              :files ("*" (:exclude ".git")))
-  :hook (after-init . global-lsp-bridge-mode))
+  :hook (after-init . global-lsp-bridge-mode)
+  :custom
+  (lsp-bridge-signature-function 'eldoc-message)
+  :bind
+  (:map lsp-bridge-mode-map
+    ([remap xref-find-definitions] . lsp-bridge-find-def)
+    ([remap xref-find-references] . lsp-bridge-find-references))
+  :init
+  (with-eval-after-load 'hydra
+   (defhydra hydra-lsp (:exit t :hint nil)
+     "
+ Action^^               Documentation^^            Server
+-------------------------------------------------------------------------------------
+ [_f_] format           [_i_] implementation       [_M-r_] restart
+ [_x_] execute action   [_D_] definition           [_o_] documentation
+ [_r_] rename           [_R_] references"
+     ("D" lsp-bridge-find-def)
+     ("R" lsp-bridge-find-references)
+     ("i" lsp-bridge-find-impl)
+     ("o" lsp-bridge-lookup-documentation)
+     ("r" lsp-bridge-rename)
+     ("f" lsp-bridge-code-format)
+     ("x" lsp-bridge-code-action)
+     ("M-r" lsp-bridge-restart-process))))
 
 (provide 'fate-lsp)
 ;;; fate-lsp.el ends here
