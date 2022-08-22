@@ -92,8 +92,10 @@
   (defun fate-doom-modeline ()
     "Setup custom doom modeline."
     (doom-modeline-set-modeline 'doom-fate 'default))
-  :hook ((after-init . doom-modeline-mode)
-         (doom-modeline-mode . fate-doom-modeline)))
+  :hook ((after-init . doom-modeline-mode
+          (doom-modeline-mode . fate-doom-modeline)))
+  :custom
+  (doom-modeline-buffer-file-name-style 'truncate-upto-project))
 
 (use-package dashboard
   :hook (after-init . dashboard-setup-startup-hook)
