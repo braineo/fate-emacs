@@ -33,7 +33,10 @@
 (define-derived-mode fate-json-mode prog-mode "JSON"
   ;; It's up to the major mode to set this. It plays a role similar to that of
   ;; `font-lock-defaults'.
-  (setq tree-sitter-hl-default-patterns
+  (setq-local comment-start "// ")
+  (setq-local comment-start-skip "\\(?://+\\|/\\*+\\)\\s *")
+  (setq-local comment-end "")
+  (setq-local tree-sitter-hl-default-patterns
         [(pair key: (_) @keyword)
          (number) @number
          (string) @string

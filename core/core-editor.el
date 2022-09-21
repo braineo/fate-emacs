@@ -259,6 +259,8 @@ if `N' is 9, return root dir + repo path."
 (use-package hideshow
   :hook
   (prog-mode . hs-minor-mode)
+  :init
+  (add-to-list 'hs-special-modes-alist '(fate-json-mode "{" "}" "/[*/]" nil))
   :bind
   ("C-<tab>" . hs-toggle-hiding))
 
