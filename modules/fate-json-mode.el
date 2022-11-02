@@ -80,8 +80,7 @@ OUTPUT is parsed path list."
             (setq json-path (concat json-path "." trimmed-elt)))))
       (when (numberp elt)
         (setq json-path (concat json-path "[" (number-to-string elt) "]"))))
-    (message json-path)
-    (kill-new json-path)))
+    (message json-path)))
 
 (define-key fate-json-mode-map (kbd "C-c P") 'fate/json-print-path-js)
 

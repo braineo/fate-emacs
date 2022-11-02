@@ -11,7 +11,7 @@
 ;; Font
 (when (display-graphic-p)
   (when (and (x-list-fonts "Operator Mono"))
-    (set-face-attribute 'default nil :font "Operator Mono" :height 80 :weight 'light))
+    (set-face-attribute 'default nil :font "Operator Mono" :height 80 :weight 'semilight))
 
   (when (x-list-fonts "Noto Sans")
     (set-fontset-font t 'han "Noto Sans CJK SC Regular")
