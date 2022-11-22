@@ -80,6 +80,7 @@
   :straight (:host github :repo "manateelazycat/color-rg")
   :custom
   (color-rg-search-no-ignore-file nil)
+  (color-rg-mac-load-path-from-shell nil)
   :config
   (custom-set-faces
    `(color-rg-font-lock-header-line-text ((t (:foreground ,(doom-color 'base7)))))

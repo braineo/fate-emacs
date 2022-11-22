@@ -31,7 +31,6 @@
 ;;   (progn
 ;;     (exec-path-from-shell-initialize)
 ;;     (exec-path-from-shell-copy-env "PYTHONPATH")))
-   
 
 ;; Swap command and option
 (setq mac-command-modifier 'meta)
