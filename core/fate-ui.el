@@ -98,9 +98,6 @@
   (doom-modeline-buffer-file-name-style 'truncate-upto-project))
 
 (use-package dashboard
-  :hook (after-init . dashboard-setup-startup-hook)
-  :init
-  (setq inhibit-startup-screen t)
   :custom
   (dashboard-banner-logo-title "Unlimited Blade Works")
   (dashboard-startup-banner (expand-file-name (concat fate-directory "asset/fate-banner.png")))
@@ -109,19 +106,21 @@
   (dashboard-set-init-info t)
   (dashboard-projects-switch-function 'find-file)
   :config
-  (setq dashboard-items '((recents  . 10)
-                          (projects . 10))
-        ;; Format: "(icon title help action face prefix suffix)"
-        dashboard-set-navigator t
-        dashboard-navigator-buttons
-        `(((,(when (display-graphic-p)
-               (all-the-icons-octicon "mark-github" :height 1.1 :v-adjust 0.0))
-             "Homepage" "Browse homepage"
-             (lambda (&rest _) (browse-url FATE-HOME)))
-           (,(when (display-graphic-p)
-               (all-the-icons-material "update" :height 1.35 :v-adjust -0.24))
-             "Update" "Update Fate Emacs"
-             (lambda (&rest _) (fate-update)))))))
+  (progn
+    (setq dashboard-items '((recents  . 10)
+                            (projects . 10))
+          ;; Format: "(icon title help action face prefix suffix)"
+          dashboard-set-navigator t
+          dashboard-navigator-buttons
+          `(((,(when (display-graphic-p)
+                 (all-the-icons-octicon "mark-github" :height 1.1 :v-adjust 0.0))
+               "Homepage" "Browse homepage"
+               (lambda (&rest _) (browse-url FATE-HOME)))
+             (,(when (display-graphic-p)
+                 (all-the-icons-material "update" :height 1.35 :v-adjust -0.24))
+               "Update" "Update Fate Emacs"
+               (lambda (&rest _) (fate-update))))))
+    (dashboard-setup-startup-hook)))
 
 (use-package all-the-icons
   :if (display-graphic-p)

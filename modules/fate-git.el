@@ -44,9 +44,11 @@
    (magit-post-refresh . diff-hl-magit-post-refresh)
    (dired-mode . diff-hl-dired-mode))
   :config
-  (unless (display-graphic-p)
-    ;; There's no fringe when Emacs is running in the console
-    (diff-hl-margin-mode 1)))
+  (progn
+    (setq vc-git-diff-switches '("--histogram"))
+    (unless (display-graphic-p)
+      ;; There's no fringe when Emacs is running in the console
+      (diff-hl-margin-mode 1))))
 
 (use-package blamer
   :bind (("C-c i" . blamer-show-posframe-commit-info))
