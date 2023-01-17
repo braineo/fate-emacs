@@ -218,7 +218,7 @@ pip install flake8
     "path2"))
 
 ;; If you need to work on some python2 projects, make sure use a right flake8
-(setq (flycheck-python-flake8-executable "python2"))
+(setq flycheck-python-flake8-executable "python2")
 ```
 
 ### Clangd
