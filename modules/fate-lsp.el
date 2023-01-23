@@ -72,7 +72,6 @@
       groovy-mode graphql-mode) . lsp-deferred)
    (lsp-mode . lsp-headerline-breadcrumb-mode))
   :init
-  (setq lsp-auto-guess-root t)       ; Detect project root
   ;; Increase the amount of data which Emacs reads from the process 1mb
   ;; default is 4k while some of the language server responses are in 800k - 3M range
   (setq read-process-output-max (* 1024 1024))
@@ -103,6 +102,20 @@
   (defun fate-lsp-graphql-activate-p (filename &optional _)
     (derived-mode-p 'graphql-mode))
   (advice-add 'lsp-graphql-activate-p :override #'fate-lsp-graphql-activate-p)
+  :config
+  ;; same definition as mentioned earlier
+  (advice-add 'json-parse-string :around
+    (lambda (orig string &rest rest)
+      (apply orig (s-replace "\\u0000" "" string)
+             rest)))
+
+  ;; minor changes: saves excursion and uses search-forward instead of re-search-forward
+  (advice-add 'json-parse-buffer :around
+    (lambda (oldfn &rest args)
+      (save-excursion
+        (while (search-forward "\\u0000" nil t)
+          (replace-match "" nil t)))
+            (apply oldfn args)))
   :custom
   (lsp-enable-snippet nil "not yet configured")
   (lsp-headerline-breadcrumb-segments '(file symbols))
