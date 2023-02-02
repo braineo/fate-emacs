@@ -33,17 +33,24 @@
   "Microsoft Python Language Server does not have a syntax checker, setup one for it."
   (progn
     (require 'lsp-python-ms)
-    (lsp)
+    (fate-lsp-deferred)
     ;; https://github.com/flycheck/flycheck/issues/1762#issuecomment-626210720
     ;; Do not let lsp hijack flycheck
     (setq-local lsp-diagnostics-provider :none)
     (setq-local flycheck-checker 'python-flake8)))
 
+(defun fate-lsp-deferred ()
+  "Defer start of lsp and exclude lsp in specific folders."
+  (when (and (stringp buffer-file-name)
+          (not (string-match-p "node_modules" buffer-file-name))
+          (not (string-match-p "\\\/run" buffer-file-name)))
+        (lsp-deferred)))
+
 (defun fate-lsp-setup-go ()
   "Use gopls for format and import sorting."
   (progn
     (require 'lsp)
-    (lsp)
+    (fate-lsp-deferred)
     (add-hook 'before-save-hook #'lsp-format-buffer nil t)
     (add-hook 'before-save-hook #'lsp-organize-imports nil t)
     (setq lsp-go-use-gofumpt t)))
@@ -51,7 +58,7 @@
 (defun fate-lsp-setup-js ()
   "Do not start lsp when major mode is qml which derives from `js-mode'."
   (unless (member major-mode '(qml-mode))
-    (lsp-deferred)))
+    (fate-lsp-deferred)))
 
 (use-package lsp-python-ms
   :defer t
@@ -69,7 +76,7 @@
       html-mode web-mode json-mode
       css-mode less-mode sass-mode scss-mode
       js2-mode typescript-mode rust-mode
-      groovy-mode graphql-mode) . lsp-deferred)
+      groovy-mode graphql-mode) . fate-lsp-deferred)
    (lsp-mode . lsp-headerline-breadcrumb-mode))
   :init
   ;; Increase the amount of data which Emacs reads from the process 1mb
