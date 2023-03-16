@@ -282,6 +282,9 @@ if `N' is 9, return root dir + repo path."
   :bind
   ([remap list-buffers] . ibuffer))
 
+(use-package all-the-icons-ibuffer
+  :hook (ibuffer-mode . all-the-icons-ibuffer-mode))
+
 ;; Avy. Jump to anywhere like a sniper
 (use-package avy
   :ensure t
