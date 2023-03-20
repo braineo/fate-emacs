@@ -36,10 +36,12 @@
   :hook (after-init . global-lsp-bridge-mode)
   :custom
   (lsp-bridge-signature-function 'eldoc-message)
+  (acm-markdown-render-font-height 80)
   :bind
   (:map lsp-bridge-mode-map
     ([remap xref-find-definitions] . lsp-bridge-find-def)
-    ([remap xref-find-references] . lsp-bridge-find-references))
+    ([remap xref-find-references] . lsp-bridge-find-references)
+    ([remap view-hello-file] . lsp-bridge-popup-documentation))
   :init
   (with-eval-after-load 'hydra
    (defhydra hydra-lsp (:exit t :hint nil)
