@@ -51,7 +51,6 @@ Argument ARG is ignored."
   :hook
   (python-mode . fate/python-setup-hs-mode))
 
-;; Format using YAPF
 ;; Install:
 ;; pip install black
 ;; pip install black-macchiato

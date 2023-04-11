@@ -72,14 +72,27 @@ brew install ripgrep
 sudo apt install fd-find
 ```
 
+### enchant
+
+`enchant` is a library for spell checking
+
+``` shell
+## Ubuntu
+sudo apt install libenchant-2-dev pkg-config
+
+### mac
+brew install enchant2 pkg-config
+```
+
 
 ### Tools configured for Python
 
-| Name            | Installation command        | Description                                                                         |
-|-----------------|-----------------------------|-------------------------------------------------------------------------------------|
-| flake8          | pip install flake8          | Flake8 is a wrapper around PyFlakes, pycodestyle and Ned Batchelder’s McCabe script |
-| python-black    | pip install black           | Black is the uncompromising Python code formatter                                   |
-| black-macchiato | pip install black-macchiato | Enable formatting of partial files using black                                      |
+| Name            | Installation command        | Description                                       |
+|-----------------|-----------------------------|---------------------------------------------------|
+| python-black    | pip install black           | Black is the uncompromising Python code formatter |
+| black-macchiato | pip install black-macchiato | Enable formatting of partial files using black    |
+| ruff            | pip install ruff            | Fast Python linter written in rust                |
+
 
 ### Tools configured for Go
 
@@ -90,9 +103,11 @@ sudo apt install fd-find
 
 ### Tools configured for JavaScript/JSON
 
-| Name     | Installation command | Description                                              |
-|----------|----------------------|----------------------------------------------------------|
-| prettier | npm i -g prettier    | Formater for JavaScript, TypeScript, CSS, JSON, and more |
+| Name           | Installation command                  | Description                                              |
+|----------------|---------------------------------------|----------------------------------------------------------|
+| prettier       | npm i -g prettier                     | Formater for JavaScript, TypeScript, CSS, JSON, and more |
+| linter LSP     | npm i -g vscode-langservers-extracted | Language server of eslint, HTML, CSS                     |
+| TypeScript LSP | npm i -g typescript-language-server   |                                                          |
 
 
 ### Tools configured for shell script

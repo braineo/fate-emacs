@@ -52,6 +52,10 @@
                            (setq-local prettier-js-args
                             '("--parser" "markdown")))))
 
+(use-package jinx
+  :hook (markdown-mode . jinx-mode)
+  :bind ([remap ispell-word] . jinx-correct))
+
 (use-package yaml-mode
   :mode (("\\.yaml\\'" . yaml-mode)
          ("\\.yml\\'" . yaml-mode)))
