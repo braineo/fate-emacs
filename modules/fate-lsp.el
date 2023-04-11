@@ -37,6 +37,8 @@
   :custom
   (lsp-bridge-signature-function 'eldoc-message)
   (acm-markdown-render-font-height 80)
+  (lsp-bridge-multi-lang-server-extension-list
+    '((("ts" "tsx") . "typescript_eslint")))
   :bind
   (:map lsp-bridge-mode-map
     ([remap xref-find-definitions] . lsp-bridge-find-def)
