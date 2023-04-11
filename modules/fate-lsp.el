@@ -50,7 +50,7 @@
 -------------------------------------------------------------------------------------
  [_f_] format           [_i_] implementation       [_M-r_] restart
  [_x_] execute action   [_D_] definition           [_o_] documentation
- [_r_] rename           [_R_] references"
+ [_r_] rename           [_R_] references           [_d_] diagnostic"
      ("D" lsp-bridge-find-def)
      ("R" lsp-bridge-find-references)
      ("i" lsp-bridge-find-impl)
@@ -58,6 +58,7 @@
      ("r" lsp-bridge-rename)
      ("f" lsp-bridge-code-format)
      ("x" lsp-bridge-code-action)
+     ("d" lsp-bridge-diagnostic-list)
      ("M-r" lsp-bridge-restart-process))))
 
 (provide 'fate-lsp)
