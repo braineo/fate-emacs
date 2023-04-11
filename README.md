@@ -116,7 +116,7 @@ brew install enchant2 pkg-config
 | Name       | Installation command                       | Description                                           |
 |------------|--------------------------------------------|-------------------------------------------------------|
 | shellcheck | apt install shellcheck                     | A great teacher helping you write better shell script |
-| shfmt      | go install mvdan.cc/sh/v3/cmd/shfmt@latest | A shell script formater                               |
+| shfmt      | go install mvdan.cc/sh/v3/cmd/shfmt@latest | A shell script formatter                               |
 
 
 ### all-the-icons
@@ -170,7 +170,17 @@ Optional configuration, take a look at my [configs](https://github.com/braineo/c
 
 ## Install and Update Language Servers
 
-Lsp has a good website documenting usage of [lsp-mode](https://emacs-lsp.github.io/lsp-mode/)
+
+
+Previously [lsp-mode](https://emacs-lsp.github.io/lsp-mode/) was used as LSP client. The configuration now migrates to [lsp-bridge](https://github.com/manateelazycat/lsp-bridge), a client emphasizes performance. It has not covered all the features in lsp-mode, but it is **really** fast.
+
+``` shell
+# install dependencies for lsp-bridge
+pip3 install epc orjson sexpdata six
+```
+
+For each language server, refer to the configuration guide in [lsp-bridge](https://github.com/manateelazycat/lsp-bridge)
+
 
 ### Language servers implemented in NodeJS
 
@@ -180,8 +190,6 @@ Language servers implemented in NodeJS can obtain directly by doing `lsp-install
 | --------------------- | -------------------------------------------------------- |
 | TypeScript/JavaScript | npm i -g typescript-language-server; npm i -g typescript |
 | JSON                  | npm i -g vscode-json-languageserver                      |
-| CSS/LessCSS/SASS/SCSS | npm install -g vscode-css-languageserver-bin             |
-| HTML                  | npm install -g vscode-html-languageserver-bin            |
 | Dockerfile            | npm install -g dockerfile-language-server-nodejs         |
 
 ### Go
