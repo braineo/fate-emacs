@@ -150,11 +150,10 @@
 
 ;; Power package visualizing undo redo history
 (use-package undo-tree
-  :ensure t
   :hook (after-init . global-undo-tree-mode)
   :custom
   ;; autosave the undo-tree history
-  (undo-tree-auto-save-history t)
+  (undo-tree-auto-save-history nil)
   (undo-tree-enable-undo-in-region nil "Known to be problematic so disable it https://debbugs.gnu.org/cgi/bugreport.cgi?bug=16377"))
 
 

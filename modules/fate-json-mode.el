@@ -96,7 +96,7 @@ OUTPUT is parsed path list."
 (defun fate/json-pretty-print (&optional minimize)
   "Pretty-print current buffer.  when MINIMIZE is set, minimize JSON document."
   (interactive "P")
-  (if minimize
+  (when minimize
     (setq-local jq-foramt-args '("-c")))
   (when (use-region-p)
     (cond ((executable-find "jq") (json-jq-region (region-beginning) (region-end) nil))
