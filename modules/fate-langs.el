@@ -86,6 +86,10 @@
 (use-package po-mode
   :mode (("\\.po\\'" . po-mode)))
 
+(use-package conf-mode
+  :ensure nil
+  :mode (("/\\.env" . conf-mode)))
+
 
 (provide 'fate-langs)
 ;;; fate-langs.el ends here
