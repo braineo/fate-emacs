@@ -33,7 +33,7 @@
 (defun fate/prettier-minor-mode ()
   "Enable minor mdoe for certain extensions."
   (when (buffer-file-name)
-    (cl-dolist (extension '("\\.js[x]?\\'" "\\.ts[x]?\\'" "\\.[s]?css\\'" "\\.less\\'"
+    (cl-dolist (extension '("\\.[m]?js[x]?\\'" "\\.ts[x]?\\'" "\\.[s]?css\\'" "\\.less\\'"
                              "\\.vue\\'" "\\.json\\'" "\\.gql\\'" "\\.graphql\\'" "\\.md\\'"))
       (when (and (string-match-p extension buffer-file-name)
               ;; Do not auto format anything inside node_modules
@@ -78,7 +78,12 @@
 
 (use-package graphql-mode
   :mode ("\\.graphql\\'")
-  :hook (graphql-mode . prettier-js-mode))
+  :hook (graphql-mode . fate/prettier-minor-mode))
+
+(use-package javascript-mode
+  :ensure nil
+  :mode ("\\.mjs\\'")
+  :hook (javascript-mode . fate/prettier-minor-mode))
 
 (use-package jest
   :defer t)
