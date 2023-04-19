@@ -53,7 +53,7 @@
                             '("--parser" "markdown")))))
 
 (use-package jinx
-  :hook (markdown-mode . jinx-mode)
+  :hook ((markdown-mode text-mode) . jinx-mode)
   :bind ([remap ispell-word] . jinx-correct))
 
 (use-package yaml-mode
