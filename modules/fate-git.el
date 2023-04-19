@@ -15,6 +15,8 @@
 (eval-when-compile
   (require 'core-load-paths))
 
+(use-package sqlite3)
+
 (use-package magit
   :custom
   (magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
