@@ -42,6 +42,35 @@ Argument ARG is ignored."
     (add-to-list 'hs-special-modes-alist python-mode-hs-info)
     (hs-grok-mode-type)))
 
+
+(defun fate/pydocstring ()
+  "Insert docstring for function at point."
+  (interactive)
+  (let* ((indent (save-excursion
+                   (beginning-of-line)
+                   (back-to-indentation)
+                   (current-indentation)))
+         (current-buffer (current-buffer))
+         (file-path (buffer-file-name))
+         (line-number (line-number-at-pos)))
+    (with-temp-buffer
+      (insert (shell-command-to-string
+                (format "pydocstring -f google %s '(%d,)'"
+                  file-path
+                  (+ 1 line-number))))
+      (goto-char (point-min))
+      (kill-line)
+      (kill-line)
+      (set-mark (point-min))
+      (goto-char (point-max))
+      (indent-rigidly (region-beginning) (region-end) (+ indent 4))
+      (let* ((docstring (buffer-substring-no-properties (point-min) (point-max))))
+        (with-current-buffer current-buffer
+          (save-excursion
+             (forward-line)
+             (beginning-of-line)
+             (insert docstring)))))))
+
 (use-package python
   :defines gud-pdb-command-name pdb-path
   :functions python-nav-end-of-block
@@ -62,12 +91,6 @@ Argument ARG is ignored."
   :bind
   (:map python-mode-map
     ("C-c C-l" . python-black-partial-dwim)))
-
-(use-package sphinx-doc
-  :hook (python-mode . sphinx-doc-mode))
-
-(use-package pytest
-  :defer t)
 
 (provide 'fate-python)
 ;;; fate-python.el ends here
