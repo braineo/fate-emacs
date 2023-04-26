@@ -34,11 +34,13 @@
              :repo "manateelazycat/lsp-bridge"
              :files ("*" (:exclude ".git")))
   :hook (after-init . global-lsp-bridge-mode)
+  :config
+  (add-to-list
+    'lsp-bridge-single-lang-server-extension-list
+    '(("less") . "vscode-css-language-server"))
   :custom
   (lsp-bridge-signature-function 'eldoc-message)
   (acm-markdown-render-font-height 80)
-  (lsp-bridge-multi-lang-server-extension-list
-    '((("ts" "tsx") . "typescript_eslint")))
   :bind
   (:map lsp-bridge-mode-map
     ([remap xref-find-definitions] . lsp-bridge-find-def)
