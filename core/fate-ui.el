@@ -105,6 +105,7 @@
   (dashboard-set-file-icons t)
   (dashboard-set-init-info t)
   (dashboard-projects-switch-function 'find-file)
+  (dashboard-icon-type 'nerd-icons)
   :config
   (progn
     (setq dashboard-items '((recents  . 10)
@@ -113,19 +114,16 @@
           dashboard-set-navigator t
           dashboard-navigator-buttons
           `(((,(when (display-graphic-p)
-                 (all-the-icons-octicon "mark-github" :height 1.1 :v-adjust 0.0))
+                 (nerd-icons-codicon "nf-cod-github"))
                "Homepage" "Browse homepage"
                (lambda (&rest _) (browse-url FATE-HOME)))
              (,(when (display-graphic-p)
-                 (all-the-icons-material "update" :height 1.35 :v-adjust -0.24))
+                 (nerd-icons-mdicon "nf-md-update"))
                "Update" "Update Fate Emacs"
                (lambda (&rest _) (fate-update))))))
     (dashboard-setup-startup-hook)))
 
-(use-package all-the-icons
-  :if (display-graphic-p)
-  :init (unless (member "all-the-icons" (font-family-list))
-          (all-the-icons-install-fonts t)))
+(use-package nerd-icons)
 
 ;; Highlight nested parentheses
 (use-package highlight-parentheses
