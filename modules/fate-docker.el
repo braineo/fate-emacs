@@ -33,10 +33,6 @@
 (use-package docker-compose-mode
   :mode "docker-compose.*\.yml\\'")
 
-(use-package docker-tramp
-  :after tramp
-  :defer 5)
-
 (use-package docker
   :bind ("C-c d" . docker))
 
