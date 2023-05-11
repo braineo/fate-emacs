@@ -8,7 +8,7 @@
   - [External tools](#external-tools)
       - [ripgrep](#ripgrep)
       - [Tools configured for Python](#tools-configured-for-python)
-      - [all-the-icons](#all-the-icons)
+      - [nerd-icons](#nerd-icons)
   - [Customize](#customize)
       - [Custom.el](#custom.el)
       - [EditorConfig (Code style)](#editorconfig-code-style)
@@ -119,11 +119,11 @@ brew install enchant2 pkg-config
 | shfmt      | go install mvdan.cc/sh/v3/cmd/shfmt@latest | A shell script formatter                               |
 
 
-### all-the-icons
+### nerd-icons
 
 Install fonts for mode-line
 
-`M-x` `all-the-icons-install-fonts`
+`M-x` `nerd-icons-install-fonts`
 
 ## Customize
 
