@@ -54,7 +54,6 @@
 (require 'fate-lsp)
 (require 'fate-hydra)
 (require 'fate-docker)
-(require 'fate-treemacs)
 (require 'fate-vterm)
 (require 'fate-misc)
 
