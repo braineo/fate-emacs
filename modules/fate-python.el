@@ -77,6 +77,9 @@ Argument ARG is ignored."
   :config
   ;; Disable readline based native completion
   (setq python-shell-completion-native-enable nil)
+  :bind
+  (:map python-mode-map
+    ("C-c M-d" . fate/pydocstring))
   :hook
   (python-mode . fate/python-setup-hs-mode))
 
