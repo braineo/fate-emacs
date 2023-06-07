@@ -259,10 +259,16 @@ if(CMAKE_EXPORT_COMPILE_COMMANDS)
 endif()
 ```
 
-But again, if the project is using `gcc` instead of `clang`, you might see some errors like from clangd. That's because the previous lines add `-isystem /usr/lib/gcc/x86_64-linux-gnu/14/include` and it is not compatible with clang. You can manually remove it and fine tune the CMake.
+But again, if the project is using `gcc` instead of `clang`, you might see some errors like this from clangd. That's because the previous lines add `-isystem /usr/lib/gcc/x86_64-linux-gnu/14/include` and it is not compatible with clang. You can manually remove it and fine tune the CMake.
 
 ``` text
 E[12:12:01.769] [builtin_definition] Line 18: in included file: definition of builtin function '_mm_getcsr'
+```
+
+To manually verify if clangd works. You can run
+
+``` shell
+clangd --compile-commands-dir="."  --query-driver="clang-tidy" --check="path/to/some.cpp"
 ```
 
 ## Vterm
