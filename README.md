@@ -251,6 +251,20 @@ pip install flake8
 For cmake project, passing `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON` to `cmake` can generate `compile_commands.json`. If it is not a cmake project,
 [bear](https://github.com/rizsotto/Bear) is a right tool to generate it.
 
+Pitfalls for `compile_commands.json`. By default `CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES` are not exported into `compile_commands.json`. With `compile_commands.json` clangd might still not able to figure out the include paths. In that case you can try adding following lines to the beginning of `CMakeLists.txt`. [See cmake issue](https://gitlab.kitware.com/cmake/cmake/-/issues/20912)
+
+``` cmake
+if(CMAKE_EXPORT_COMPILE_COMMANDS)
+    set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
+endif()
+```
+
+But again, if the project is using `gcc` instead of `clang`, you might see some errors like from clangd. That's because the previous lines add `-isystem /usr/lib/gcc/x86_64-linux-gnu/14/include` and it is not compatible with clang. You can manually remove it and fine tune the CMake.
+
+``` text
+E[12:12:01.769] [builtin_definition] Line 18: in included file: definition of builtin function '_mm_getcsr'
+```
+
 ## Vterm
 
 To make vterm handy, you need some shell-side configuration, add following to `.zshrc` or `.bashrc`
