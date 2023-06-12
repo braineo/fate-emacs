@@ -44,7 +44,7 @@
   :bind
   (:map lsp-bridge-mode-map
     ([remap xref-find-definitions] . lsp-bridge-find-def)
-    ([remap xref-pop-marker-stack] . lsp-bridge-find-def-return)
+    ([remap xref-go-back] . lsp-bridge-find-def-return)
     ([remap xref-find-references] . lsp-bridge-find-references)
     ([remap view-hello-file] . lsp-bridge-popup-documentation))
   :init
