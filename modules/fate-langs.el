@@ -42,6 +42,13 @@
   :custom
   (parinfer-rust-library-directory (concat fate-cache-directory "parinfer-rust/")))
 
+
+(use-package treesit
+  :ensure nil
+  :defer t
+  :custom
+  (treesit-font-lock-level 4))
+
 ;; Markdown
 (use-package markdown-mode
   :mode (("\\.md\\'" . gfm-mode)
