@@ -90,6 +90,10 @@
   :ensure nil
   :mode (("/\\.env" . conf-mode)))
 
+;; shaders
+(use-package glsl-mode
+  :mode (("/\\.glsl" . glsl-mode)))
+
 
 (provide 'fate-langs)
 ;;; fate-langs.el ends here
