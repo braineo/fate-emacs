@@ -20,7 +20,7 @@
 
 ## Get Started
 
-Only tested with \>= Emacs 26.3 in Debian and macOS
+Only tested with \>= Emacs 28.2 in Debian and macOS
 
 ### Backup
 
