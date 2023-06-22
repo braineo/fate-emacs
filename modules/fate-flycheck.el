@@ -75,6 +75,20 @@ See URL `http://pypi.python.org/pypi/ruff'."
      :modes python-mode)
     (add-to-list 'flycheck-checkers 'python-ruff))
 
+  (flycheck-def-executable-var qt-qmllint "qmllint")
+  (flycheck-define-checker qt-qmllint
+      "A QML syntatic validity checker provided by QT
+`flycheck-qt-qmllint-executable'.
+See URL `https://doc.qt.io/qt-6/qtquick-tool-qmllint.html'."
+     :command ("qmllint" source)
+     :error-patterns
+     ((error line-start
+               (file-name) ":" line " : "
+               (message (one-or-more not-newline))
+               line-end))
+     :modes qml-mode)
+  (add-to-list 'flycheck-checkers 'qt-qmllint)
+
   :custom
   (flycheck-indication-mode 'right-fringe)
   (flycheck-emacs-lisp-load-path 'inherit)
