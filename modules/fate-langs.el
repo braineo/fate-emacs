@@ -86,8 +86,15 @@
          ("\\.cmake\\'" . cmake-mode)))
 
 ;; QML
+(reformatter-define qmlformat
+  :program "qmlformat"
+  :stdin nil
+  :args (list input-file "--no-sort"))
+
 (use-package qml-mode
-  :mode (("\\.qml\\'" . qml-mode)))
+  :mode (("\\.qml\\'" . qml-mode))
+  :bind (:map qml-mode-map
+         ("C-c C-l" . qmlformat-buffer)))
 
 ;; i18n
 (use-package po-mode
