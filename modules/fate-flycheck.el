@@ -98,5 +98,11 @@ See URL `https://doc.qt.io/qt-6/qtquick-tool-qmllint.html'."
   :after flycheck
   :hook (global-flycheck-mode . flycheck-pos-tip-mode))
 
+(use-package flycheck-rust
+  :after rust-mode
+  :hook (flycheck-mode . (lambda ()
+                           (setq-local flycheck-checker 'rust-clippy)
+                           (flycheck-rust-setup))))
+
 (provide 'fate-flycheck)
 ;;; fate-flycheck.el ends here

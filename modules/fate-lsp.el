@@ -41,6 +41,7 @@
   :custom
   (lsp-bridge-signature-function 'eldoc-message)
   (acm-markdown-render-font-height 80)
+  (acm-enable-tabnine nil)
   :bind
   (:map lsp-bridge-mode-map
     ([remap xref-find-definitions] . lsp-bridge-find-def)
