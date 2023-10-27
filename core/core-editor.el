@@ -60,6 +60,15 @@
 (setq auto-save-default nil) ; stop creating #autosave# files
 (setq create-lockfiles nil)  ; stop creating .#interlock files
 
+
+;; disable bidi to improve longline rendering performance
+;; reference https://emacs-china.org/t/topic/25811/9
+(setq-default bidi-display-reordering nil)
+(setq bidi-inhibit-bpa t
+      long-line-threshold 1000
+      large-hscroll-threshold 1000
+      syntax-wholeline-max 1000)
+
 (use-package tramp
   :defer t
   :ensure nil
