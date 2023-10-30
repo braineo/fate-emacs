@@ -30,9 +30,12 @@
 
 
 (use-package lsp-bridge
-  :straight (:host github
-             :repo "manateelazycat/lsp-bridge"
-             :files ("*" (:exclude ".git")))
+  :straight '(lsp-bridge
+               :type git
+               :host github
+               :repo "manateelazycat/lsp-bridge"
+               :files ("*" (:exclude ".git"))
+               :build (:not compile))
   :hook (after-init . global-lsp-bridge-mode)
   :config
   (add-to-list
