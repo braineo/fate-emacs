@@ -25,7 +25,7 @@
 ;;; Code:
 
 (defun add-to-load-path (dirs)
-  "Add a list of directories `DIRS' to 'load-path."
+  "Add a list of directories `DIRS' to `load-path'."
   (add-to-list 'load-path dirs))
 
 (defvar fate-directory
