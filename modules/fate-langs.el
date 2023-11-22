@@ -108,6 +108,10 @@
 (use-package glsl-mode
   :mode (("/\\.glsl" . glsl-mode)))
 
+;; shaders
+(use-package lua-mode
+  :mode (("/\\.lua" . lua-mode)))
+
 
 (provide 'fate-langs)
 ;;; fate-langs.el ends here
