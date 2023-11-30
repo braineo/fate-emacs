@@ -86,10 +86,22 @@
          ("\\.cmake\\'" . cmake-mode)))
 
 ;; QML
+
+(defgroup qmlformat nil
+  "Reformat QML using qmlformat."
+  :group 'languages)
+
+(defcustom qmlformat-command "qmlformat"
+  "Command used for reformatting."
+  :group 'qmlformat
+  :type 'string)
+
 (reformatter-define qmlformat
-  :program "qmlformat"
+  :program qmlformat-command
   :stdin nil
-  :args (list input-file "--no-sort"))
+  :args (list input-file "--no-sort")
+  :lighter "QF"
+  :group 'qmlformat)
 
 (use-package qml-mode
   :mode (("\\.qml\\'" . qml-mode))
@@ -108,10 +120,27 @@
 (use-package glsl-mode
   :mode (("/\\.glsl" . glsl-mode)))
 
-;; shaders
-(use-package lua-mode
-  :mode (("/\\.lua" . lua-mode)))
+;; lua
 
+(defgroup stylua nil
+  "Reformat lua using StyLua."
+  :group 'languages)
+
+(defcustom stylua-command "stylua"
+  "Command used for reformatting."
+  :group 'stylua
+  :type 'string)
+
+(reformatter-define stylua
+  :program stylua-command
+  :args '("-" "--indent-type=Spaces" "--indent-width=2")
+  :lighter "QF"
+  :group 'stylua)
+
+(use-package lua-mode
+  :mode (("/\\.lua" . lua-mode))
+  :bind (:map lua-mode-map
+         ("C-c C-l" . stylua-buffer)))
 
 (provide 'fate-langs)
 ;;; fate-langs.el ends here
