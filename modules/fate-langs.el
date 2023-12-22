@@ -142,5 +142,26 @@
   :bind (:map lua-mode-map
          ("C-c C-l" . stylua-buffer)))
 
+(defgroup shfmt nil
+  "Reformat JSON using shfmt."
+  :group 'languages)
+
+(defcustom shfmt-command "shfmt"
+  "Command used for reformatting."
+  :group 'shfmt
+  :type 'string)
+
+(reformatter-define shfmt
+  :program shfmt-command
+  :args '("--indent=4" "--case-indent" "--simplify")
+  :lighter "SHF"
+  :group 'shfmt)
+
+
+(use-package sh-mode
+  :ensure nil
+  :bind (:map sh-mode-map
+         ("C-c C-l" . shfmt-buffer)))
+
 (provide 'fate-langs)
 ;;; fate-langs.el ends here

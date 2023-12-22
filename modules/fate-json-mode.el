@@ -108,10 +108,20 @@ OUTPUT is parsed path list."
 
 (define-key fate-json-mode-map (kbd "C-c C-l") 'fate/json-pretty-print)
 
+(defgroup jqfmt nil
+  "Reformat JSON using jq."
+  :group 'languages)
+
+(defcustom jqfmt-command "jq"
+  "Command used for reformatting."
+  :group 'jqfmt
+  :type 'string)
+
 (reformatter-define json-jq
-  :program (executable-find "jq")
+  :program jqfmt-command
   :args jq-foramt-args
-  :lighter " jq")
+  :lighter "JQ"
+  :group 'jqfmt)
 
 ;;;###autoload
 (progn
