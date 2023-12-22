@@ -45,6 +45,7 @@
   (lsp-bridge-signature-function 'eldoc-message)
   (acm-markdown-render-font-height 80)
   (acm-enable-tabnine nil)
+  (acm-backend-lsp-match-mode "fuzzy")
   (lsp-bridge-user-langserver-dir (expand-file-name "langserver" fate-directory))
   :bind
   (:map lsp-bridge-mode-map
