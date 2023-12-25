@@ -81,7 +81,7 @@ sudo apt install fd-find
 sudo apt install libenchant-2-dev pkg-config
 
 ### mac
-brew install enchant2 pkg-config
+brew install enchant pkg-config
 ```
 
 

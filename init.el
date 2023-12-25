@@ -52,7 +52,7 @@
 (require 'fate-langs)
 (require 'fate-flycheck)
 (require 'fate-lsp)
-(require 'fate-hydra)
+(require 'fate-transient)
 (require 'fate-docker)
 (require 'fate-vterm)
 (require 'fate-misc)

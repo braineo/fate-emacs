@@ -54,23 +54,24 @@
     ([remap xref-find-references] . lsp-bridge-find-references)
     ([remap view-hello-file] . lsp-bridge-popup-documentation))
   :init
-  (with-eval-after-load 'hydra
-   (defhydra hydra-lsp (:exit t :hint nil)
-     "
- Action^^               Documentation^^            Server
--------------------------------------------------------------------------------------
- [_f_] format           [_i_] implementation       [_M-r_] restart
- [_x_] execute action   [_D_] definition           [_o_] documentation
- [_r_] rename           [_R_] references           [_d_] diagnostic"
-     ("D" lsp-bridge-find-def)
-     ("R" lsp-bridge-find-references)
-     ("i" lsp-bridge-find-impl)
-     ("o" lsp-bridge-lookup-documentation)
-     ("r" lsp-bridge-rename)
-     ("f" lsp-bridge-code-format)
-     ("x" lsp-bridge-code-action)
-     ("d" lsp-bridge-diagnostic-list)
-     ("M-r" lsp-bridge-restart-process))))
+  (with-eval-after-load 'transient
+    (transient-define-prefix lsp-transient ()
+      "LSP Transient"
+
+      [["Action"
+        ("f" "Format" lsp-bridge-code-format)
+        ("r" "Rename" lsp-bridge-rename)
+        ("x" "Action" lsp-bridge-code-action)]
+       ["Code"
+        ("i" "Implementation" lsp-bridge-find-impl)
+        ("D" "Definition" lsp-bridge-find-def)
+        ("R" "References" lsp-bridge-find-references)]
+       ["Debug"
+        ("o" "Documentation" lsp-bridge-popup-documentation)
+        ("d" "Diagnostic" lsp-bridge-diagnostic-list)
+        ("M-r" "Restrat" lsp-bridge-restart-process)]])))
+
+
 
 (provide 'fate-lsp)
 ;;; fate-lsp.el ends here
