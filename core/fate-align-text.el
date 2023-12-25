@@ -77,27 +77,30 @@ the right."
 
 ;; END align functions
 
-(with-eval-after-load 'hydra
-  (defhydra hydra-align-text (:hint nil)
-    "
-Align text
-^^^^^^^^-------------------------------------------------
-[_x_] regex         [_,_] comma       [_=_] equal
-[_;_] semicolon     [_._] period      [_o_] math-oper
-[_:_] colon         [_&_] ampersand
-"
-    ("x" fate/align-repeat)
-    ("," fate/align-repeat-comma)
-    (";" fate/align-repeat-semicolon)
-    (":" fate/align-repeat-colon)
-    ("=" fate/align-repeat-equal)
-    ("o" fate/align-repeat-math-oper)
-    ("&" fate/align-repeat-ampersand)
-    ("|" fate/align-repeat-bar)
-    ("(" fate/align-repeat-left-paren)
-    (")" fate/align-repeat-right-paren)
-    ("\\" fate/align-repeat-backslash)
-    ("\." fate/align-repeat-period)))
+(with-eval-after-load 'transient
+  (transient-define-prefix align-text-transient ()
+    "Align text"
+
+   [[""
+     ("x" "Regex" fate/align-repeat)
+     (";" "Semicolon" fate/align-repeat-semicolon)
+     (":" "Colon" fate/align-repeat-colon)]
+
+    [""
+     ("," "Comma" fate/align-repeat-comma)
+     ("." "Period" fate/align-repeat-period)
+     ("&" "Ampersand" fate/align-repeat-ampersand)]
+
+    [""
+     ("=" "Equal" fate/align-repeat-equal)
+     ("|" "Bar" fate/align-repeat-bar)
+     ("\\" "Backslash" fate/align-repeat-backslash)]
+
+    [""
+      ("o" "Math Oper" fate/align-repeat-math-oper)
+      ("(" "Left Paren" fate/align-repeat-left-paren)
+      (")" "Right Paren" fate/align-repeat-right-paren)]]))
+
 
 (provide 'fate-align-text)
 ;;; fate-align-text.el ends here

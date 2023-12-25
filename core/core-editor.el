@@ -26,9 +26,6 @@
 (eval-when-compile
   (require 'core-load-paths))
 
-(use-package hydra
-  :commands (hydra-default-pre hydra-keyboard-quit hydra--call-interactively-remap-maybe hydra-show-hint hydra-set-transient-map))
-
 ;; Death to the tabs!  However, tabs historically indent to the next
 ;; 8-character offset; specifying anything else will cause *mass*
 ;; confusion, as it will change the appearance of every existing file.
@@ -297,35 +294,26 @@ if `N' is 9, return root dir + repo path."
 (use-package avy
   :ensure t
   :bind
-  ("C-c j" . hydra-avy/body)
+  ("C-c j" . avy-transient)
   :init
-  (with-eval-after-load 'hydra
-    (defhydra hydra-avy (:hint nil :exit t)
-      "
-Goto:
-^Char^              ^Word^
-^^^^^^^^--------------------------------
-_c_: 2 chars        _w_: word by char
-_C_: char           _W_: some word
-_l_: char in line   _s_: subword by char
-^  ^                _S_: some subword
-----------------------------------------
-_L_: avy-goto-line
-_j_: word-or-subword
-"
-      ("c" avy-goto-char)
-      ("C" avy-goto-char-2)
-      ("L" avy-goto-char-in-line)
-      ("w" avy-goto-word-1)
-      ;; jump to beginning of some word
-      ("W" avy-goto-word-0)
-       ;; jump to subword starting with a char
-      ("s" avy-goto-subword-1)
-        ;; jump to some subword
-      ("S" avy-goto-subword-0)
-      ("l" avy-goto-line)
-      ("j" avy-goto-word-or-subword-1)
-      ("q" nil :color blue)))
+  (with-eval-after-load 'transient
+    (transient-define-prefix avy-transient ()
+      "Avy"
+      ["Avy"
+       ("l" "Line" avy-goto-line)
+       ("j" "Jump" avy-goto-word-or-subword-1)]
+
+      [["Char"
+        ("c" "Char" avy-goto-char)
+        ("C" "2 Chars" avy-goto-char-2)
+        ("L" "Char in line" avy-goto-char-in-line)]
+
+       ["Word"
+        ("w" "Word by char" avy-goto-word-1)
+        ;; jump to beginning of some word
+        ("W" "Some word" avy-goto-word-0)
+        ("s" "Subword by char" avy-goto-subword-1)
+        ("S" "Some subword" avy-goto-subword-0)]]))
   :config
   (avy-setup-default)
   :custom
@@ -343,26 +331,24 @@ _j_: word-or-subword
   ("M-S-<down>" . move-text-down))
 
 (use-package string-inflection
-  :defer t)
+  :defer t
+  :init
+  (with-eval-after-load 'transient
+    (transient-define-prefix string-inflection-transient ()
+      "String Inflection"
+      [[""
+        ("c" "camelCase" string-inflection-lower-camelcase)
+        ("C" "CamelCase" string-inflection-camelcase)
+        ("_" "Underscore" string-inflection-underscore)]
+
+       [""
+        ("-" "Kebab" string-inflection-kebab-case)
+        ("u" "Upper" string-inflection-upcase)
+        ("t" "Cycle" string-inflection-all-cycle :transient nil)]])))
 
 (use-package multiple-cursors
   :diminish
   :init
-  (with-eval-after-load 'hydra
-    (defhydra hydra-multiple-cursors (:hint nil)
-      "
-^ ^ M/C^ ^ ^ |^Cancel^
-^-^-^-^-^-^-+-^-^-----------
-^ ^ _k_ ^ ^ | _q_uit
-_h_ ^+^ _l_ |
-^ ^ _j_ ^ ^ |
-"
-      ("j" mc/mark-next-like-this)
-      ("k" mc/mark-previous-like-this)
-      ("h" mc/skip-to-previous-like-this)
-      ("l" mc/skip-to-next-like-this)
-      ("q" nil :color blue)))
-
   :bind
   ("C->"   . mc/mark-next-like-this)
   ("C-<"   . mc/mark-previous-like-this)

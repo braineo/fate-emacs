@@ -172,24 +172,23 @@
   :diminish
   :defer t
   :init
-  (with-eval-after-load 'hydra
-    (defhydra hydra-symbol-overlay (:hint nil)
-      "
-^Highlight^            ^Navigation^           ^Manipulate^
-^^^^^^^^-------------------------------------------------
-[_h_]ighlight symbol    [_n_]ext              [_s_]earch
-[_t_]oogle scope        [_p_]revious          [_r_]eplace
-[_c_]lean               ^ ^                   [_R_]ename
-"
-      ("h" symbol-overlay-put)
-      ("n" symbol-overlay-jump-next)
-      ("p" symbol-overlay-jump-prev)
-      ("t" symbol-overlay-toggle-in-scope)
-      ("s" symbol-overlay-isearch-literally)
-      ("r" symbol-overlay-query-replace)
-      ("R" symbol-overlay-rename)
-      ("c" symbol-overlay-remove-all)
-      ("q" nil :color blue))))
+  (with-eval-after-load 'transient
+    (transient-define-prefix symbol-overlay-transient ()
+      "Symbol overlay"
+      :transient-suffix 'transient--do-stay
+      [["Highlight"
+        ("h" "Highlight symbol" symbol-overlay-put)
+        ("t" "Toggle scope" symbol-overlay-toggle-in-scope)
+        ("c" "Clear" symbol-overlay-remove-all)]
+
+       ["Navigation"
+        ("n" "Next" symbol-overlay-jump-next)
+        ("p" "Previous" symbol-overlay-jump-prev)]
+
+       ["Manipulate"
+        ("s" "Search" symbol-overlay-isearch-literally :transient nil)
+        ("r" "Replace" symbol-overlay-query-replace :transient nil)
+        ("R" "Rename" symbol-overlay-rename :transient nil)]])))
 
 ;; Show color of color text #FFE4C4
 (use-package rainbow-mode

@@ -1,4 +1,4 @@
-;;; fate-hydra.el --- Hydra entries                  -*- lexical-binding: t; -*-
+;;; fate-transient.el --- Transient entries                  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2018  Binbin Ye
 
@@ -24,21 +24,19 @@
 
 ;;; Code:
 
-(defhydra fate-hydra (:hint nil :color blue)
-    "
-Gate of Babylon
-^^^^^^^^-------------------------------------------------
-[_h_]ighlight
-te[_x_]t
-[_m_]ulti-cursor
-[_l_]anguage server
-"
-  ("h" hydra-symbol-overlay/body)
-  ("x" hydra-align-text/body)
-  ("m" hydra-multiple-cursors/body)
-  ("l" hydra-lsp/body))
+(require 'transient)
 
-(global-set-key (kbd "M-m") 'fate-hydra/body)
+(transient-define-prefix gate-of-babylon ()
+  "Gate of Babylon."
+  [["Text"
+    ("x" "Align" align-text-transient)
+    ("c" "Case" string-inflection-transient)]
 
-(provide 'fate-hydra)
-;;; fate-hydra.el ends here
+   [""
+    ("h" "Highlight" symbol-overlay-transient)
+    ("l" "Language Server" lsp-transient)]])
+
+(global-set-key (kbd "M-m") 'gate-of-babylon)
+
+(provide 'fate-transient)
+;;; fate-transient.el ends here
