@@ -93,6 +93,7 @@
   (evil-set-initial-state 'help-mode 'emacs)
   (evil-set-initial-state 'Info-mode 'emacs)
   (evil-set-initial-state 'Man-mode 'emacs)
+  (evil-set-initial-state 'grep-mode 'emacs)
   :hook (prog-mode . evil-mode))
 
 (use-package dired
