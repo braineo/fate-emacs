@@ -112,5 +112,16 @@
   :custom-face
   (helm-rg-preview-line-highlight ((t (:inherit highlight :distant-foreground "black")))))
 
+;; Better isearch behavior
+(use-package swiper
+  :defer t
+  :custom
+  (swiper-action-recenter t)
+  :bind (:map swiper-map
+         ("M-%" . swiper-query-replace)
+         :map isearch-mode-map
+         ("M-i" . swiper-from-isearch)
+         ([remap isearch-delete-char] . isearch-del-char)))
+
 (provide 'fate-helm)
 ;;; fate-helm.el ends here

@@ -56,16 +56,6 @@
   :bind (("C-c i" . blamer-show-posframe-commit-info))
   :defer t)
 
-;; Has some serious performance issue for diff > 2000 line changes, disable for now.
-(use-package magit-delta
-  :disabled
-  :if (executable-find "delta")
-  :hook
-  ((magit-mode . (lambda () (magit-delta-mode +1))))
-  :config
-  ;; Cannot use line number feature of delta in magit. refer to https://github.com/dandavison/magit-delta/issues/13
-  (setq magit-delta-delta-args (append magit-delta-delta-args '("--features" "magit-delta"))))
-
 (use-package winner-mode
   :ensure nil
   :hook (after-init . winner-mode))

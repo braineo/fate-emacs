@@ -82,17 +82,6 @@
          ([remap isearch-query-replace-regexp] . anzu-isearch-query-replace-regexp))
   :hook (after-init . global-anzu-mode))
 
-;; Better isearch behavior
-(use-package swiper
-  :defer t
-  :custom
-  (swiper-action-recenter t)
-  :bind (:map swiper-map
-         ("M-%" . swiper-query-replace)
-         :map isearch-mode-map
-         ("M-i" . swiper-from-isearch)
-         ([remap isearch-delete-char] . isearch-del-char)))
-
 ;; Perl regular expression search and replace
 (use-package evil
   :commands evil-set-initial-state
@@ -168,28 +157,6 @@
   :ensure nil
   :hook (after-init . electric-pair-mode)
   :custom (electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit))
-
-;; Core package smartparens
-(use-package smartparens
-  :disabled
-  :commands (sp-split-sexp sp-newline sp-up-sexp)
-  :hook
-  (after-init . smartparens-global-mode)
-  :init
-  (progn
-    ;; settings
-    (setq sp-show-pair-delay 0.2
-          ;; fix paren highlighting in normal mode
-          sp-show-pair-from-inside t
-          sp-cancel-autoskip-on-backward-movement nil
-          sp-highlight-pair-overlay nil
-          sp-highlight-wrap-overlay nil
-          sp-highlight-wrap-tag-overlay nil))
-  :config
-  (progn
-    (require 'smartparens-config)
-    ;; don't create a pair with single quote in minibuffer
-    (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)))
 
 ;; Core package move to beginning of code first
 (use-package mwim
