@@ -45,7 +45,7 @@
 (require 'fate-const)
 (require 'fate-core)
 (require 'fate-git)
-(require 'fate-helm)
+(require 'fate-completion)
 (require 'fate-company)
 (require 'fate-python)
 (require 'fate-web)
