@@ -25,8 +25,8 @@
 ;;; Code:
 
 (require 'core-packages)
-(require 'core-editor)
 (require 'fate-ui)
+(require 'core-editor)
 (require 'fate-custom)
 
 (provide 'fate-core)
