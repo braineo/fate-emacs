@@ -59,6 +59,9 @@
                            (setq-local prettier-js-args
                             '("--parser" "markdown")))))
 
+(use-package markdown-toc
+ :defer)
+
 (use-package jinx
   :hook ((markdown-mode text-mode) . jinx-mode)
   :bind ([remap ispell-word] . jinx-correct))
