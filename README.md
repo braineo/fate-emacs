@@ -1,22 +1,37 @@
 [![Build Status](https://travis-ci.com/braineo/fate-emacs.svg?branch=master)](https://travis-ci.com/braineo/fate-emacs)
 ![GitHub](https://img.shields.io/github/license/braineo/fate-emacs)
 
-  - [Get Started](#get-started)
-      - [Backup](#backup)
-      - [Install](#install)
-      - [Try it in docker](#try-it-in-docker)
-  - [External tools](#external-tools)
-      - [ripgrep](#ripgrep)
-      - [Tools configured for Python](#tools-configured-for-python)
-      - [nerd-icons](#nerd-icons)
-  - [Customize](#customize)
-      - [Custom.el](#custom.el)
-      - [EditorConfig (Code style)](#editorconfig-code-style)
-  - [Language servers](#language-servers)
-      - [MicroSoft Python Language Server](#microsoft-python-language-server)
-  - [Useful links](#useful-links)
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
 
+- [Get Started](#get-started)
+    - [Backup](#backup)
+    - [Install](#install)
+    - [Try it in docker](#try-it-in-docker)
+- [External tools](#external-tools)
+    - [ripgrep](#ripgrep)
+    - [fd](#fd)
+    - [enchant](#enchant)
+    - [Tools configured for Python](#tools-configured-for-python)
+    - [Tools configured for Go](#tools-configured-for-go)
+    - [Tools configured for JavaScript/JSON](#tools-configured-for-javascriptjson)
+    - [Tools configured for shell script](#tools-configured-for-shell-script)
+    - [nerd-icons](#nerd-icons)
+- [Customize](#customize)
+    - [Custom.el](#customel)
+        - [exec-path](#exec-path)
+        - [Setting ENV variables](#setting-env-variables)
+        - [Custom variable for packages](#custom-variable-for-packages)
+    - [EditorConfig (Code style)](#editorconfig-code-style)
+- [Install and Update Language Servers](#install-and-update-language-servers)
+    - [Language servers implemented in NodeJS](#language-servers-implemented-in-nodejs)
+    - [Go](#go)
+    - [Python (MicroSoft Python Language Server)](#python-microsoft-python-language-server)
+    - [Clangd](#clangd)
+- [Vterm](#vterm)
+- [Useful links](#useful-links)
 
+<!-- markdown-toc end -->
 
 ## Get Started
 
@@ -176,7 +191,7 @@ Previously [lsp-mode](https://emacs-lsp.github.io/lsp-mode/) was used as LSP cli
 
 ``` shell
 # install dependencies for lsp-bridge
-pip3 install epc orjson sexpdata six
+pip3 install epc orjson sexpdata six setuptools paramiko rapidfuzz
 ```
 
 For each language server, refer to the configuration guide in [lsp-bridge](https://github.com/manateelazycat/lsp-bridge)
@@ -184,7 +199,7 @@ For each language server, refer to the configuration guide in [lsp-bridge](https
 
 ### Language servers implemented in NodeJS
 
-Language servers implemented in NodeJS can obtain directly by doing `lsp-install-server`. For updating installed servers do `C-0` then `lsp-install-server`.
+Language servers implemented in NodeJS can obtain directly by doing `lsp-install-server`.
 
 | Language              | Installation command                                     |
 | --------------------- | -------------------------------------------------------- |
@@ -202,7 +217,7 @@ GO111MODULE=on go get gopls
 
 ### Python (MicroSoft Python Language Server)
 
-`lsp-python-ms` now downloads language server binary automatically, or you can build latest Microsoft Python Lanugage Server by yourself
+`lsp-python-ms` now downloads language server binary automatically, or you can build latest Microsoft Python Language Server by yourself
 
 1.  Install [dotnet-sdk](https://www.microsoft.com/net/download)
 2.  Clone and install [python-language-server](https://github.com/Microsoft/python-language-server)
