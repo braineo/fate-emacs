@@ -143,8 +143,26 @@
   ;; For some commands and buffer sources it is useful to configure the
   ;; :preview-key on a per-command basis using the `consult-customize' macro.
   (consult-customize
-   consult-goto-line
-   consult-theme :preview-key '(:debounce 0.4 any))
+    consult-goto-line
+    consult-theme :preview-key '(:debounce 0.4 any))
+  :config
+
+  (defun fate/consult-to-color-rg ()
+    (interactive)
+    (pcase-let* ((`(,arg . ,opts) (consult--command-split (minibuffer-contents)))
+                 (`(,re . ,hl) (funcall consult--regexp-compiler arg 'pcre nil)))
+      (embark--become-command
+        #'color-rg-search-input (if re (consult--join-regexps re 'pcre)
+                                  ""))))
+
+  (defvar fate/consult-rg-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "M-i") #'fate/consult-to-color-rg)
+      map))
+
+  (consult-customize
+    fate/consult-rg consult-ripgrep consult-grep
+    :keymap fate/consult-rg-map)
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
@@ -180,6 +198,7 @@
 (use-package embark
   :bind (("s-."   . embark-act)
          ([remap describe-bindings] . embark-bindings))
+  :commands (embark--become-command)
   :init
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
@@ -231,6 +250,7 @@ targets."
 
 
 (use-package embark-consult
+  :after embark
   :bind (:map minibuffer-mode-map
          ("C-c C-o" . embark-export))
   :hook (embark-collect-mode . consult-preview-at-point-mode))
