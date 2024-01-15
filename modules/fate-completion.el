@@ -54,7 +54,6 @@
          ("C-c k"   . consult-kmacro)
          ("C-c m"   . consult-man)
          ("C-c i"   . consult-info)
-         ("C-c r"   . consult-ripgrep)
 
          ([remap Info-search]        . consult-info)
          ([remap imenu]              . consult-imenu)
