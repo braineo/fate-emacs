@@ -62,6 +62,9 @@
 (use-package markdown-toc
  :defer)
 
+(use-package org-modern
+  :hook (org-mode . org-modern-mode))
+
 (use-package jinx
   :hook ((markdown-mode text-mode) . jinx-mode)
   :bind ([remap ispell-word] . jinx-correct))
