@@ -1,4 +1,4 @@
-;;; fate-completion.el --- completion related        -*- lexical-binding: t; -*-
+;;; fate-vertico.el --- vertico related        -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2023  Binbin Ye
 
@@ -254,5 +254,5 @@ targets."
          ("C-c C-o" . embark-export))
   :hook (embark-collect-mode . consult-preview-at-point-mode))
 
-(provide 'fate-completion)
-;;; fate-completion.el ends here
+(provide 'fate-vertico)
+;;; fate-vertico.el ends here
