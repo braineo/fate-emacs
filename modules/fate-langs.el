@@ -77,7 +77,33 @@
   :mode (("\\.swift\\'" . swift-mode)))
 
 (use-package go-mode
-  :mode (("\\.go\\'" . go-mode)))
+  :mode (("\\.go\\'" . go-mode))
+  :config
+  (defconst fate/go-tools
+    '("golang.org/x/tools/gopls"
+      "github.com/cweill/gotests/gotests"
+      "github.com/fatih/gomodifytags"
+      "github.com/josharian/impl"
+      "github.com/haya14busa/goplay/cmd/goplay"
+      "github.com/go-delve/delve/cmd/dlv"
+       "honnef.co/go/tools/cmd/staticcheck")
+    "go cli tools")
+
+  (defun fate/go-install-tools ()
+    "Install necessary tools for go development."
+    (interactive)
+    (unless (executable-find "go")
+      (message "cannot find `go' executable"))
+
+    (message "installing %d tools" (length fate/go-tools))
+    (dolist (tool fate/go-tools)
+      (set-process-sentinel
+        (start-process "go-tools" "*Go Tools*" "go" "install" "-v" "-x" (concat tool "@latest"))
+        (lambda (proc _)
+          (let ((status (process-exit-status proc)))
+            (if (= 0 status)
+              (message "Installed %s" tool)
+             (message "Failed to install %s" tool))))))))
 
 (use-package rust-mode
   :mode (("\\.rs\\'" . rust-mode))
