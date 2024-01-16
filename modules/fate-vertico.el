@@ -27,9 +27,11 @@
 
 (use-package vertico
   :bind (:map vertico-map
-              ("RET" . vertico-directory-enter)
-              ("DEL" . vertico-directory-delete-char)
-              ("M-DEL" . vertico-directory-delete-word))
+          ("RET" . vertico-directory-enter)
+          ("DEL" . vertico-directory-delete-char)
+          ("M-DEL" . vertico-directory-delete-word)
+          ("C-l" . vertico-directory-up))
+
   :hook ((after-init . vertico-mode)
          (rfn-eshadow-update-overlay . vertico-directory-tidy)))
 
@@ -144,7 +146,6 @@
   (consult-customize
     consult-goto-line
     consult-theme :preview-key '(:debounce 0.4 any))
-  :config
 
   (defun fate/consult-to-color-rg ()
     (interactive)
