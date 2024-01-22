@@ -193,7 +193,22 @@
 (use-package sh-mode
   :ensure nil
   :bind (:map sh-mode-map
-         ("C-c C-l" . shfmt-buffer)))
+          ("C-c C-l" . shfmt-buffer)))
+
+(use-package taskjuggler-mode
+  :straight (:host gitlab
+              :repo "bricka/emacs-taskjuggler-mode")
+    :config (add-to-list 'tree-sitter-load-path (straight--repos-dir "tree-sitter-taskjuggler")))
+
+(use-package tree-sitter-taskjuggler
+  :defer t
+  :straight (tree-sitter-taskjuggler
+              :host gitlab
+              :repo "bricka/tree-sitter-taskjuggler"
+              :post-build (("npm" "ci") ("make"))
+              :build (:not compile)
+              :files ("taskjuggler.so")))
+
 
 (provide 'fate-langs)
 ;;; fate-langs.el ends here
