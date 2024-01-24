@@ -204,8 +204,9 @@
   :defer t
   :straight (tree-sitter-taskjuggler
               :host gitlab
-              :repo "bricka/tree-sitter-taskjuggler"
-              :post-build (("npm" "ci") ("make"))
+              :repo "braineo/tree-sitter-taskjuggler"
+              :branch "block-comment"
+              :pre-build (("npm" "ci") ("make"))
               :build (:not compile)
               :files ("taskjuggler.so")))
 
