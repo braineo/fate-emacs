@@ -72,15 +72,13 @@
   :custom
   (tramp-default-method "ssh"))
 
-;; Core package anzu better search and replace
-(use-package anzu
-  :diminish anzu-mode
-  :bind (([remap query-replace] . anzu-query-replace)
-         ([remap query-replace-regexp] . anzu-query-replace-regexp)
-         :map isearch-mode-map
-         ([remap isearch-query-replace] . anzu-isearch-query-replace)
-         ([remap isearch-query-replace-regexp] . anzu-isearch-query-replace-regexp))
-  :hook (after-init . global-anzu-mode))
+(use-package isearch
+  :ensure nil
+  :bind (:map isearch-mode-map
+         ([remap isearch-delete-char] . isearch-del-char))
+  :custom
+  (isearch-lazy-count t)
+  (lazy-count-prefix-format "%s/%s "))
 
 ;; Perl regular expression search and replace
 (use-package evil
