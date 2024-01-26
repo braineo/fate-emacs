@@ -103,15 +103,13 @@
   (setq dired-recursive-deletes 'always)
   (setq dired-recursive-copies 'always)
 
+
+  (setq dired-dwim-target t)
+  :custom
+  (dired-listing-switches "-alh" "show human readable size")
   ;; if there is a dired buffer displayed in the next window, use its
   ;; current subdir, instead of the current subdir of this dired buffer
-  (setq dired-dwim-target t)
-  :bind
-  (:map dired-mode-map
-    ("RET" . dired-find-alternate-file))
-
-  :custom
-  (dired-listing-switches "-alh" "show humna readable size"))
+  (dired-kill-when-opening-new-dired-buffer t))
 
 ;; Core package Projectile
 (use-package projectile
