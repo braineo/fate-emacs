@@ -80,6 +80,37 @@
   (isearch-lazy-count t)
   (lazy-count-prefix-format "%s/%s "))
 
+
+
+(use-package re-builder
+  :ensure nil
+  :config
+  ;; Stay in the original buffer position on re-builder
+  (define-advice reb-update-overlays
+      (:around (orig-fun &rest args) save-window-excursion)
+    "Advice for `reb-update-overlays' to inhibit window config changes."
+    (save-window-excursion (apply orig-fun args)))
+
+  (defun fate/reb-query-replace-regexp (&optional delimited)
+    "Run `query-replace-regexp' with the contents of re-builder. With
+non-nil optional argument `DELIMITED', only replace matches
+surrounded by word boundaries."
+    (interactive "P")
+    (let* ((re (reb-target-value 'reb-regexp))
+           (start (use-region-beginning))
+           (end (use-region-end))
+           (replacement (query-replace-read-to re
+                          (concat "Query replace"
+                            (if current-prefix-arg
+                              (if (eq current-prefix-arg '-) " backward" " word")
+                              "")
+                            " regexp"
+                            (if (use-region-p) " in region"))
+                          t)))
+      (with-selected-window reb-target-window
+        (reb-quit)
+        (query-replace-regexp re replacement delimited start end)))))
+
 ;; Perl regular expression search and replace
 (use-package evil
   :commands evil-set-initial-state
