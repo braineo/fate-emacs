@@ -198,7 +198,18 @@
 (use-package taskjuggler-mode
   :straight (:host gitlab
               :repo "bricka/emacs-taskjuggler-mode")
-    :config (add-to-list 'tree-sitter-load-path (straight--repos-dir "tree-sitter-taskjuggler")))
+  :config
+  (add-to-list 'tree-sitter-load-path (straight--repos-dir "tree-sitter-taskjuggler"))
+  (with-eval-after-load 'editorconfig
+    (add-to-list 'editorconfig-indentation-alist '(taskjuggler-mode taskjuggler-indent-offset tree-sitter-indent-offset)))
+  (with-eval-after-load 'flycheck
+    (flycheck-define-checker taskjuggler
+      "A syntax checker for TaskJuggler files."
+      :command ("tj3" "--check-syntax" source)
+      :modes taskjuggler-mode
+      :error-patterns
+      ((error line-start (file-name) ":" line ": " "Error: " (message))))
+    (add-to-list 'flycheck-checkers 'taskjuggler)))
 
 (use-package tree-sitter-taskjuggler
   :defer t
