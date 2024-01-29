@@ -84,6 +84,12 @@
 
 (use-package re-builder
   :ensure nil
+  :bind ((:map reb-mode-map
+           ("C-<return>" . fate/reb-query-replace-regexp))
+         (:map reb-subexp-mode-map
+           ("C-<return>" . fate/reb-query-replace-regexp)))
+  :custom
+  (reb-re-syntax 'string)
   :config
   ;; Stay in the original buffer position on re-builder
   (define-advice reb-update-overlays
@@ -96,6 +102,7 @@
 non-nil optional argument `DELIMITED', only replace matches
 surrounded by word boundaries."
     (interactive "P")
+    (reb-update-regexp)
     (let* ((re (reb-target-value 'reb-regexp))
            (start (use-region-beginning))
            (end (use-region-end))
