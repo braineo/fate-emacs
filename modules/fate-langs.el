@@ -49,26 +49,6 @@
   :custom
   (treesit-font-lock-level 4))
 
-;; Markdown
-(use-package markdown-mode
-  :mode (("\\.md\\'" . gfm-mode)
-         ("\\.markdown\\'" . gfm-mode))
-  :config
-  (setq markdown-fontify-code-blocks-natively t)
-  :hook (markdown-mode . (lambda()
-                           (setq-local prettier-js-args
-                            '("--parser" "markdown")))))
-
-(use-package markdown-toc
- :defer)
-
-(use-package org-modern
-  :hook (org-mode . org-modern-mode))
-
-(use-package jinx
-  :hook ((markdown-mode text-mode) . jinx-mode)
-  :bind ([remap ispell-word] . jinx-correct))
-
 (use-package yaml-mode
   :mode (("\\.yaml\\'" . yaml-mode)
          ("\\.yml\\'" . yaml-mode)))
