@@ -50,6 +50,7 @@
 (require 'fate-python)
 (require 'fate-web)
 (require 'fate-langs)
+(require 'fate-writing)
 (require 'fate-flycheck)
 (require 'fate-lsp)
 (require 'fate-transient)

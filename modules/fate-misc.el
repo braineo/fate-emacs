@@ -28,9 +28,10 @@
   (interactive "P")
   (let* ((option (if restore
                    "" ;; `setxkbmap -option` only adds options, need to replace the entire options
-                   "caps:ctrl_modifier")))
-    (message (format "setxkbmap -option -option %s" option))
-    (shell-command (format "setxkbmap -option -option %s" option))))
+                   "caps:ctrl_modifier"))
+         (command (format "setxkbmap -option -option %s" option)))
+    (message command)
+    (shell-command command)))
 
 (provide 'fate-misc)
 ;;; fate-misc.el ends here
