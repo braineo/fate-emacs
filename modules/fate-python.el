@@ -71,36 +71,40 @@ Argument ARG is ignored."
              (beginning-of-line)
              (insert docstring)))))))
 
+(defcustom ruff-command "ruff"
+ "Command used for reformatting."
+ :group 'ruff
+ :type 'string)
+
+(reformatter-define ruff
+  :program ruff-command
+  :args `("format" "--stdin-filename" ,buffer-file-name "-")
+  :lighter "RF"
+  :group 'ruff)
+
 (use-package python
   :defines gud-pdb-command-name pdb-path
   :functions python-nav-end-of-block
   :config
   ;; Disable readline based native completion
   (setq python-shell-completion-native-enable nil)
+
   (defconst fate/python-tools
    '("ruff"
      "pydocstring")
    "python cli tools")
+
   (with-eval-after-load 'core-packages
     (fate/create-install-tools
       "python" ("pip3" "install" "--upgrade") fate/python-tools))
+
   :bind
   (:map python-mode-map
-    ("C-c M-d" . fate/pydocstring))
+    ("C-c M-d" . fate/pydocstring)
+    ("C-c C-l" . ruff-buffer))
   :hook
   (python-mode . fate/python-setup-hs-mode))
 
-;; Install:
-;; pip install black
-;; pip install black-macchiato
-(use-package python-black
-  :demand t
-  :after python
-  :custom
-  (python-black-extra-args '("--line-length=120" "--skip-string-normalization"))
-  :bind
-  (:map python-mode-map
-    ("C-c C-l" . python-black-partial-dwim)))
 
 (provide 'fate-python)
 ;;; fate-python.el ends here
