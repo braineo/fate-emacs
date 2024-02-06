@@ -53,6 +53,7 @@
 (require 'fate-writing)
 (require 'fate-flycheck)
 (require 'fate-lsp)
+(require 'fate-assist)
 (require 'fate-transient)
 (require 'fate-docker)
 (require 'fate-vterm)

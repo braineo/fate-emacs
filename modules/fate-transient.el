@@ -34,7 +34,11 @@
 
    [""
     ("h" "Highlight" symbol-overlay-transient)
-    ("l" "Language Server" lsp-transient)]])
+    ("l" "Language Server" lsp-transient)]
+
+   ["Assistant"
+     ("s" "Search Engine" engine-transient)
+     ("a" "GPT" gptel-menu)]])
 
 (global-set-key (kbd "M-m") 'gate-of-babylon)
 

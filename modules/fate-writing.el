@@ -44,8 +44,7 @@
 
 (use-package org
   :ensure nil
-  :init
-  (setq-local fill-column 100))
+  :hook (org-mode . (lambda() (set-fill-column 100))))
 
 (use-package org-modern
   :hook (org-mode . org-modern-mode))

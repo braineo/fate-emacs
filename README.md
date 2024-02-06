@@ -111,10 +111,7 @@ brew install enchant pkg-config
 
 ### Tools configured for Go
 
-| Name    | Installation command                       | Description                                    |
-|---------|--------------------------------------------|------------------------------------------------|
-| gopls   | go install golang.org/x/tools/gopls@latest | Go language server                             |
-| gofumpt | go install mvdan.cc/gofumpt@latest         | Go formater, sometimes works better than gopls |
+`M-x` `fate/go-install-tools`
 
 ### Tools configured for JavaScript/JSON
 
@@ -207,15 +204,12 @@ Language servers implemented in NodeJS can obtain directly by doing `lsp-install
 | JSON                  | npm i -g vscode-json-languageserver                      |
 | Dockerfile            | npm install -g dockerfile-language-server-nodejs         |
 
-### Go
 
-Install `gopls`
 
-``` shell
-GO111MODULE=on go get gopls
-```
+### Python
 
-### Python (MicroSoft Python Language Server)
+<details>
+  <summary>Microsoft Python Language Server (depreciated)</summary>
 
 `lsp-python-ms` now downloads language server binary automatically, or you can build latest Microsoft Python Language Server by yourself
 
@@ -258,6 +252,7 @@ pip install flake8
 ;; If you need to work on some python2 projects, make sure use a right flake8
 (setq flycheck-python-flake8-executable "python2")
 ```
+</details>
 
 ### Clangd
 
@@ -296,6 +291,41 @@ if [[ "$INSIDE_EMACS" = 'vterm' ]] \
     && [[ -f ${EMACS_VTERM_PATH}/etc/emacs-vterm-zsh.sh ]]; then
 	source ${EMACS_VTERM_PATH}/etc/emacs-vterm-zsh.sh
 fi
+```
+
+## GPT
+
+You can choose to use OpenAI, if you want to keep the prompt to yourself. Hosting a local LLM is not difficult either.
+
+### Install CUDA
+
+follow guide in [nvidia site](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html).
+
+TL;DR
+
+``` shell
+sudo apt-get install -y nvidia-kernel-open-dkms
+sudo apt-get install -y cuda-drivers
+sudo apt install nvidia-cuda-toolkit
+```
+
+### Build llama.cpp
+
+``` shell
+git clone git@github.com:ggerganov/llama.cpp.git
+
+mkdir build
+cd build
+cmake .. -DLLAMA_CUBLAS=ON
+cmake --build . --config Release
+```
+
+### Run
+
+Run following command in `build` folder, api server will spin up at `localhost:8080`
+
+``` shell
+./bin/server --model /path/to/models/dolphin-2.6-mistral-7b-dpo-laser.Q5_K_M.gguf --n-gpu-layers 400
 ```
 
 
