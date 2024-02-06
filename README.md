@@ -12,10 +12,10 @@
     - [ripgrep](#ripgrep)
     - [fd](#fd)
     - [enchant](#enchant)
-    - [Tools configured for Python](#tools-configured-for-python)
-    - [Tools configured for Go](#tools-configured-for-go)
-    - [Tools configured for JavaScript/JSON](#tools-configured-for-javascriptjson)
-    - [Tools configured for shell script](#tools-configured-for-shell-script)
+    - [Python Tools](#python-tools)
+    - [Go Tools](#go-tools)
+    - [JavaScript/JSON Tools](#javascriptjson-tools)
+    - [Shell Tools](#shell-tools)
     - [nerd-icons](#nerd-icons)
 - [Customize](#customize)
     - [Custom.el](#customel)
@@ -25,10 +25,13 @@
     - [EditorConfig (Code style)](#editorconfig-code-style)
 - [Install and Update Language Servers](#install-and-update-language-servers)
     - [Language servers implemented in NodeJS](#language-servers-implemented-in-nodejs)
-    - [Go](#go)
-    - [Python (MicroSoft Python Language Server)](#python-microsoft-python-language-server)
+    - [Python](#python)
     - [Clangd](#clangd)
 - [Vterm](#vterm)
+- [GPT](#gpt)
+    - [Install CUDA](#install-cuda)
+    - [Build llama.cpp](#build-llamacpp)
+    - [Run](#run)
 - [Useful links](#useful-links)
 
 <!-- markdown-toc end -->
@@ -100,20 +103,15 @@ brew install enchant pkg-config
 ```
 
 
-### Tools configured for Python
+### Python Tools
 
-| Name            | Installation command        | Description                                       |
-|-----------------|-----------------------------|---------------------------------------------------|
-| python-black    | pip install black           | Black is the uncompromising Python code formatter |
-| black-macchiato | pip install black-macchiato | Enable formatting of partial files using black    |
-| ruff            | pip install ruff            | Fast Python linter written in rust                |
+`M-x` `fate/python-install-tools`
 
-
-### Tools configured for Go
+### Go Tools
 
 `M-x` `fate/go-install-tools`
 
-### Tools configured for JavaScript/JSON
+### JavaScript/JSON Tools
 
 | Name           | Installation command                  | Description                                              |
 |----------------|---------------------------------------|----------------------------------------------------------|
@@ -122,8 +120,7 @@ brew install enchant pkg-config
 | TypeScript LSP | npm i -g typescript-language-server   |                                                          |
 
 
-### Tools configured for shell script
-
+### Shell Tools
 
 | Name       | Installation command                       | Description                                           |
 |------------|--------------------------------------------|-------------------------------------------------------|

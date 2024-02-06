@@ -77,6 +77,13 @@ Argument ARG is ignored."
   :config
   ;; Disable readline based native completion
   (setq python-shell-completion-native-enable nil)
+  (defconst fate/python-tools
+   '("ruff"
+     "pydocstring")
+   "python cli tools")
+  (with-eval-after-load 'core-packages
+    (fate/create-install-tools
+      "python" ("pip3" "install" "--upgrade") fate/python-tools))
   :bind
   (:map python-mode-map
     ("C-c M-d" . fate/pydocstring))
