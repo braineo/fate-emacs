@@ -27,6 +27,12 @@
 
 ;; Lisp
 
+(eval-when-compile
+  (require 'core-packages))
+
+(use-package reformatter
+  :defer t)
+
 (defun fate-init-parinfer-mode ()
   "Disable some minor modes having troubles with parinfer-rus-mode."
   (progn
@@ -69,7 +75,7 @@
        "honnef.co/go/tools/cmd/staticcheck")
     "go cli tools")
   (with-eval-after-load 'core-packages
-    (fate/create-install-tools
+    (fate/create-install-tools!
       "go" ("go" "install" "-v" "-x") fate/go-tools (lambda (tool) (concat tool "@latest")))))
 
 (use-package rust-mode

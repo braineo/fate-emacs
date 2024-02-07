@@ -27,6 +27,7 @@
 ;; Package configs
 (require 'package)
 (require 'core-load-paths)
+(require 'comp)
 
 (setq package-enable-at-startup nil)
 (setq package-archives '(("org"   . "http://orgmode.org/elpa/")
@@ -70,9 +71,6 @@
   :custom
   (auto-package-update-delete-old-versions t)
   (auto-package-update-hide-results t))
-  ;; (auto-package-update-last-update-day-filename
-  ;;  (concat fate-cache-directory "auto-package-last-update-day")))
-
 
 (defun fate-update ()
   "Update packages and configure repository."
@@ -89,7 +87,7 @@
 (when (native-comp-available-p)
   (setq native-comp-async-report-warnings-errors 'silent))
 
-(defmacro fate/create-install-tools (name command tools &optional tool-name-fun)
+(defmacro fate/create-install-tools! (name command tools &optional tool-name-fun)
   "Install necessary tools for a given executable.
 `NAME' is function and buffer name it generates.
 `COMMAND' is the full command without package name

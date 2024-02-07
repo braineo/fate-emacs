@@ -24,6 +24,10 @@
 
 ;;; Code:
 
+(require 'hideshow)
+(eval-when-compile
+  (require 'core-packages))
+
 (defun fate/python-hideshow-forward-sexp-function (arg)
   "Python specific `forward-sexp' function for `hs-minor-mode'.
 Argument ARG is ignored."
@@ -95,7 +99,7 @@ Argument ARG is ignored."
    "python cli tools")
 
   (with-eval-after-load 'core-packages
-    (fate/create-install-tools
+    (fate/create-install-tools!
       "python" ("pip3" "install" "--upgrade") fate/python-tools))
 
   :bind
