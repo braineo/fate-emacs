@@ -25,6 +25,17 @@
 ;;; Code:
 
 (require 'tree-sitter)
+(eval-when-compile
+  (require 'core-packages))
+
+(defconst fate/js-tools
+   '("prettier"
+     "vscode-langservers-extracted"
+     "typescript-language-server")
+    "Web development tools.")
+
+(fate/create-install-tools!
+  "js" ("npm" "install" "-g") fate/js-tools)
 
 (use-package prettier-js
   :defer t

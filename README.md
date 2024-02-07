@@ -119,13 +119,14 @@ brew install enchant pkg-config
 | linter LSP     | npm i -g vscode-langservers-extracted | Language server of eslint, HTML, CSS                     |
 | TypeScript LSP | npm i -g typescript-language-server   |                                                          |
 
+or `M-x` `fate/js-install-tools`
 
 ### Shell Tools
 
 | Name       | Installation command                       | Description                                           |
 |------------|--------------------------------------------|-------------------------------------------------------|
 | shellcheck | apt install shellcheck                     | A great teacher helping you write better shell script |
-| shfmt      | go install mvdan.cc/sh/v3/cmd/shfmt@latest | A shell script formatter                               |
+| shfmt      | go install mvdan.cc/sh/v3/cmd/shfmt@latest | A shell script formatter                              |
 
 
 ### nerd-icons
@@ -138,7 +139,7 @@ Install fonts for mode-line
 
 ### Custom.el
 
-The first time you open Emacs, it will create a `custom.el` for you automatically from `fate-custom-template.el`. There you can made custom configuration does not go with emacs for different computers (like your personal ones and working ones). For example, `PATH` variable.
+The first time you open Emacs, it will create a `custom.el` for you automatically from `fate-custom-template.el`. There you can made custom configuration does not go with Emacs for different computers (like your personal ones and working ones). For example, `PATH` variable.
 
 Especially for macOS users, because `exec-path-from-shell` is slow that I did not include it and you might want to edit ENV variables and `exec-path`
 
