@@ -68,11 +68,13 @@
 
 (use-package typescript-mode
   :mode ("\\.ts\\'")
-  :hook (typescript-mode . fate/prettier-minor-mode))
-
-(define-derived-mode typescript-tsx-mode typescript-mode "TSX"
-  "Derived mode for better syntax highlight and linter config.")
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-tsx-mode))
+  :hook (typescript-mode . fate/prettier-minor-mode)
+  :config
+  (define-derived-mode typescript-tsx-mode typescript-mode "TSX"
+   "Derived mode for better syntax highlight and linter config.")
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-tsx-mode))
+  (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.ts\\'" "\\1.spec.ts"))
+  (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.tsx\\'" "\\1.spec.tsx" "\\1.scss" "\\1.module.less" "\\1.sass" "\\1.css")))
 
 (use-package tide
   :after typescript-mode
@@ -89,7 +91,9 @@
 
 (use-package graphql-mode
   :mode ("\\.graphql\\'")
-  :hook (graphql-mode . fate/prettier-minor-mode))
+  :hook (graphql-mode . fate/prettier-minor-mode)
+  :config
+  (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.gql.ts\\'" "\\1.graphql")))
 
 (use-package javascript-mode
   :ensure nil
