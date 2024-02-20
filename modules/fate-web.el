@@ -60,11 +60,10 @@
 (use-package less-css-mode
   :hook (less-css-mode . fate/prettier-minor-mode))
 
-(use-package js-mode
+(use-package javascript-mode
   :ensure nil
-  :mode ("\\.js\\'"
-         "\\.jsx\\'")
-  :hook (js-mode . fate/prettier-minor-mode))
+  :mode ("\\.[cm]?jsx?\\'")
+  :hook (javascript-mode . fate/prettier-minor-mode))
 
 (use-package typescript-mode
   :mode ("\\.ts\\'")
@@ -94,11 +93,6 @@
   :hook (graphql-mode . fate/prettier-minor-mode)
   :config
   (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.gql.ts\\'" "\\1.graphql")))
-
-(use-package javascript-mode
-  :ensure nil
-  :mode ("\\.mjs\\'")
-  :hook (javascript-mode . fate/prettier-minor-mode))
 
 (use-package jest
   :defer t)
