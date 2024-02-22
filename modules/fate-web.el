@@ -58,12 +58,14 @@
   :load-path "modules/fate-json-mode")
 
 (use-package less-css-mode
-  :hook (less-css-mode . fate/prettier-minor-mode))
+  :hook (less-css-mode . fate/prettier-minor-mode)
+  :config
+  (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.module.less\\'" "\\1.tsx")))
 
 (use-package javascript-mode
   :ensure nil
   :mode ("\\.[cm]?jsx?\\'")
-  :hook (javascript-mode . fate/prettier-minor-mode))
+  :hook (js-mode . fate/prettier-minor-mode))
 
 (use-package typescript-mode
   :mode ("\\.ts\\'")
