@@ -21,11 +21,11 @@
 
 
 ;; Fix path issue or executable not found
-;; (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin")))
-;; (setq exec-path (append '("/usr/local/bin") exec-path))
+;; (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin:/home/user/.cargo/bin:/home/user/go/bin"))
+;; (setq exec-path (append '("/usr/local/bin" "/home/user/.cargo/bin" "/home/user/go/bin") exec-path))
 
 ;; GO related env vars
-;; (setenv "GOPATH" "/home/user/.go")
+;; (setenv "GOPATH" "/home/user/go")
 ;; (setenv "GO111MODULE" "auto")
 
 ;; Open from mac

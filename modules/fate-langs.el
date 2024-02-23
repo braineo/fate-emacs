@@ -67,16 +67,19 @@
   :config
   (defconst fate/go-tools
     '("golang.org/x/tools/gopls"
+      "golang.org/x/tools/cmd/goimports"
       "github.com/cweill/gotests/gotests"
       "github.com/fatih/gomodifytags"
       "github.com/josharian/impl"
       "github.com/haya14busa/goplay/cmd/goplay"
       "github.com/go-delve/delve/cmd/dlv"
-       "honnef.co/go/tools/cmd/staticcheck")
+      "honnef.co/go/tools/cmd/staticcheck")
     "go cli tools")
   (with-eval-after-load 'core-packages
     (fate/create-install-tools!
-      "go" ("go" "install" "-v" "-x") fate/go-tools (lambda (tool) (concat tool "@latest")))))
+      "go" ("go" "install" "-v" "-x") fate/go-tools (lambda (tool) (concat tool "@latest"))))
+  :custom
+  (gofmt-command (if (executable-find "gpimports") "goimports" "gofmt")))
 
 (use-package rust-mode
   :mode (("\\.rs\\'" . rust-mode))
