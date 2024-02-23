@@ -88,7 +88,7 @@
   :config
   (doom-modeline-def-modeline 'doom-fate
     '(bar workspace-name window-number modals matches buffer-info remote-host buffer-position word-count parrot selection-info)
-    '(objed-state misc-info persp-name grip gnus debug lsp minor-modes input-method indent-info buffer-encoding major-mode vcs checker))
+    '(objed-state misc-info persp-name grip gnus debug lsp minor-modes input-method indent-info buffer-encoding major-mode vcs check))
   (defun fate-doom-modeline ()
     "Setup custom doom modeline."
     (doom-modeline-set-modeline 'doom-fate 'default))

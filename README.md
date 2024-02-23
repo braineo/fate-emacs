@@ -30,8 +30,10 @@
 - [Vterm](#vterm)
 - [GPT](#gpt)
     - [Install CUDA](#install-cuda)
-    - [Build llama.cpp](#build-llamacpp)
-    - [Run](#run)
+    - [llama.cpp](#llamacpp)
+        - [Build](#build)
+        - [Run](#run)
+    - [Ollama](#ollama)
 - [Useful links](#useful-links)
 
 <!-- markdown-toc end -->
@@ -302,12 +304,16 @@ follow guide in [nvidia site](https://docs.nvidia.com/cuda/cuda-installation-gui
 TL;DR
 
 ``` shell
+wget https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64//cuda-keyring_1.1-1_all.deb
+sudo dpkg -i cuda-keyring_1.1-1_all.deb
 sudo apt-get install -y nvidia-kernel-open-dkms
 sudo apt-get install -y cuda-drivers
 sudo apt install nvidia-cuda-toolkit
 ```
 
-### Build llama.cpp
+### llama.cpp
+
+#### Build
 
 ``` shell
 git clone git@github.com:ggerganov/llama.cpp.git
@@ -318,7 +324,7 @@ cmake .. -DLLAMA_CUBLAS=ON
 cmake --build . --config Release
 ```
 
-### Run
+#### Run
 
 Run following command in `build` folder, api server will spin up at `localhost:8080`
 
@@ -326,6 +332,14 @@ Run following command in `build` folder, api server will spin up at `localhost:8
 ./bin/server --model /path/to/models/dolphin-2.6-mistral-7b-dpo-laser.Q5_K_M.gguf --n-gpu-layers 400
 ```
 
+### Ollama
+
+Or use Ollama as frontend
+
+``` shell
+curl -fsSL https://ollama.com/install.sh | sh
+ollama run dolphin-mixtral
+```
 
 ## Useful links
 

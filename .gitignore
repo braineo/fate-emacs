@@ -54,9 +54,12 @@ eclipse.jdt.ls
 .trello
 *~
 
-# lsp related
+# lsp-mode related
 .lsp-python
 mspyls/
+
+# lsp-bridge related
+.venv
 
 # package specific
 straight/

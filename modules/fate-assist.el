@@ -45,14 +45,17 @@
 
 (use-package gptel
   :config
+  (gptel-make-openai "llama-cpp"
+           :stream t
+           :protocol "http"
+           :host "localhost:8080"
+           :models '("any"))
   (setq-default
-    gptel-backend (gptel-make-openai "llama-cpp"
-                    :stream t
-                    :protocol "http"
-                    :host "localhost:8080"
-                    :models '("any"))
-    gptel-model "any"))
-
+    gptel-backend (gptel-make-ollama "Ollama"
+                   :host "localhost:11434"
+                   :stream t
+                   :models '("dolphin-mixtral"))
+    gptel-model "dolphin-mixtral"))
 
 (provide 'fate-assist)
 ;;; fate-assist.el ends here
