@@ -79,7 +79,7 @@
     (fate/create-install-tools!
       "go" ("go" "install" "-v" "-x") fate/go-tools (lambda (tool) (concat tool "@latest"))))
   :custom
-  (gofmt-command (if (executable-find "gpimports") "goimports" "gofmt")))
+  (gofmt-command (if (executable-find "goimports") "goimports" "gofmt")))
 
 (use-package rust-mode
   :mode (("\\.rs\\'" . rust-mode))
