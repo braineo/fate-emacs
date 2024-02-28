@@ -118,20 +118,6 @@ surrounded by word boundaries."
         (reb-quit)
         (query-replace-regexp re replacement delimited start end)))))
 
-;; Perl regular expression search and replace
-(use-package evil
-  :commands evil-set-initial-state
-  :init
-  (setq evil-disable-insert-state-bindings t) ;; "Leave emacs binding unchanged in insert mode"
-  :custom
-  (evil-default-state 'insert)
-  :config
-  (evil-set-initial-state 'help-mode 'emacs)
-  (evil-set-initial-state 'Info-mode 'emacs)
-  (evil-set-initial-state 'Man-mode 'emacs)
-  (evil-set-initial-state 'grep-mode 'emacs)
-  :hook (prog-mode . evil-mode))
-
 (use-package dired
   :ensure nil
   :config
