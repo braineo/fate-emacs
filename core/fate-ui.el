@@ -32,6 +32,7 @@
 
 ;; the blinking cursor is nothing, but an annoyance
 (blink-cursor-mode -1)
+(set-frame-parameter (window-frame) 'cursor-type 'bar)
 
 ;; Turn on line numbers
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
