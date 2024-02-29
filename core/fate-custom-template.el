@@ -33,7 +33,7 @@
 
 
 ;;; Forge
-;; (setq fate/forge-alist '(("git.site.com" "git.site.com/api/v4" "ssh://git@git.site.com" forge-github-repository)))
+;; (setq fate/forge-alist '(("git.site.com" "git.site.com/api/v4" "git.site.com" forge-github-repository)))
 
 (provide 'custom)
 ;;; custom.el ends here
