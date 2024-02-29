@@ -23,11 +23,12 @@
 ;; 
 
 ;;; Code:
-
+(require 'fate-custom)
+(require 'fate-misc)
 (require 'core-packages)
 (require 'fate-ui)
 (require 'core-editor)
-(require 'fate-custom)
+
 
 (provide 'fate-core)
 ;;; fate-core.el ends here

@@ -124,9 +124,7 @@
                (lambda (&rest _) (fate-update))))))
     (dashboard-setup-startup-hook)))
 
-(use-package nerd-icons
-  :config
-  (set-fontset-font t 'unicode "Hack Nerd Font"))
+(use-package nerd-icons)
 
 (use-package nerd-icons-dired
   :hook

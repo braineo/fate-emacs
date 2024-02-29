@@ -33,5 +33,9 @@
     (message command)
     (shell-command command)))
 
+(defun font-installed-p (font-name)
+  "Check if font FONT-NAME is installed."
+  (if (find-font (font-spec :name font-name)) t nil))
+
 (provide 'fate-misc)
 ;;; fate-misc.el ends here

@@ -11,15 +11,15 @@
 ;; Font
 (when (display-graphic-p)
   (cond
-    ((x-list-fonts "JetBrains Mono") (set-face-attribute 'default nil :font "JetBrains Mono" :height 75))
-    ((x-list-fonts "Operator Mono") (set-face-attribute 'default nil :font "Operator Mono" :height 80 :weight 'semilight)))
+    ((font-installed-p "JetBrains Mono") (set-face-attribute 'default nil :font "JetBrains Mono" :height 75))
+    ((font-installed-p "Operator Mono") (set-face-attribute 'default nil :font "Operator Mono" :height 80 :weight 'semilight)))
 
-  (when (x-list-fonts "Noto Sans")
+  (when (font-installed-p "Noto Sans")
     (set-fontset-font t 'han "Noto Sans CJK SC Regular")
     (set-fontset-font t 'kana "Noto Sans CJK JP Regular")
     (set-fontset-font t 'cjk-misc "Noto Sans CJK Sc Regular"))
 
-  (when (x-list-fonts "Noto Color Emoji")
+  (when (font-installed-p "Noto Color Emoji")
     (set-fontset-font t 'emoji (font-spec :family "Noto Color Emoji") nil 'prepend)))
 
 ;; Fix path issue or executable not found

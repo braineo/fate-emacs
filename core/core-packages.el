@@ -60,6 +60,9 @@
   (load bootstrap-file nil 'nomessage))
 (straight-use-package 'use-package)
 
+
+(when (file-readable-p custom-file) (load custom-file))
+
 ;; Only enable for benchmarking
 (use-package benchmark-init
   :disabled
