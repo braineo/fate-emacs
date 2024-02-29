@@ -17,8 +17,10 @@
   (when (x-list-fonts "Noto Sans")
     (set-fontset-font t 'han "Noto Sans CJK SC Regular")
     (set-fontset-font t 'kana "Noto Sans CJK JP Regular")
-    (set-fontset-font t 'cjk-misc "Noto Sans CJK Sc Regular")))
+    (set-fontset-font t 'cjk-misc "Noto Sans CJK Sc Regular"))
 
+  (when (x-list-fonts "Noto Color Emoji")
+    (set-fontset-font t 'emoji (font-spec :family "Noto Color Emoji") nil 'prepend)))
 
 ;; Fix path issue or executable not found
 ;; (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin:/home/user/.cargo/bin:/home/user/go/bin"))
