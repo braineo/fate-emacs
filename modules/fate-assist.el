@@ -3,7 +3,7 @@
 ;; Copyright (C) 2024  binbin
 
 ;; Author: binbin
-;; Keywords: 
+;; Keywords: search, gpt, llm
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
@@ -43,19 +43,30 @@
   (engine-mode t))
 
 
+
 (use-package gptel
   :config
-  (gptel-make-openai "llama-cpp"
-           :stream t
-           :protocol "http"
-           :host "localhost:8080"
-           :models '("any"))
-  (setq-default
-    gptel-backend (gptel-make-ollama "Ollama"
-                   :host "localhost:11434"
-                   :stream t
-                   :models '("dolphin-mixtral"))
-    gptel-model "dolphin-mixtral"))
+  (defun fate/gptel-setup ()
+    (let* ((ollama-models (seq-filter #'(lambda (line)(length> line 0))
+                            (mapcar #'(lambda (line) (car (split-string line "\t")))
+                             (cdr (split-string (shell-command-to-string "ollama ls 2>/dev/null") "\n")))))
+
+           (llama-cpp (gptel-make-openai "llama-cpp"
+                         :stream t
+                         :protocol "http"
+                         :host "localhost:8080"
+                         :models '("any"))))
+      (if ollama-models
+        (setq-default
+          gptel-backend (gptel-make-ollama "Ollama"
+                           :host "localhost:11434"
+                           :stream t
+                           :models ollama-models)
+          gptel-model (car ollama-models))
+        (setq-default
+          gptel-backend llama-cpp
+          gptel-model "any"))))
+  (fate/gptel-setup))
 
 (provide 'fate-assist)
 ;;; fate-assist.el ends here
