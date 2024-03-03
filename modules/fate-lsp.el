@@ -41,6 +41,8 @@
   (add-to-list
     'lsp-bridge-single-lang-server-extension-list
     '(("less") . "vscode-css-language-server"))
+  (with-eval-after-load 'fate-flycheck-bridge
+    (add-hook 'lsp-bridge-mode-hook #'flycheck-lsp-bridge-setup))
   :custom
   (lsp-bridge-signature-function 'eldoc-message)
   (acm-markdown-render-font-height 80)
