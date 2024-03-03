@@ -173,6 +173,8 @@
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
   (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
 
+  (setq consult-ripgrep-args (concat consult-ripgrep-args " --hidden"))
+
   (defun fate/consult-rg (&optional dir given-initial)
     (interactive "P")
     (let ((initial (or given-initial
