@@ -37,8 +37,8 @@ Return the corresponding `flycheck-error'."
          (message (plist-get diagnostic :message))
          (severity (plist-get diagnostic :severity)))
     (flycheck-error-new-at
-      (+ 1 (or (plist-get diagnostic-start :line) 0))
-      (+ 1 (or (plist-get diagnostic-start :character) 0))
+      (1+ (or (plist-get diagnostic-start :line) 0))
+      (1+ (or (plist-get diagnostic-start :character) 0))
       (pcase severity
         (1 'error)
         (2 'warning)
@@ -46,8 +46,8 @@ Return the corresponding `flycheck-error'."
         (4 'info)
         (_ 'error))
       message
-      :end-line (+ 1 (or (plist-get diagnostic-end :line) 0))
-      :end-column (+ 1 (or (plist-get diagnostic-end :character) 0))
+      :end-line (1+ (or (plist-get diagnostic-end :line) 0))
+      :end-column (1+ (or (plist-get diagnostic-end :character) 0))
       :checker checker)))
 
 (defun flycheck-lsp-bridge-start (checker callback)
