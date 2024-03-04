@@ -26,6 +26,7 @@
 
 (use-package flycheck
   :hook (after-init . global-flycheck-mode)
+  :commands (flycheck-add-mode)
   :config
   (progn
     ;; Fix error list to bottom of window
@@ -35,45 +36,9 @@
            display-buffer-in-side-window)
          (side            . bottom)
          (reusable-frames . visible)
-         (window-height   . 0.2)))
-    (flycheck-define-checker fate-json-jq
-      "JSON checker using the jq tool.
-This checker accepts multiple consecutive JSON values in a
-single input, which is useful for jsonlines data.
-See URL `https://stedolan.github.io/jq/'."
-      :command ("jq" "." source null-device)
-      ;; Example error message:
-      ;;   parse error: Expected another key-value pair at line 3, column 1
-      :error-patterns
-      ((error line-start
-              (optional "parse error: ")
-              (message) "at line " line ", column " column
-              (zero-or-more not-newline) line-end))
-      :modes fate-json-mode)
-    (add-to-list 'flycheck-checkers 'fate-json-jq)
+         (window-height   . 0.2))))
 
-    (flycheck-define-checker python-ruff
-      "A Python syntax and style checker using the ruff utility.
-To override the path to the ruff executable, set
-`flycheck-python-ruff-executable'.
-See URL `http://pypi.python.org/pypi/ruff'."
-        :command ("ruff"
-                  "check --output-format=text"
-                  (eval (when buffer-file-name
-                          (concat "--stdin-filename=" buffer-file-name)))
-                  "-")
-     :standard-input t
-     :error-filter (lambda (errors)
-                     (let ((errors (flycheck-sanitize-errors errors)))
-                       (seq-map #'flycheck-flake8-fix-error-level errors)))
-     :error-patterns
-     ((warning line-start
-               (file-name) ":" line ":" (optional column ":") " "
-               (id (one-or-more (any alpha)) (one-or-more digit)) " "
-               (message (one-or-more not-newline))
-               line-end))
-     :modes python-mode)
-    (add-to-list 'flycheck-checkers 'python-ruff))
+  (flycheck-add-mode 'json-jq 'fate-json-mode)
 
   (flycheck-def-executable-var qt-qmllint "qmllint")
   (flycheck-define-checker qt-qmllint
