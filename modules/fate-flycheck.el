@@ -59,9 +59,20 @@ See URL `https://doc.qt.io/qt-6/qtquick-tool-qmllint.html'."
   (flycheck-emacs-lisp-load-path 'inherit)
   (flycheck-check-syntax-automatically '(save idle-change mode-enabled)))
 
-(use-package flycheck-pos-tip
+(use-package flycheck-posframe
   :after flycheck
-  :hook (global-flycheck-mode . flycheck-pos-tip-mode))
+  :hook (flycheck-mode . flycheck-posframe-mode)
+  :config
+  (with-eval-after-load 'nerd-icons
+    (defun flycheck-posframe--pad-icon (icon)
+      (concat icon " "))
+    (setq
+      flycheck-posframe-info-prefix (flycheck-posframe--pad-icon (nerd-icons-codicon "nf-cod-info"))
+      flycheck-posframe-warning-prefix (flycheck-posframe--pad-icon (nerd-icons-codicon "nf-cod-warning"))
+      flycheck-posframe-error-prefix (flycheck-posframe--pad-icon (nerd-icons-codicon "nf-cod-error"))))
+  (set-face-attribute 'flycheck-posframe-info-face nil :inherit 'success :foreground (face-attribute 'success :foreground))
+  (set-face-attribute 'flycheck-posframe-warning-face nil :inherit 'warning)
+  (set-face-attribute 'flycheck-posframe-error-face nil :inherit 'error))
 
 (use-package flycheck-rust
   :after rust-mode
