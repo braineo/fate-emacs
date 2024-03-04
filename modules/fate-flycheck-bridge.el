@@ -41,7 +41,7 @@ Return the corresponding `flycheck-error'."
       (+ 1 (or (plist-get diagnostic-start :character) 0))
       (pcase severity
         (1 'error)
-        (2 'warn)
+        (2 'warning)
         (3 'info)
         (4 'info)
         (_ 'error))
