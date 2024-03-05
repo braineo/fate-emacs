@@ -43,30 +43,69 @@
   (engine-mode t))
 
 
+(defconst fate/docstring-prompt-template "You are going to write docstring comment.
+
+Function definition:
+```
+%s
+```
+
+- Now write %s docstring for this function.
+- Return the inline docstring only.
+- Do not output code or explanation.
+- Response concisely.
+")
+
+(defun fate/gptel-backend-setup ()
+  "Setup additional model backend for gptel."
+  (let* ((ollama-models (seq-filter #'(lambda (line)(length> line 0))
+                          (mapcar #'(lambda (line) (car (split-string line "\t")))
+                           (cdr (split-string (shell-command-to-string "ollama ls 2>/dev/null") "\n")))))
+
+         (llama-cpp (gptel-make-openai "llama-cpp"
+                       :stream t
+                       :protocol "http"
+                       :host "localhost:8080"
+                       :models '("any"))))
+    (if ollama-models
+      (setq-default
+        gptel-backend (gptel-make-ollama "Ollama"
+                         :host "localhost:11434"
+                         :stream t
+                         :models ollama-models)
+        gptel-model (car ollama-models))
+      (setq-default
+        gptel-backend llama-cpp
+        gptel-model "any"))))
+
+
 
 (use-package gptel
+  :commands (gptel-request)
   :config
-  (defun fate/gptel-setup ()
-    (let* ((ollama-models (seq-filter #'(lambda (line)(length> line 0))
-                            (mapcar #'(lambda (line) (car (split-string line "\t")))
-                             (cdr (split-string (shell-command-to-string "ollama ls 2>/dev/null") "\n")))))
+  (fate/gptel-backend-setup)
+  (with-eval-after-load 'gptel-transient
 
-           (llama-cpp (gptel-make-openai "llama-cpp"
-                         :stream t
-                         :protocol "http"
-                         :host "localhost:8080"
-                         :models '("any"))))
-      (if ollama-models
-        (setq-default
-          gptel-backend (gptel-make-ollama "Ollama"
-                           :host "localhost:11434"
-                           :stream t
-                           :models ollama-models)
-          gptel-model (car ollama-models))
-        (setq-default
-          gptel-backend llama-cpp
-          gptel-model "any"))))
-  (fate/gptel-setup))
+   (transient-define-suffix fate/gptel-suffix-docstring ()
+     "Generate docstring for region contents."
+     :key "d"
+     :description "Docstring"
+     :if (and (derived-mode-p 'prog-mode) (use-region-p))
+     (interactive)
+     (let* ((lang (substring (symbol-name major-mode) nil -5))
+            (prompt (format fate/docstring-prompt-template
+                           (buffer-substring-no-properties
+                             (region-beginning) (region-end))
+                           lang)))
+       (gptel-request
+         prompt
+         :stream t
+         :position (region-beginning)
+         :system (format "You are an expert %s programmer writing docstring for a function." lang))))
+
+   (transient-insert-suffix 'gptel-menu '(2 -1)
+     ["Document" :if use-region-p (fate/gptel-suffix-docstring)])))
+
 (use-package helpful
   :bind
   ([remap describe-function] . helpful-callable)

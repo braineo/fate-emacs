@@ -60,12 +60,13 @@ See URL `https://doc.qt.io/qt-6/qtquick-tool-qmllint.html'."
   (flycheck-check-syntax-automatically '(save idle-change mode-enabled)))
 
 (use-package flycheck-posframe
+  :commands (flycheck-posframe--pad-icon)
   :after flycheck
   :hook (flycheck-mode . flycheck-posframe-mode)
   :config
+  (defun flycheck-posframe--pad-icon (icon)
+    (concat icon " "))
   (with-eval-after-load 'nerd-icons
-    (defun flycheck-posframe--pad-icon (icon)
-      (concat icon " "))
     (setq
       flycheck-posframe-info-prefix (flycheck-posframe--pad-icon (nerd-icons-codicon "nf-cod-info"))
       flycheck-posframe-warning-prefix (flycheck-posframe--pad-icon (nerd-icons-codicon "nf-cod-warning"))
