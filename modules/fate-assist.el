@@ -67,6 +67,12 @@
           gptel-backend llama-cpp
           gptel-model "any"))))
   (fate/gptel-setup))
+(use-package helpful
+  :bind
+  ([remap describe-function] . helpful-callable)
+  ([remap describe-key] . helpful-key)
+  ([remap describe-command] . helpful-command)
+  ([remap Info-goto-emacs-command-node] . helpful-function))
 
 (provide 'fate-assist)
 ;;; fate-assist.el ends here
