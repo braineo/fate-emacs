@@ -173,7 +173,7 @@
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
   (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
 
-  (setq consult-ripgrep-args (concat consult-ripgrep-args " --hidden"))
+  (setq consult-ripgrep-args (concat consult-ripgrep-args " --hidden --glob \"!**/.git/**\""))
 
   (defun fate/consult-rg (&optional dir given-initial)
     (interactive "P")
