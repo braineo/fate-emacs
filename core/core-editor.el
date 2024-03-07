@@ -26,6 +26,8 @@
 (eval-when-compile
   (require 'core-load-paths))
 
+(require 're-builder)
+
 ;; Death to the tabs!  However, tabs historically indent to the next
 ;; 8-character offset; specifying anything else will cause *mass*
 ;; confusion, as it will change the appearance of every existing file.
@@ -151,6 +153,7 @@ surrounded by word boundaries."
 (use-package recentf
   :hook
   (after-init . recentf-mode)
+  :commands (recentf-expand-file-name)
   :config
   (progn
     (setq
@@ -404,5 +407,6 @@ PREFIX determines whether to match file name or buffer name."
 
 (require 'fate-auto-complete)
 (require 'fate-align-text)
+(require 'fate-windows)
 (provide 'core-editor)
 ;;; core-editor.el ends here
