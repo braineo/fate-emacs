@@ -114,5 +114,10 @@ Function definition:
   ([remap describe-variable] . helpful-variable)
   ([remap Info-goto-emacs-command-node] . helpful-function))
 
+
+(use-package ace-link
+  :init
+  (ace-link-setup-default))
+
 (provide 'fate-assist)
 ;;; fate-assist.el ends here
