@@ -13,7 +13,8 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'core-load-paths))
+  (require 'core-load-paths)
+  (require 'fate-custom))
 
 (use-package sqlite3)
 
@@ -55,10 +56,6 @@
 (use-package blamer
   :bind (("C-c i" . blamer-show-posframe-commit-info))
   :defer t)
-
-(use-package winner-mode
-  :ensure nil
-  :hook (after-init . winner-mode))
 
 (use-package ediff
   :ensure nil
