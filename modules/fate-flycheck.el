@@ -28,16 +28,6 @@
   :hook (after-init . global-flycheck-mode)
   :commands (flycheck-add-mode)
   :config
-  (progn
-    ;; Fix error list to bottom of window
-    (add-to-list 'display-buffer-alist
-      `(,(rx bos "*Flycheck errors*" eos)
-         (display-buffer-reuse-window
-           display-buffer-in-side-window)
-         (side            . bottom)
-         (reusable-frames . visible)
-         (window-height   . 0.2))))
-
   (flycheck-add-mode 'json-jq 'fate-json-mode)
 
   (flycheck-def-executable-var qt-qmllint "qmllint")
