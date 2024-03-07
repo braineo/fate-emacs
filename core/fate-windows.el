@@ -43,11 +43,11 @@
   :commands shackle-mode
   :hook (after-init . shackle-mode)
   :custom
-  (shackle-default-rule '(:select t))
   (shackle-rules
     ;;   :regexp     :select  :custom  :inhibit-window-quit :ignore :other :popup :align :size :frame
     '((flycheck-error-list-mode  :select nil :size 0.2   :align bottom)
       (calendar-mode :select t :size 0.2 :align bottom)
+      (magit-status-mode :other t)
       ((help-mode helpful-mode)  :select t :size 80 :align right))))
 
 
@@ -57,11 +57,18 @@
          ("M-`"   . popper-cycle)
          ("C-M-`" . popper-toggle-type))
   :custom
+  (popper-display-control nil)
   (popper-reference-buffers '("\\*Messages\\*"
                               "Output\\*$"
                               "\\*Async Shell Command\\*"
                               help-mode  helpful-mode
                               compilation-mode)))
+
+;; Ace window. specify which window to jump to
+(use-package ace-window
+  :bind
+  ("s-w" . ace-window)
+  ([remap other-window] . ace-window))
 
 (provide 'fate-windows)
 ;;; fate-windows.el ends here
