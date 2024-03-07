@@ -24,6 +24,8 @@
 
 ;;; Code:
 
+(require 'transient)
+
 (use-package engine-mode
   :bind-keymap ("C-c s" . engine-mode-prefixed-map)
   :config
@@ -78,6 +80,22 @@ Function definition:
         gptel-backend llama-cpp
         gptel-model "any"))))
 
+(transient-define-suffix fate/gptel-suffix-docstring ()
+  "Generate docstring for region contents."
+  :key "d"
+  :description "Docstring"
+  :if (and (derived-mode-p 'prog-mode) (use-region-p))
+  (interactive)
+  (let* ((lang (substring (symbol-name major-mode) nil -5))
+         (prompt (format fate/docstring-prompt-template
+                        (buffer-substring-no-properties
+                          (region-beginning) (region-end))
+                        lang)))
+    (gptel-request
+      prompt
+      :stream t
+      :position (region-beginning)
+      :system (format "You are an expert %s programmer writing docstring for a function." lang))))
 
 
 (use-package gptel
@@ -85,32 +103,15 @@ Function definition:
   :config
   (fate/gptel-backend-setup)
   (with-eval-after-load 'gptel-transient
-
-   (transient-define-suffix fate/gptel-suffix-docstring ()
-     "Generate docstring for region contents."
-     :key "d"
-     :description "Docstring"
-     :if (and (derived-mode-p 'prog-mode) (use-region-p))
-     (interactive)
-     (let* ((lang (substring (symbol-name major-mode) nil -5))
-            (prompt (format fate/docstring-prompt-template
-                           (buffer-substring-no-properties
-                             (region-beginning) (region-end))
-                           lang)))
-       (gptel-request
-         prompt
-         :stream t
-         :position (region-beginning)
-         :system (format "You are an expert %s programmer writing docstring for a function." lang))))
-
-   (transient-insert-suffix 'gptel-menu '(2 -1)
-     ["Document" :if use-region-p (fate/gptel-suffix-docstring)])))
+    (transient-insert-suffix 'gptel-menu '(2 -1)
+      ["Document" :if use-region-p (fate/gptel-suffix-docstring)])))
 
 (use-package helpful
   :bind
   ([remap describe-function] . helpful-callable)
   ([remap describe-key] . helpful-key)
   ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . helpful-variable)
   ([remap Info-goto-emacs-command-node] . helpful-function))
 
 (provide 'fate-assist)

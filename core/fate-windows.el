@@ -39,5 +39,29 @@
                             "*Ibuffer*"
                             "*esh command on file*")))
 
+(use-package shackle
+  :commands shackle-mode
+  :hook (after-init . shackle-mode)
+  :custom
+  (shackle-default-rule '(:select t))
+  (shackle-rules
+    ;;   :regexp     :select  :custom  :inhibit-window-quit :ignore :other :popup :align :size :frame
+    '((flycheck-error-list-mode  :select nil :size 0.2   :align bottom)
+      (calendar-mode :select t :size 0.2 :align bottom)
+      ((help-mode helpful-mode)  :select t :size 80 :align right))))
+
+
+(use-package popper
+  :hook (after-init . popper-mode)
+  :bind (("C-`"   . popper-toggle)
+         ("M-`"   . popper-cycle)
+         ("C-M-`" . popper-toggle-type))
+  :custom
+  (popper-reference-buffers '("\\*Messages\\*"
+                              "Output\\*$"
+                              "\\*Async Shell Command\\*"
+                              help-mode  helpful-mode
+                              compilation-mode)))
+
 (provide 'fate-windows)
 ;;; fate-windows.el ends here
