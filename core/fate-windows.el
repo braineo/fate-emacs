@@ -46,10 +46,9 @@
   (shackle-rules
     ;;   :regexp     :select  :custom  :inhibit-window-quit :ignore :other :popup :align :size :frame
     '((flycheck-error-list-mode  :select nil :size 0.2   :align bottom)
+      (("*Compile-Log*" "*Messages*") :select nil :size 0.1 :align bottom)
       (calendar-mode :select t :size 0.2 :align bottom)
-      (magit-status-mode :other t)
       ((help-mode helpful-mode)  :select t :size 80 :align right))))
-
 
 (use-package popper
   :hook (after-init . popper-mode)
@@ -59,6 +58,7 @@
   :custom
   (popper-display-control nil)
   (popper-reference-buffers '("\\*Messages\\*"
+                              "*Compile-Log*"
                               "Output\\*$"
                               "\\*Async Shell Command\\*"
                               help-mode  helpful-mode
