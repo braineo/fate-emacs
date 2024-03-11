@@ -48,9 +48,10 @@
 
 (push '(menu-bar-lines . 0) default-frame-alist)
 (push '(tool-bar-lines . 0) default-frame-alist)
-(push '(vertical-scroll-bars . 0) default-frame-alist)
-(push '(horizontal-scroll-bars. 0) default-frame-alist)
+(push '(vertical-scroll-bars) default-frame-alist)
 
+(setq frame-inhibit-implied-resize t)
+(setq frame-resize-pixelwise t)
 ;; Always load newest byte code
 (setq load-prefer-newer t)
 
