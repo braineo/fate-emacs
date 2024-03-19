@@ -49,6 +49,16 @@
 (use-package org-modern
   :hook (org-mode . org-modern-mode))
 
+(use-package atomic-chrome
+  :demand t
+  :straight (atomic-chrome
+             :repo "KarimAziev/atomic-chrome"
+             :type git
+             :flavor nil
+             :host github)
+  :commands (atomic-chrome-start-server)
+  :config (atomic-chrome-start-server))
+
 
 (provide 'fate-writing)
 ;;; fate-writing.el ends here
