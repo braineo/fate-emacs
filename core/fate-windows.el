@@ -46,7 +46,7 @@
   (shackle-rules
     ;;   :regexp     :select  :custom  :inhibit-window-quit :ignore :other :popup :align :size :frame
     '((flycheck-error-list-mode  :select nil :size 0.2   :align bottom)
-      (("*Compile-Log*" "*Messages*") :select nil :size 0.1 :align bottom)
+      (("*Compile-Log*" "*Messages*" "*Warnings*") :select nil :size 0.1 :align bottom)
       (calendar-mode :select t :size 0.2 :align bottom)
       ((help-mode helpful-mode)  :select t :size 80 :align right))))
 
@@ -58,6 +58,7 @@
   :custom
   (popper-display-control nil)
   (popper-reference-buffers '("\\*Messages\\*"
+                              "\\*Warnings\\*"
                               "*Compile-Log*"
                               "Output\\*$"
                               "\\*Async Shell Command\\*"
