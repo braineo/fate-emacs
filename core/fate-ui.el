@@ -111,8 +111,19 @@
   (progn
     (setq dashboard-items '((recents  . 10)
                             (projects . 10))
+
+          dashboard-startupify-list '(dashboard-insert-banner
+                                      dashboard-insert-newline
+                                      dashboard-insert-banner-title
+                                      dashboard-insert-newline
+                                      dashboard-insert-navigator
+                                      dashboard-insert-newline
+                                      dashboard-insert-init-info
+                                      dashboard-insert-items
+                                      dashboard-insert-newline
+                                      dashboard-insert-footer)
+
           ;; Format: "(icon title help action face prefix suffix)"
-          dashboard-set-navigator t
           dashboard-navigator-buttons
           `(((,(when (display-graphic-p)
                  (nerd-icons-codicon "nf-cod-github"))
