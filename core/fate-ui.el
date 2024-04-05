@@ -107,6 +107,8 @@
   (dashboard-set-init-info t)
   (dashboard-projects-switch-function 'find-file)
   (dashboard-icon-type 'nerd-icons)
+  (dashboard-projects-backend 'projectile)
+  (dashboard-footer-messages '("Start and finish recording keyboard macros: c-x (, c-x )"))
   :config
   (progn
     (setq dashboard-items '((recents  . 10)
