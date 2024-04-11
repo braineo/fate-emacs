@@ -82,7 +82,9 @@
   (isearch-lazy-count t)
   (lazy-count-prefix-format "%s/%s "))
 
-
+(use-package cc-isearch-menu
+  :bind (:map isearch-mode-map
+         ("<f2>" . cc-isearch-menu-transient)))
 
 (use-package re-builder
   :ensure nil
