@@ -263,13 +263,24 @@ if `N' is 9, return root dir + repo path."
 (use-package ts-fold
   :straight (ts-fold :type git :host github :repo "emacs-tree-sitter/ts-fold")
   :config
+  (defun fate/ts-fold-range-jsx-self-close-tag (node offset)
+    "Define fold range for `jsx_self_closing_element'.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+    (when-let* ((identifier-node (car (ts-fold-find-children-traverse node "identifier")))
+                (beg (tsc-node-end-position identifier-node))
+                (end (tsc-node-end-position node)))
+      (ts-fold--cons-add (cons beg (- end 2)) offset)))
+
   (defun fate/ts-fold-parers-tsx ()
     "Rule set for tsx"
     (append
       (ts-fold-parsers-typescript)
       '((jsx_element . ts-fold-range-html)
         (jsx_attribute . ts-fold-range-seq)
-        (jsx_expression . ts-fold-range-seq))))
+        (jsx_expression . ts-fold-range-seq)
+        (jsx_self_closing_element . fate/ts-fold-range-jsx-self-close-tag))))
 
   (defun fate/ts-fold-range-python-block (node offset)
     "Define fold range for `if_statement'.
