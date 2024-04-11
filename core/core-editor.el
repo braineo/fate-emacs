@@ -82,7 +82,9 @@
   (isearch-lazy-count t)
   (lazy-count-prefix-format "%s/%s "))
 
-
+(use-package cc-isearch-menu
+  :bind (:map isearch-mode-map
+         ("<f2>" . cc-isearch-menu-transient)))
 
 (use-package re-builder
   :ensure nil
@@ -256,9 +258,59 @@ if `N' is 9, return root dir + repo path."
   :hook
   (prog-mode . hs-minor-mode)
   :init
-  (add-to-list 'hs-special-modes-alist '(fate-json-mode "{" "}" "/[*/]" nil))
+  (add-to-list 'hs-special-modes-alist '(fate-json-mode "{" "}" "/[*/]" nil)))
+  ;; :bind
+  ;; ("C-<tab>" . hs-toggle-hiding))
+
+(use-package ts-fold
+  :straight (ts-fold :type git :host github :repo "emacs-tree-sitter/ts-fold")
+  :config
+  (defun fate/ts-fold-range-jsx-self-close-tag (node offset)
+    "Define fold range for `jsx_self_closing_element'.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+    (when-let* ((identifier-node (car (ts-fold-find-children-traverse node "identifier")))
+                (beg (tsc-node-end-position identifier-node))
+                (end (tsc-node-end-position node)))
+      (ts-fold--cons-add (cons beg (- end 2)) offset)))
+
+  (defun fate/ts-fold-parers-tsx ()
+    "Rule set for tsx"
+    (append
+      (ts-fold-parsers-typescript)
+      '((jsx_element . ts-fold-range-html)
+        (jsx_attribute . ts-fold-range-seq)
+        (jsx_expression . ts-fold-range-seq)
+        (jsx_self_closing_element . fate/ts-fold-range-jsx-self-close-tag))))
+
+  (defun fate/ts-fold-range-python-block (node offset)
+    "Define fold range for `if_statement'.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+    (when-let* ((colon-node (car (ts-fold-find-children-traverse node ":")))
+                (beg (tsc-node-start-position colon-node))
+                (end (tsc-node-end-position node)))
+      (ts-fold--cons-add (cons (+ beg 1) end) offset)))
+
+  (defun fate/ts-fold-parsers-python ()
+    (append
+      (ts-fold-parsers-python)
+      (mapcar (lambda (keyword) (cons keyword 'fate/ts-fold-range-python-block))
+        '(while_statement for_statement if_statement elif_clause else_clause
+           match_statement case_clause try_statement except_clause with_statement))))
+
+  (add-to-list 'ts-fold-range-alist `(typescript-tsx-mode . ,(fate/ts-fold-parers-tsx)))
+  (add-to-list 'ts-fold-summary-parsers-alist '(typescript-tsx-mode . ts-fold-summary-javadoc))
+
+  (setq ts-fold-range-alist (assq-delete-all 'python-mode ts-fold-range-alist))
+
+  (add-to-list 'ts-fold-range-alist `(python-mode . ,(fate/ts-fold-parsers-python)))
+  (global-ts-fold-mode)
   :bind
-  ("C-<tab>" . hs-toggle-hiding))
+  ("C-<tab>" . ts-fold-toggle))
+
 
 ;; Core package winum. Easy navigation to different buffers
 (use-package winum
