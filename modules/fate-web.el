@@ -60,10 +60,9 @@ OUTPUT is parsed path list."
   (let* ((parent-node (treesit-node-parent current-node)))
     (if parent-node
       (progn
-        (when (eq (treesit-node-type parent-node) 'array)
+        (when (equal (treesit-node-type parent-node) "array")
           (let ((index -1)
-                (cursor parent-node))
-            (treesit-node-child cursor 0)
+                (cursor (treesit-node-child parent-node 0)))
             (while (not (treesit-node-eq current-node cursor))
                 (progn
                   (setq cursor (treesit-node-next-sibling cursor t))
