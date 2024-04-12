@@ -171,5 +171,14 @@
   :bind (:map sh-mode-map
           ("C-c C-l" . shfmt-buffer)))
 
+(use-package treesit-auto
+  :commands (treesit-auto-add-to-auto-mode-alist global-treesit-auto-mode)
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (setq treesit-auto-langs '(python rust yaml org json glsl dockerfile c cmake bash))
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
+
 (provide 'fate-langs)
 ;;; fate-langs.el ends here

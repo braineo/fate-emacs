@@ -24,7 +24,7 @@
 
 ;;; Code:
 
-(require 'tree-sitter)
+(require 'treesit)
 (eval-when-compile
   (require 'core-packages))
 
@@ -52,33 +52,108 @@
         (prettier-js-mode)
         (cl-return)))))
 
+(defvar-local jq-foramt-args '())
 
-(use-package fate-json-mode
+(defun fate/json-get-path (current-node output)
+  "Get path to json value at cursor position.  CURRENT-NODE is a tree-sitter-node.
+OUTPUT is parsed path list."
+  (let* ((parent-node (treesit-node-parent current-node)))
+    (if parent-node
+      (progn
+        (when (eq (treesit-node-type parent-node) 'array)
+          (let ((index -1)
+                (cursor parent-node))
+            (treesit-node-child cursor 0)
+            (while (not (treesit-node-eq current-node cursor))
+                (progn
+                  (setq cursor (treesit-node-next-sibling cursor t))
+                  (if cursor
+                    (progn
+                      (setq index (+ index 1))))))
+            (setq output (push index output))))
+        (when (equal (treesit-node-type current-node) "pair")
+            (setq output (push (substring-no-properties (treesit-node-text (treesit-node-child current-node 0))) output)))
+        (fate/json-get-path parent-node output))
+      output)))
+
+;;;###autoload
+(defun fate/json-print-path-js ()
+  "Show json path in minibuffer in JavaScript, jq format."
+  (interactive)
+  (let (json-path)
+    (dolist (elt (fate/json-get-path (treesit-node-at (point)) '()) json-path)
+      (when (stringp elt)
+        (let* ((trimmed-elt (string-trim elt "\"" "\"")))
+          (if (string-match-p "-" trimmed-elt)
+            (setq json-path (concat json-path "[" trimmed-elt "]"))
+            (setq json-path (concat json-path "." trimmed-elt)))))
+      (when (numberp elt)
+        (setq json-path (concat json-path "[" (number-to-string elt) "]"))))
+    (message json-path)))
+
+;;;###autoload
+(defun fate/json-kill-path-js ()
+  "Save json path to kill ring."
+  (interactive)
+  (kill-new (fate/json-print-path-js)))
+
+;;;###autoload
+(defun fate/json-pretty-print (&optional minimize)
+  "Pretty-print current buffer.  when MINIMIZE is set, minimize JSON document."
+  (interactive "P")
+  (when minimize
+    (setq-local jq-foramt-args '("-c")))
+  (when (use-region-p)
+    (cond ((executable-find "jq") (json-jq-region (region-beginning) (region-end) nil))
+          (t (json-pretty-print (region-beginning) (region-end) minimize))))
+  (cond ((executable-find "jq") (json-jq-buffer nil))
+        (t (json-pretty-print (point-min) (point-max) minimize)))
+
+  (setq-local jq-foramt-args '()))
+
+
+(defgroup jqfmt nil
+  "Reformat JSON using jq."
+  :group 'languages)
+
+(defcustom jqfmt-command "jq"
+  "Command used for reformatting."
+  :group 'jqfmt
+  :type 'string)
+
+(reformatter-define json-jq
+  :program jqfmt-command
+  :args jq-foramt-args
+  :lighter "JQ"
+  :group 'jqfmt)
+
+(use-package json-ts-mode
+  :ensure nil
   :mode ("\\.json\\'")
-  :load-path "modules/fate-json-mode")
+  :bind (:map json-ts-mode-map
+          ("C-c P" . fate/json-print-path-js)
+          ("C-c C-p" . fate/json-kill-path-js)
+          ("C-c C-l" . fate/json-pretty-print)))
 
-(use-package less-css-mode
-  :hook (less-css-mode . fate/prettier-minor-mode)
+(use-package css-ts-mode
+  :ensure nil
+  :mode ("\\.less\\'")
+  :hook (css-ts-mode . fate/prettier-minor-mode)
   :config
   (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.module.less\\'" "\\1.tsx")))
 
-(use-package javascript-mode
-  :ensure nil
-  :mode ("\\.[cm]?jsx?\\'")
-  :hook (js-mode . fate/prettier-minor-mode))
-
-(use-package typescript-mode
-  :mode ("\\.ts\\'")
-  :hook (typescript-mode . fate/prettier-minor-mode)
+(use-package jtsx
+  :mode
+  (("\\.[cm]?jsx?\\'" . jtsx-jsx-mode)
+   ("\\.tsx\\'" . jtsx-tsx-mode)
+   ("\\.ts\\'" . jtsx-typescript-mode))
+  :hook ((javascript-ts-mode typescript-ts-mode tsx-ts-mode) . fate/prettier-minor-mode)
   :config
-  (define-derived-mode typescript-tsx-mode typescript-mode "TSX"
-   "Derived mode for better syntax highlight and linter config.")
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-tsx-mode))
   (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.ts\\'" "\\1.spec.ts"))
   (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.tsx\\'" "\\1.spec.tsx" "\\1.scss" "\\1.module.less" "\\1.sass" "\\1.css")))
 
 (use-package tide
-  :after typescript-mode
+  :after typescript-ts-mode
   :init (tide-start-server-if-nonexistent)
   :commands (tide-current-server tide-start-server-if-nonexistent tide-jsdoc-template))
 
@@ -90,9 +165,13 @@
   (web-mode-enable-auto-quoting nil "annoying when writting arrow function in a tag")
   :hook (web-mode . fate/prettier-minor-mode))
 
-(use-package graphql-mode
-  :mode ("\\.graphql\\'")
-  :hook (graphql-mode . fate/prettier-minor-mode)
+(use-package graphql-ts-mode
+  :mode ("\\.graphql\\'" "\\.gql\\'")
+  :hook (graphql-ts-mode . fate/prettier-minor-mode)
+  :init
+  (with-eval-after-load 'treesit
+    (add-to-list 'treesit-language-source-alist
+                 '(graphql "https://github.com/bkegley/tree-sitter-graphql")))
   :config
   (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.gql.ts\\'" "\\1.graphql")))
 
