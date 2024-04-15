@@ -111,17 +111,18 @@
       (mojo . ("https://github.com/HerringtonDarkholme/tree-sitter-mojo"))))
 
   (setq major-mode-remap-alist
-    '((c-mode          . c-ts-mode)
-      (c++-mode        . c++-ts-mode)
-      (cmake-mode      . cmake-ts-mode)
-      (conf-toml-mode  . toml-ts-mode)
-      (css-mode        . css-ts-mode)
-      (graphql-mode    . graphql-ts-mode)
-      (js-mode         . js-ts-mode)
-      (js-json-mode    . json-ts-mode)
-      (python-mode     . python-ts-mode)
-      (sh-mode         . bash-ts-mode)
-      (rust-mode       . rust-ts-mode)))
+    '((c-mode         . c-ts-mode)
+      (c++-mode       . c++-ts-mode)
+      (cmake-mode     . cmake-ts-mode)
+      (conf-toml-mode . toml-ts-mode)
+      (css-mode       . css-ts-mode)
+      (graphql-mode   . graphql-ts-mode)
+      (js-mode        . js-ts-mode)
+      (js-json-mode   . json-ts-mode)
+      (python-mode    . python-ts-mode)
+      (sh-mode        . bash-ts-mode)
+      (rust-mode      . rust-ts-mode)
+      (yaml-mode      . yaml-ts-mode)))
 
   :custom
   (treesit-font-lock-level 4))
@@ -132,7 +133,9 @@
   (load-theme 'doom-one t)
   (custom-theme-set-faces
    'doom-one
-    '(font-lock-misc-punctuation-face ((t (:inherit font-lock-string-face))))))
+    '(font-lock-misc-punctuation-face ((t (:inherit font-lock-variable-name-face)))))
+
+  (enable-theme 'doom-one))
 
 (use-package doom-modeline
   :config

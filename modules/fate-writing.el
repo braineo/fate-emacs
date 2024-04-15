@@ -38,8 +38,13 @@
   :defer)
 
 
+(defun fate/enable-jinx ()
+  "Enable jinx only for writing modes."
+  (unless (member major-mode '(yaml-ts-mode toml-ts-mode))
+    (jinx-mode)))
+
 (use-package jinx
-  :hook ((markdown-mode text-mode) . jinx-mode)
+  :hook ((markdown-mode text-mode) . fate/enable-jinx)
   :bind ([remap ispell-word] . jinx-correct))
 
 (use-package org
