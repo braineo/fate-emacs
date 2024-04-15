@@ -43,9 +43,8 @@
   :if (string-match-p "MODULES" system-configuration-features)
   :hook
   ((emacs-lisp-mode scheme-mode) . fate-init-parinfer-mode)
-  :init
-  (setq parinfer-rust-auto-download t)
   :custom
+  (parinfer-rust-auto-download t)
   (parinfer-rust-library-directory (concat fate-cache-directory "parinfer-rust/")))
 
 (defun fate/treesit-install-language-grammars ()
