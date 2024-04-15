@@ -48,12 +48,11 @@
   :custom
   (parinfer-rust-library-directory (concat fate-cache-directory "parinfer-rust/")))
 
-
-(use-package treesit
-  :ensure nil
-  :defer t
-  :custom
-  (treesit-font-lock-level 4))
+(defun fate/treesit-install-language-grammars ()
+  "Install treesitter so for configured major modes."
+  (interactive)
+  (dolist (lang '(python rust typescript javascript tsx graphql c cpp css cmake toml yaml json))
+    (treesit-install-language-grammar lang)))
 
 (use-package yaml-mode
   :mode (("\\.yaml\\'" . yaml-mode)
@@ -170,15 +169,6 @@
   :ensure nil
   :bind (:map sh-mode-map
           ("C-c C-l" . shfmt-buffer)))
-
-(use-package treesit-auto
-  :commands (treesit-auto-add-to-auto-mode-alist global-treesit-auto-mode)
-  :custom
-  (treesit-auto-install 'prompt)
-  :config
-  (setq treesit-auto-langs '(python rust yaml org json glsl dockerfile c cmake bash))
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
 
 (provide 'fate-langs)
 ;;; fate-langs.el ends here
