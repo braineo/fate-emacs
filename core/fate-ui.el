@@ -12,6 +12,7 @@
 ;;; Code:
 
 (require 'fate-const)
+(require 'fate-hints)
 (eval-when-compile
  (require 'core-load-paths))
 
@@ -131,9 +132,21 @@
 (use-package doom-themes
   :config
   (load-theme 'doom-one t)
+  ;; new font-lock since 29.1 for tree sitter
   (custom-theme-set-faces
-   'doom-one
-    '(font-lock-misc-punctuation-face ((t (:inherit font-lock-variable-name-face)))))
+    'doom-one
+    ;; '(font-lock-bracket-face) ;; punctuation
+    ;; '(font-lock-delimiter-face) ;; punctuation
+    '(font-lock-escape-face ((t (:inherit font-lock-keyword-face))))
+    ;; '(font-lock-function-call-face) ;; function-name-face
+    '(font-lock-misc-punctuation-face ((t (:inherit font-lock-keyword-face))))
+    '(font-lock-number-face ((t (:inherit font-lock-constant-face))))
+    '(font-lock-operator-face ((t (:inherit font-lock-keyword-face))))
+    ;; '(font-lock-property-name-face) ;; defined
+    '(font-lock-property-use-face ((t (:inherit font-lock-property-name-face :slant italic)))))
+    ;; '(font-lock-punctuation-face) ;; dimmed
+    ;; '(font-lock-regexp-face) ;; defined
+    ;; '(font-lock-variable-use-face)) ;; variable-name
 
   (enable-theme 'doom-one))
 
@@ -160,7 +173,7 @@
   (dashboard-projects-switch-function 'find-file)
   (dashboard-icon-type 'nerd-icons)
   (dashboard-projects-backend 'projectile)
-  (dashboard-footer-messages '("Start and finish recording keyboard macros: c-x (, c-x )"))
+  (dashboard-footer-messages fate/emacs-hints)
   :config
   (progn
     (setq dashboard-items '((recents  . 10)
