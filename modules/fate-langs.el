@@ -51,7 +51,8 @@
   "Install treesitter so for configured major modes."
   (interactive)
   (dolist (lang '(python rust typescript javascript tsx graphql c cpp css cmake toml yaml json))
-    (treesit-install-language-grammar lang)))
+    (unless (treesit-language-available-p lang)
+      (treesit-install-language-grammar lang))))
 
 (use-package yaml-mode
   :mode (("\\.yaml\\'" . yaml-mode)
