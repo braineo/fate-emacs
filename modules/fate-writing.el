@@ -40,7 +40,7 @@
 
 (defun fate/enable-jinx ()
   "Enable jinx only for writing modes."
-  (unless (member major-mode '(yaml-ts-mode toml-ts-mode))
+  (unless (member major-mode '(yaml-ts-mode toml-ts-mode nxml-mode))
     (jinx-mode)))
 
 (use-package jinx
