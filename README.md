@@ -341,6 +341,27 @@ curl -fsSL https://ollama.com/install.sh | sh
 ollama run dolphin-mixtral
 ```
 
+## Tree sitter
+
+Tree-sitter is a parser generator tool and an incremental parsing
+library. It is integrated into Emacs from 29. With tree sitter, it
+makes syntax parsing much faster and font-lock-rules much easier to
+write. Other than syntax highlight, it can provide some other useful
+functions to improve editing efficiency.
+
+### Build parser from source
+
+Although `fate/treesit-install-language-grammars` or the built-in `treesit-install-language-grammar` should be enough to automate the process.
+
+In case you need to test your modification locally and build it from source.
+
+``` shell
+git clone git@github.com:tree-sitter/tree-sitter-rust.git
+cd tree-sitter-rust/src
+cc parser.c scanner.c -fPIC -I. --shared -o libtree-sitter-rust.so
+mv libtree-sitter-rust.so ~/.emacs.d/tree-sitter
+```
+
 ## Useful links
 
   - [How to change fonts](https://www.gnu.org/software/emacs/manual/html_node/emacs/Fonts.html)
