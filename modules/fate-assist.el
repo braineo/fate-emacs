@@ -61,7 +61,7 @@ Function definition:
 (defun fate/gptel-backend-setup ()
   "Setup additional model backend for gptel."
   (let* ((ollama-models (seq-filter #'(lambda (line)(length> line 0))
-                          (mapcar #'(lambda (line) (car (split-string line "\t")))
+                          (mapcar #'(lambda (line) (string-trim (car (split-string line "\t"))))
                            (cdr (split-string (shell-command-to-string "ollama ls 2>/dev/null") "\n")))))
 
          (llama-cpp (gptel-make-openai "llama-cpp"
