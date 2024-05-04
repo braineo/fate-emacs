@@ -27,8 +27,9 @@
 
 (defvar fate/emacs-hints
   '("Start and finish recording keyboard macros: C-x (, C-x )"
-    "Enable edit mode in occur mode by `e` (occur-edit-mode)"
-    "Start wgrep in embark export by C-c C-p")
+    "Enable edit mode in occur mode: `e` (occur-edit-mode)"
+    "Start wgrep in embark export: C-c C-p"
+    "Open file in Hexl mode: M-x hexl-find-file")
    "Hints to show on dashboard footer.")
 
 
