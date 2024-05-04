@@ -81,6 +81,8 @@
   (gofmt-command (if (executable-find "goimports") "goimports" "gofmt")))
 
 (use-package rust-mode
+  :init
+  (setq rust-mode-treesitter-derive t)
   :mode (("\\.rs\\'" . rust-mode))
   :custom (rust-format-on-save t))
 
