@@ -37,5 +37,35 @@
   "Check if font FONT-NAME is installed."
   (if (find-font (font-spec :name font-name)) t nil))
 
+(defun fate/draw-file-tree (file-tree &optional level branch prefix)
+  "FILE-TREE is an S-expression of file system structure.
+LEVEL is indent level of current recurssion.
+BRANCH is either ├ or └.   PREFIX is the prefix before branch and bar.
+'(foo (bar a) b) stands for folder foo has folder bar and file b, folder bar has file a."
+  (let* ((indent-level (or level 0))
+         (prefix (or prefix ""))
+         (bar "── ")
+         (index 1)
+         (dir-name (car file-tree))
+         (sub-tree (cdr file-tree))
+         (branch (or branch "├"))
+         (is-last (string= branch "└")))
+
+    ;; (print (format "%d %s prefix %s is last %s" indent-level dir-name prefix is-last))
+    (insert prefix (if (> indent-level 0) (concat branch bar ) "") dir-name "\n")
+
+    (setq indent-level (+ 1 indent-level))
+    (dolist (entry sub-tree)
+      (let* ((tree-length (length sub-tree))
+             (branch (if (eq index tree-length) "└" "├"))
+             (prefix (if (> indent-level 1) (concat prefix (if is-last "    " "│   ")) "")))
+        (cond
+         ((stringp entry)
+          ;; (print (format "%d %s prefix %s index %d tree-length %d" indent-level entry prefix index tree-length))
+          (insert prefix branch bar entry "\n"))
+         ((listp entry)
+          (fate/draw-file-tree entry indent-level branch prefix))))
+      (setq index (+ index 1)))))
+
 (provide 'fate-misc)
 ;;; fate-misc.el ends here
