@@ -41,8 +41,10 @@
   "FILE-TREE is an S-expression of file system structure.
 LEVEL is indent level of current recurssion.
 BRANCH is either ├ or └.   PREFIX is the prefix before branch and bar.
-'(foo (bar a) b) stands for folder foo has folder bar and file b, folder bar has file a."
-  (let* ((indent-level (or level 0))
+\=(foo (bar a) b) stands for folder foo has folder bar and file b,
+folder bar has file a."
+  (let* ((text-tree "")
+         (indent-level (or level 0))
          (prefix (or prefix ""))
          (bar "── ")
          (index 1)
@@ -52,7 +54,9 @@ BRANCH is either ├ or └.   PREFIX is the prefix before branch and bar.
          (is-last (string= branch "└")))
 
     ;; (print (format "%d %s prefix %s is last %s" indent-level dir-name prefix is-last))
-    (insert prefix (if (> indent-level 0) (concat branch bar ) "") dir-name "\n")
+    (setq text-tree (concat
+                     text-tree
+                     prefix (if (> indent-level 0) (concat branch bar ) "") dir-name "\n"))
 
     (setq indent-level (+ 1 indent-level))
     (dolist (entry sub-tree)
@@ -62,10 +66,14 @@ BRANCH is either ├ or └.   PREFIX is the prefix before branch and bar.
         (cond
          ((stringp entry)
           ;; (print (format "%d %s prefix %s index %d tree-length %d" indent-level entry prefix index tree-length))
-          (insert prefix branch bar entry "\n"))
+          (setq text-tree (concat
+                           text-tree prefix branch bar entry "\n")))
          ((listp entry)
-          (fate/draw-file-tree entry indent-level branch prefix))))
-      (setq index (+ index 1)))))
+          (setq text-tree (concat
+                           text-tree
+                           (fate/draw-file-tree entry indent-level branch prefix))))))
+      (setq index (+ index 1)))
+    text-tree))
 
 (provide 'fate-misc)
 ;;; fate-misc.el ends here
