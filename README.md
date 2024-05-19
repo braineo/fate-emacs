@@ -107,6 +107,24 @@ brew install enchant pkg-config
 
 ### Python Tools
 
+Directly install via `pip install` causes warnings in Debian 12. To use packages newer than the system provided packages, use `venv` or `pipx` instead.
+
+``` shell
+# use venv
+sudo apt install python3-venv
+python3 -m venv .venv
+source .venv/bin/activate
+pip install requests
+deactivate
+```
+
+``` shell
+# for executables, use pipx
+sudo apt install pipx
+pipx ensurepath
+pipx install ruff-lsp
+```
+
 `M-x` `fate/python-install-tools`
 
 ### Go Tools
