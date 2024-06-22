@@ -122,7 +122,6 @@
       (js-json-mode   . json-ts-mode)
       (python-mode    . python-ts-mode)
       (sh-mode        . bash-ts-mode)
-      (rust-mode      . rust-ts-mode)
       (yaml-mode      . yaml-ts-mode)))
 
   :custom
