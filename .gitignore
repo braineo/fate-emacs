@@ -63,4 +63,8 @@ mspyls/
 
 # package specific
 straight/
+
+# external module compile outputs
 parinfer-rust/
+eln-cache/
+tree-sitter/

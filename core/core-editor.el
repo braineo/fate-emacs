@@ -168,13 +168,11 @@ surrounded by word boundaries."
     (add-to-list 'recentf-exclude no-littering-etc-directory)))
 
 ;; Power package visualizing undo redo history
-(use-package undo-tree
-  :hook (after-init . global-undo-tree-mode)
-  :custom
-  ;; autosave the undo-tree history
-  (undo-tree-auto-save-history nil)
-  (undo-tree-enable-undo-in-region nil "Known to be problematic so disable it https://debbugs.gnu.org/cgi/bugreport.cgi?bug=16377"))
-
+(use-package undo-redo
+  :ensure nil
+  :bind
+  (("C-/" . undo-only)
+   ("M-_" . undo-redo)))
 
 ;; Pair parentheses, brace, quotes
 (use-package elec-pair

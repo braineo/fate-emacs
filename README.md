@@ -107,6 +107,24 @@ brew install enchant pkg-config
 
 ### Python Tools
 
+Directly install via `pip install` causes warnings in Debian 12. To use packages newer than the system provided packages, use `venv` or `pipx` instead.
+
+``` shell
+# use venv
+sudo apt install python3-venv
+python3 -m venv .venv
+source .venv/bin/activate
+pip install requests
+deactivate
+```
+
+``` shell
+# for executables, use pipx
+sudo apt install pipx
+pipx ensurepath
+pipx install ruff-lsp
+```
+
 `M-x` `fate/python-install-tools`
 
 ### Go Tools
@@ -339,6 +357,27 @@ Or use Ollama as frontend
 ``` shell
 curl -fsSL https://ollama.com/install.sh | sh
 ollama run dolphin-mixtral
+```
+
+## Tree sitter
+
+Tree-sitter is a parser generator tool and an incremental parsing
+library. It is integrated into Emacs from 29. With tree sitter, it
+makes syntax parsing much faster and font-lock-rules much easier to
+write. Other than syntax highlight, it can provide some other useful
+functions to improve editing efficiency.
+
+### Build parser from source
+
+Although `fate/treesit-install-language-grammars` or the built-in `treesit-install-language-grammar` should be enough to automate the process.
+
+In case you need to test your modification locally and build it from source.
+
+``` shell
+git clone git@github.com:tree-sitter/tree-sitter-rust.git
+cd tree-sitter-rust/src
+cc parser.c scanner.c -fPIC -I. --shared -o libtree-sitter-rust.so
+mv libtree-sitter-rust.so ~/.emacs.d/tree-sitter
 ```
 
 ## Useful links

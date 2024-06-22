@@ -43,17 +43,16 @@
   :if (string-match-p "MODULES" system-configuration-features)
   :hook
   ((emacs-lisp-mode scheme-mode) . fate-init-parinfer-mode)
-  :init
-  (setq parinfer-rust-auto-download t)
   :custom
+  (parinfer-rust-auto-download t)
   (parinfer-rust-library-directory (concat fate-cache-directory "parinfer-rust/")))
 
-
-(use-package treesit
-  :ensure nil
-  :defer t
-  :custom
-  (treesit-font-lock-level 4))
+(defun fate/treesit-install-language-grammars ()
+  "Install treesitter so for configured major modes."
+  (interactive)
+  (dolist (lang '(python rust typescript javascript tsx graphql c cpp css cmake toml yaml json bash))
+    (unless (treesit-language-available-p lang)
+      (treesit-install-language-grammar lang))))
 
 (use-package yaml-mode
   :mode (("\\.yaml\\'" . yaml-mode)
@@ -82,6 +81,8 @@
   (gofmt-command (if (executable-find "goimports") "goimports" "gofmt")))
 
 (use-package rust-mode
+  :init
+  (setq rust-mode-treesitter-derive t)
   :mode (("\\.rs\\'" . rust-mode))
   :custom (rust-format-on-save t))
 

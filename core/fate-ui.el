@@ -12,6 +12,7 @@
 ;;; Code:
 
 (require 'fate-const)
+(require 'fate-hints)
 (eval-when-compile
  (require 'core-load-paths))
 
@@ -68,22 +69,85 @@
   (setq default-frame-alist '((ns-transparent-titlebar . t) (ns-appearance . dark))))
 
 ;; Tree sitter for better syntax highlight
+(use-package treesit
+  :if (treesit-available-p)
+  :ensure nil
+  :init
+  (setq treesit-language-source-alist
+    '((bash . ("https://github.com/tree-sitter/tree-sitter-bash"))
+      (c . ("https://github.com/tree-sitter/tree-sitter-c"))
+      (cpp . ("https://github.com/tree-sitter/tree-sitter-cpp"))
+      (css . ("https://github.com/tree-sitter/tree-sitter-css"))
+      (cmake . ("https://github.com/uyha/tree-sitter-cmake"))
+      (csharp     . ("https://github.com/tree-sitter/tree-sitter-c-sharp.git"))
+      (dockerfile . ("https://github.com/camdencheek/tree-sitter-dockerfile"))
+      (elisp . ("https://github.com/Wilfred/tree-sitter-elisp"))
+      (elixir "https://github.com/elixir-lang/tree-sitter-elixir" "main" "src" nil nil)
+      (go . ("https://github.com/tree-sitter/tree-sitter-go"))
+      (gomod      . ("https://github.com/camdencheek/tree-sitter-go-mod.git"))
+      (graphql . ("https://github.com/bkegley/tree-sitter-graphql"))
+      (haskell "https://github.com/tree-sitter/tree-sitter-haskell" "master" "src" nil nil)
+      (html . ("https://github.com/tree-sitter/tree-sitter-html"))
+      (java       . ("https://github.com/tree-sitter/tree-sitter-java.git"))
+      (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript"))
+      (json . ("https://github.com/tree-sitter/tree-sitter-json"))
+      (lua . ("https://github.com/Azganoth/tree-sitter-lua"))
+      (make . ("https://github.com/alemuller/tree-sitter-make"))
+      (markdown . ("https://github.com/MDeiml/tree-sitter-markdown" nil "tree-sitter-markdown/src"))
+      (ocaml . ("https://github.com/tree-sitter/tree-sitter-ocaml" nil "ocaml/src"))
+      (org . ("https://github.com/milisims/tree-sitter-org"))
+      (python . ("https://github.com/tree-sitter/tree-sitter-python"))
+      (php . ("https://github.com/tree-sitter/tree-sitter-php"))
+      (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript/src"))
+      (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx/src"))
+      (ruby . ("https://github.com/tree-sitter/tree-sitter-ruby"))
+      (rust . ("https://github.com/tree-sitter/tree-sitter-rust"))
+      (sql . ("https://github.com/m-novikov/tree-sitter-sql"))
+      (scala "https://github.com/tree-sitter/tree-sitter-scala" "master" "src" nil nil)
+      (toml "https://github.com/tree-sitter/tree-sitter-toml" "master" "src" nil nil)
+      (vue . ("https://github.com/merico-dev/tree-sitter-vue"))
+      (kotlin . ("https://github.com/fwcd/tree-sitter-kotlin"))
+      (yaml . ("https://github.com/ikatyang/tree-sitter-yaml"))
+      (zig . ("https://github.com/GrayJack/tree-sitter-zig"))
+      (mojo . ("https://github.com/HerringtonDarkholme/tree-sitter-mojo"))))
 
-(when (functionp (quote module-load))
-  (use-package tree-sitter-langs
-    :after tree-sitter
-    :config
-    (tree-sitter-require 'tsx)
-    (add-to-list 'tree-sitter-major-mode-language-alist '(typescript-tsx-mode . tsx)))
+  (setq major-mode-remap-alist
+    '((c-mode         . c-ts-mode)
+      (c++-mode       . c++-ts-mode)
+      (cmake-mode     . cmake-ts-mode)
+      (conf-toml-mode . toml-ts-mode)
+      (css-mode       . css-ts-mode)
+      (graphql-mode   . graphql-ts-mode)
+      (js-mode        . js-ts-mode)
+      (js-json-mode   . json-ts-mode)
+      (python-mode    . python-ts-mode)
+      (sh-mode        . bash-ts-mode)
+      (yaml-mode      . yaml-ts-mode)))
 
-  (use-package tree-sitter
-    :hook ((prog-mode . global-tree-sitter-mode))
-          (tree-sitter-after-on . tree-sitter-hl-mode)))
+  :custom
+  (treesit-font-lock-level 4))
 
 ;; Theme
 (use-package doom-themes
   :config
-  (load-theme 'doom-one t))
+  (load-theme 'doom-one t)
+  ;; new font-lock since 29.1 for tree sitter
+  (custom-theme-set-faces
+    'doom-one
+    ;; '(font-lock-bracket-face) ;; punctuation
+    ;; '(font-lock-delimiter-face) ;; punctuation
+    '(font-lock-escape-face ((t (:inherit font-lock-keyword-face))))
+    ;; '(font-lock-function-call-face) ;; function-name-face
+    '(font-lock-misc-punctuation-face ((t (:inherit font-lock-keyword-face))))
+    '(font-lock-number-face ((t (:inherit font-lock-constant-face))))
+    '(font-lock-operator-face ((t (:inherit font-lock-keyword-face))))
+    ;; '(font-lock-property-name-face) ;; defined
+    '(font-lock-property-use-face ((t (:inherit font-lock-property-name-face :slant italic)))))
+    ;; '(font-lock-punctuation-face) ;; dimmed
+    ;; '(font-lock-regexp-face) ;; defined
+    ;; '(font-lock-variable-use-face)) ;; variable-name
+
+  (enable-theme 'doom-one))
 
 (use-package doom-modeline
   :config
@@ -108,7 +172,7 @@
   (dashboard-projects-switch-function 'find-file)
   (dashboard-icon-type 'nerd-icons)
   (dashboard-projects-backend 'projectile)
-  (dashboard-footer-messages '("Start and finish recording keyboard macros: c-x (, c-x )"))
+  (dashboard-footer-messages fate/emacs-hints)
   :config
   (progn
     (setq dashboard-items '((recents  . 10)
@@ -146,16 +210,16 @@
 ;; Highlight nested parentheses
 (use-package highlight-parentheses
   :custom
-  (hl-paren-highlight-adjacent t "like show-paren-mode")
-  (hl-paren-delay 0.2 "delay of parentheses highlight")
-  (hl-paren-colors '("IndianRed3"
-                     "goldenrod3"
-                     "Springgreen3"
-                     "DeepSkyBlue3"
-                     "RoyalBlue3"
-                     "DarkViolet") "colors from inside to outside")
+  (highlight-parentheses-highlight-adjacent t "like show-paren-mode")
+  (highlight-parentheses-delay 0.2 "delay of parentheses highlight")
+  (highlight-parentheses-colors '("IndianRed3"
+                                  "goldenrod3"
+                                  "Springgreen3"
+                                  "DeepSkyBlue3"
+                                  "RoyalBlue3"
+                                  "DarkViolet") "colors from inside to outside")
   :custom-face
-  (hl-paren-face ((nil (:weight ultra-bold))))
+  (highlight-parentheses-highlight ((nil (:weight ultra-bold))))
   :hook
   (prog-mode . highlight-parentheses-mode))
 
