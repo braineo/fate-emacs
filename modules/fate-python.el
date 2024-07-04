@@ -75,16 +75,23 @@ Argument ARG is ignored."
              (beginning-of-line)
              (insert docstring)))))))
 
-(defcustom ruff-command "ruff"
- "Command used for reformatting."
- :group 'ruff
- :type 'string)
+(defun fate/ruff-make-args ()
+  "Construct args with BEG and END position for ruff."
+  (append
+   '("format")
+   (when (use-region-p)
+       `("--range"
+         ,(format "%d-%d"
+                  (1- (line-number-at-pos (region-beginning)))
+                  (1+ (line-number-at-pos (region-end))))))
+   `(,(buffer-file-name))))
 
-(reformatter-define ruff
-  :program ruff-command
-  :args `("format" "--stdin-filename" ,buffer-file-name "-")
-  :lighter "RF"
-  :group 'ruff)
+(defun fate/ruff-fmt ()
+  "Format buffer using ruff."
+  (interactive)
+  (unless (executable-find "ruff")
+    (error "Cannot find ruff executable"))
+  (apply #'call-process "ruff" nil (get-buffer-create "*ruff-output*") nil (fate/ruff-make-args)))
 
 (use-package python
   :defines gud-pdb-command-name pdb-path
@@ -104,8 +111,11 @@ Argument ARG is ignored."
 
   :bind
   (:map python-mode-map
-    ("C-c M-d" . fate/pydocstring)
-    ("C-c C-l" . ruff-buffer))
+   ("C-c M-d" . fate/pydocstring)
+   ("C-c C-l" . fate/ruff-fmt)
+   :map python-ts-mode-map
+   ("C-c M-d" . fate/pydocstring)
+   ("C-c C-l" . fate/ruff-fmt))
   :hook
   (python-mode . fate/python-setup-hs-mode))
 
