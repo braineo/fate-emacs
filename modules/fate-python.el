@@ -101,8 +101,13 @@ Argument ARG is ignored."
   (setq python-shell-completion-native-enable nil)
 
   (defconst fate/python-tools
-   '("ruff"
-     "pydocstring")
+    '("ruff-lsp"
+      "ruff"
+      "basedpyright"
+      "pydocstring"
+      ;; lsp bridge dependencies
+      "epc" "orjson" "sexpdata" "six" "setuptools" "paramiko" "rapidfuzz")
+
    "python cli tools")
 
   (with-eval-after-load 'core-packages
