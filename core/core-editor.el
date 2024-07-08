@@ -260,54 +260,59 @@ if `N' is 9, return root dir + repo path."
   ;; :bind
   ;; ("C-<tab>" . hs-toggle-hiding))
 
-(use-package ts-fold
-  :straight (ts-fold :type git :host github :repo "emacs-tree-sitter/ts-fold")
-  :config
-  (defun fate/ts-fold-range-jsx-self-close-tag (node offset)
+(use-package treesit-fold
+  :straight (treesit-fold :type git :host github :repo "emacs-tree-sitter/treesit-fold")
+  :commands (treesit-fold-parsers-typescript treesit-fold-parsers-python)
+  :init
+  (defun fate/treesit-fold-range-jsx-self-close-tag (node offset)
     "Define fold range for `jsx_self_closing_element'.
 
-For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+For arguments NODE and OFFSET, see function `treesit-fold-range-seq' for
 more information."
-    (when-let* ((identifier-node (car (ts-fold-find-children-traverse node "identifier")))
-                (beg (tsc-node-end-position identifier-node))
-                (end (tsc-node-end-position node)))
-      (ts-fold--cons-add (cons beg (- end 2)) offset)))
+    (when-let* ((identifier-node (car (treesit-fold-find-children node "identifier")))
+                (beg (treesit-node-end identifier-node))
+                (end (treesit-node-end node)))
+      (treesit-fold--cons-add (cons beg (- end 2)) offset)))
 
-  (defun fate/ts-fold-parers-tsx ()
+  (defun fate/treesit-fold-parers-tsx ()
     "Rule set for tsx"
     (append
-      (ts-fold-parsers-typescript)
-      '((jsx_element . ts-fold-range-html)
-        (jsx_attribute . ts-fold-range-seq)
-        (jsx_expression . ts-fold-range-seq)
-        (jsx_self_closing_element . fate/ts-fold-range-jsx-self-close-tag))))
+      (treesit-fold-parsers-typescript)
+      '((jsx_element . treesit-fold-range-html)
+        (jsx_attribute . treesit-fold-range-seq)
+        (jsx_expression . treesit-fold-range-seq)
+        (jsx_self_closing_element . fate/treesit-fold-range-jsx-self-close-tag))))
 
-  (defun fate/ts-fold-range-python-block (node offset)
+  (defun fate/treesit-fold-range-python-block (node offset)
     "Define fold range for `if_statement'.
 
-For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+For arguments NODE and OFFSET, see function `treesit-fold-range-seq' for
 more information."
-    (when-let* ((colon-node (car (ts-fold-find-children-traverse node ":")))
-                (beg (tsc-node-start-position colon-node))
-                (end (tsc-node-end-position node)))
-      (ts-fold--cons-add (cons (+ beg 1) end) offset)))
+    (when-let* ((colon-node (car (treesit-fold-find-children node ":")))
+                (beg (treesit-node-start colon-node))
+                (end (treesit-node-end node)))
+      (treesit-fold--cons-add (cons (+ beg 1) end) offset)))
 
-  (defun fate/ts-fold-parsers-python ()
+  (defun fate/treesit-fold-parsers-python ()
     (append
-      (ts-fold-parsers-python)
-      (mapcar (lambda (keyword) (cons keyword 'fate/ts-fold-range-python-block))
+      (treesit-fold-parsers-python)
+      (mapcar (lambda (keyword) (cons keyword 'fate/treesit-fold-range-python-block))
         '(while_statement for_statement if_statement elif_clause else_clause
            match_statement case_clause try_statement except_clause with_statement))))
+  ;; jtsx mode
+  (add-to-list 'treesit-fold-range-alist `(jtsx-tsx-mode . ,(fate/treesit-fold-parers-tsx)))
+  (add-to-list 'treesit-fold-summary-parsers-alist '(jtsx-tsx-mode . treesit-fold-summary-javadoc))
+  (add-to-list 'treesit-fold-range-alist '(jtsx-typescript-mode . treesit-fold-parsers-typescript))
 
-  (add-to-list 'ts-fold-range-alist `(typescript-tsx-mode . ,(fate/ts-fold-parers-tsx)))
-  (add-to-list 'ts-fold-summary-parsers-alist '(typescript-tsx-mode . ts-fold-summary-javadoc))
+  ;; python mode
+  (setq treesit-fold-range-alist (assq-delete-all 'python-mode treesit-fold-range-alist))
+  (setq treesit-fold-range-alist (assq-delete-all 'python-ts-mode treesit-fold-range-alist))
+  (add-to-list 'treesit-fold-range-alist `(python-ts-mode . ,(fate/treesit-fold-parsers-python)))
+  (add-to-list 'treesit-fold-range-alist `(python-mode . ,(fate/treesit-fold-parsers-python)))
 
-  (setq ts-fold-range-alist (assq-delete-all 'python-mode ts-fold-range-alist))
-
-  (add-to-list 'ts-fold-range-alist `(python-mode . ,(fate/ts-fold-parsers-python)))
-  (global-ts-fold-mode)
+  (global-treesit-fold-mode)
   :bind
-  ("C-<tab>" . ts-fold-toggle))
+  ("C-<tab>" . treesit-fold-toggle))
 
 
 ;; Core package winum. Easy navigation to different buffers
