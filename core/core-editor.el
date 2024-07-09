@@ -302,7 +302,7 @@ more information."
   ;; jtsx mode
   (add-to-list 'treesit-fold-range-alist `(jtsx-tsx-mode . ,(fate/treesit-fold-parers-tsx)))
   (add-to-list 'treesit-fold-summary-parsers-alist '(jtsx-tsx-mode . treesit-fold-summary-javadoc))
-  (add-to-list 'treesit-fold-range-alist '(jtsx-typescript-mode . treesit-fold-parsers-typescript))
+  (add-to-list 'treesit-fold-range-alist `(jtsx-typescript-mode . ,(treesit-fold-parsers-typescript)))
 
   ;; python mode
   (setq treesit-fold-range-alist (assq-delete-all 'python-mode treesit-fold-range-alist))
