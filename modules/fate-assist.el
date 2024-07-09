@@ -114,6 +114,12 @@ Function definition:
   ([remap describe-variable] . helpful-variable)
   ([remap Info-goto-emacs-command-node] . helpful-function))
 
+(use-package elisp-demos
+  :after helpful
+  :init
+  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
+)
+
 
 (use-package ace-link
   :init
