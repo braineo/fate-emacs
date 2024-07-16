@@ -84,7 +84,7 @@
 
 (use-package casual-isearch
   :bind (:map isearch-mode-map
-         ("<f2>" . cc-isearch-menu-transient)))
+         ("<f2>" . casual-isearch-tmenu)))
 
 (use-package re-builder
   :ensure nil
