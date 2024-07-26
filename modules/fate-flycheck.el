@@ -53,6 +53,7 @@ See URL `https://doc.qt.io/qt-6/qtquick-tool-qmllint.html'."
   :commands (flycheck-posframe--pad-icon)
   :after flycheck
   :hook (flycheck-mode . flycheck-posframe-mode)
+  :custom (flycheck-posframe-position 'frame-top-right-corner)
   :config
   (defun flycheck-posframe--pad-icon (icon)
     (concat icon " "))

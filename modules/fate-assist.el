@@ -82,7 +82,7 @@ Function definition:
 
 (transient-define-suffix fate/gptel-suffix-docstring ()
   "Generate docstring for region contents."
-  :key "d"
+  :key "D"
   :description "Docstring"
   :if (and (derived-mode-p 'prog-mode) (use-region-p))
   (interactive)
@@ -117,8 +117,8 @@ Function definition:
 (use-package elisp-demos
   :after helpful
   :init
-  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
-)
+  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update))
+
 
 
 (use-package ace-link
