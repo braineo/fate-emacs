@@ -54,6 +54,26 @@
     (unless (treesit-language-available-p lang)
       (treesit-install-language-grammar lang))))
 
+(defgroup taplo nil
+  "Reformat YAML using taplo."
+  :group 'languages)
+
+(defcustom taplo-command "taplo"
+  "Command used for reformatting."
+  :group 'taplo
+  :type 'string)
+
+(reformatter-define taplo
+  :program taplo-command
+  :args '("format" "-")
+  :lighter "TAPLO"
+  :group 'taplo)
+
+(use-package toml-ts-mode
+  :ensure nil
+  :bind (:map toml-ts-mode-map
+          ("C-c C-l" . taplo-buffer)))
+
 (use-package yaml-mode
   :mode (("\\.yaml\\'" . yaml-mode)
          ("\\.yml\\'" . yaml-mode)))
@@ -153,7 +173,7 @@
          ("C-c C-l" . stylua-buffer)))
 
 (defgroup shfmt nil
-  "Reformat JSON using shfmt."
+  "Reformat shell script using shfmt."
   :group 'languages)
 
 (defcustom shfmt-command "shfmt"
