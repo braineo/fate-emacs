@@ -127,6 +127,9 @@
   :custom
   (treesit-font-lock-level 4))
 
+(add-to-list 'default-frame-alist '(alpha-background . 97))
+(set-frame-parameter nil 'alpha-background 97)
+
 ;; Theme
 (use-package doom-themes
   :config
@@ -148,6 +151,10 @@
     ;; '(font-lock-variable-use-face)) ;; variable-name
 
   (enable-theme 'doom-one))
+
+(use-package solaire-mode
+  :config
+  (solaire-global-mode +1))
 
 (use-package doom-modeline
   :config
