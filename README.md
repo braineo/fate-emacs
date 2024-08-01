@@ -40,7 +40,7 @@
 
 ## Get Started
 
-Only tested with \>= Emacs 28.2 in Debian and macOS
+Only tested with \>= Emacs 29.3 in Debian
 
 ### Backup
 
@@ -76,12 +76,8 @@ Download ripgrep release from https://github.com/BurntSushi/ripgrep/releases
 wget https://github.com/BurntSushi/ripgrep/releases/download/0.10.0/ripgrep_0.10.0_amd64.deb && dpkg -i ripgrep_0.10.0_amd64.deb
 # or
 apt install ripgrep
-```
-
-for masOS
-
-``` shell
-brew install ripgrep
+# or
+cargo install ripgrep
 ```
 
 ### fd
@@ -90,6 +86,8 @@ brew install ripgrep
 
 ``` shell
 sudo apt install fd-find
+# or
+cargo install fd-find
 ```
 
 ### enchant
@@ -97,11 +95,8 @@ sudo apt install fd-find
 `enchant` is a library for spell checking
 
 ``` shell
-## Ubuntu
+## Debian
 sudo apt install libenchant-2-dev pkg-config
-
-### mac
-brew install enchant pkg-config
 ```
 
 
