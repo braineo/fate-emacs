@@ -151,7 +151,14 @@ OUTPUT is parsed path list."
   :hook ((javascript-ts-mode typescript-ts-mode tsx-ts-mode) . fate/prettier-minor-mode)
   :config
   (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.ts\\'" "\\1.spec.ts"))
-  (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.tsx\\'" "\\1.spec.tsx" "\\1.scss" "\\1.module.less" "\\1.sass" "\\1.css")))
+  (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.tsx\\'" "\\1.spec.tsx" "\\1.scss" "\\1.module.less" "\\1.sass" "\\1.css"))
+  :bind (:map jtsx-tsx-mode-map
+              ("C-c C-j" . jtsx-jump-jsx-element-tag-dwim)
+              ("C-c C-w" . jtsx-wrap-in-jsx-element)
+              ("C-c C-u" . jtsx-unwrap-jsx)
+              ("C-c C-r" . jtsx-rename-jsx-element))
+  :custom
+  (jtsx-enable-jsx-element-tags-auto-sync t))
 
 (use-package tide
   :after typescript-ts-mode
