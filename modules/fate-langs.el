@@ -55,7 +55,7 @@
       (treesit-install-language-grammar lang))))
 
 (defgroup taplo nil
-  "Reformat YAML using taplo."
+  "Reformat TOML using taplo."
   :group 'languages)
 
 (defcustom taplo-command "taplo"
@@ -104,6 +104,21 @@
 (use-package rust-mode
   :init
   (setq rust-mode-treesitter-derive t)
+  :config
+  (defconst fate/rust-tools
+    '("ripgrep"
+      "fd-find"
+      "typos-cli"
+      "difftastic"
+      "tealdeer"
+      "git-delta"
+      "ast-grep"
+      "stylua"
+      "taplo-cli")
+    "rust cli tools")
+  (with-eval-after-load 'core-packages
+    (fate/create-install-tools!
+      "rust" ("cargo" "install") fate/rust-tools))
   :mode (("\\.rs\\'" . rust-mode))
   :custom (rust-format-on-save t))
 
