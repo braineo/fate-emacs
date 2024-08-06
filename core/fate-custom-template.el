@@ -33,6 +33,8 @@
 ;; Open from mac
 (setenv "LANG" "en_US.UTF-8")
 
+;; Use venv for lsp bridge
+;; (setq lsp-bridge-python-command "/home/user/.emacs.d/.venv/bin/python3")
 
 ;;; Forge
 ;; (setq fate/forge-alist '(("git.site.com" "git.site.com/api/v4" "git.site.com" forge-github-repository)))
