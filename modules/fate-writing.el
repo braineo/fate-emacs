@@ -62,7 +62,9 @@
              :flavor nil
              :host github)
   :commands (atomic-chrome-start-server)
-  :config (atomic-chrome-start-server))
+  :config (atomic-chrome-start-server)
+  :custom
+  (atomic-chrome-url-major-mode-alist '(("git" . gfm-mode))))
 
 
 (provide 'fate-writing)

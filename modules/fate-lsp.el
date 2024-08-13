@@ -49,6 +49,7 @@
   (acm-enable-tabnine nil)
   (acm-backend-lsp-match-mode "fuzzy")
   (lsp-bridge-user-langserver-dir (expand-file-name "langserver" fate-directory))
+  (lsp-bridge-enable-completion-in-string t)
   :bind
   (:map lsp-bridge-mode-map
     ([remap xref-find-definitions] . lsp-bridge-find-def)
