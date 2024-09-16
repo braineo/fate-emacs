@@ -158,7 +158,7 @@ OUTPUT is parsed path list."
               ("C-c C-u" . jtsx-unwrap-jsx)
               ("C-c C-r" . jtsx-rename-jsx-element))
   :custom
-  (jtsx-enable-jsx-element-tags-auto-sync t))
+  (jtsx-enable-jsx-element-tags-auto-sync nil "disabled because sometimes it is buggy due to node parsing"))
 
 (use-package tide
   :after typescript-ts-mode
