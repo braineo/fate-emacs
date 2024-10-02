@@ -45,7 +45,10 @@
 
 (use-package jinx
   :hook ((markdown-mode text-mode) . fate/enable-jinx)
-  :bind ([remap ispell-word] . jinx-correct))
+  :bind ([remap ispell-word] . jinx-correct)
+  :config
+  ;; disable checking spell of Chinses
+  (add-to-list 'jinx-exclude-regexps '(t "\\cc")))
 
 (use-package org
   :ensure nil
