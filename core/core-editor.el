@@ -201,6 +201,24 @@ surrounded by word boundaries."
               (concat repo-root-dir-name
                 "/") repo-root-dir-name) repo-buffer-name)))
 
+(defun fate/permanent-link-at-point()
+  "Get permanent link of current line."
+  (let
+    ((remote-url (string-trim (shell-command-to-string "git remote get-url origin")))
+     (hash (string-trim (shell-command-to-string "git rev-parse HEAD")))
+     (relative-path (file-relative-name buffer-file-name (projectile-project-root))))
+    (format "https://%s/blob/%s/%s#L%s"
+      (concat (seq-reduce (lambda (string regexp-replacement-pair)
+                           (replace-regexp-in-string
+                             (car regexp-replacement-pair)
+                             (cdr regexp-replacement-pair)
+                             string))
+               '(("\\.git$" . "") ("[[:alpha:]]+://" . "") ("git@" . "") (":" . "/"))
+               remote-url))
+      hash
+      relative-path
+      (format-mode-line "%l"))))
+
 (use-package copy-as-format
   :bind
   ("C-c w g" . copy-as-format-github)
@@ -245,7 +263,12 @@ if `N' is 9, return root dir + repo path."
   ([remap kill-ring-save] . easy-kill)
   :commands (easy-kill-echo easy-kill-adjust-candidate)
   :config
-  (advice-add 'easy-kill-on-buffer-file-name :after #'fate/easy-kill-on-buffer-file-name))
+  (defun easy-kill-on-permanent-link (_n)
+    "copy permanent link of current line."
+    (easy-kill-adjust-candidate 'permanent-link (fate/permanent-link-at-point)))
+
+  (advice-add 'easy-kill-on-buffer-file-name :after #'fate/easy-kill-on-buffer-file-name)
+  (add-to-list 'easy-kill-alist '(?p permanent-link)))
 
 ;; Core package expand-region. Increase selected region by semantic units
 (use-package expand-region
