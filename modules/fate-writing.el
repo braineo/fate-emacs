@@ -61,6 +61,9 @@
 (use-package org-modern
   :hook (org-mode . org-modern-mode))
 
+(use-package ox-pandoc
+  :defer t)
+
 (use-package org-capture
   :ensure nil
   :bind
@@ -118,11 +121,7 @@
 
 (use-package atomic-chrome
   :demand t
-  :straight (atomic-chrome
-             :repo "KarimAziev/atomic-chrome"
-             :type git
-             :flavor nil
-             :host github)
+  :vc (:url "https://github.com/KarimAziev/atomic-chrome")
   :commands (atomic-chrome-start-server)
   :config (atomic-chrome-start-server)
   :custom

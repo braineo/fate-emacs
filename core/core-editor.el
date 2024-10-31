@@ -82,7 +82,7 @@
   (isearch-lazy-count t)
   (lazy-count-prefix-format "%s/%s "))
 
-(use-package casual-isearch
+(use-package casual
   :bind (:map isearch-mode-map
          ("<f2>" . casual-isearch-tmenu)))
 
@@ -284,7 +284,7 @@ if `N' is 9, return root dir + repo path."
   ;; ("C-<tab>" . hs-toggle-hiding))
 
 (use-package treesit-fold
-  :straight (treesit-fold :type git :host github :repo "emacs-tree-sitter/treesit-fold")
+  :vc (:url "https://github.com/emacs-tree-sitter/treesit-fold")
   :commands (treesit-fold-parsers-typescript treesit-fold-parsers-python)
   :init
   (defun fate/treesit-fold-range-jsx-self-close-tag (node offset)
@@ -448,7 +448,7 @@ more information."
   (bm-buffer-persistence nil "Do not save bookmarks"))
 
 (use-package color-rg
-  :straight (:host github :repo "manateelazycat/color-rg")
+  :vc (:url "https://github.com/manateelazycat/color-rg")
   :custom
   (color-rg-search-no-ignore-file nil)
   (color-rg-mac-load-path-from-shell nil)
