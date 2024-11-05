@@ -47,11 +47,13 @@
   (parinfer-rust-auto-download t)
   (parinfer-rust-library-directory (concat fate-cache-directory "parinfer-rust/")))
 
-(defun fate/treesit-install-language-grammars ()
-  "Install treesitter so for configured major modes."
-  (interactive)
+(defun fate/treesit-install-language-grammars (&optional force)
+  "Install treesitter so for configured major modes.
+When FORCE is set, clone and reinstall grammer."
+  (interactive "P")
   (dolist (lang '(python rust typescript javascript tsx graphql c cpp css cmake toml yaml json bash))
-    (unless (treesit-language-available-p lang)
+    (when (or force
+            (not (treesit-language-available-p lang)))
       (treesit-install-language-grammar lang))))
 
 (defgroup taplo nil
