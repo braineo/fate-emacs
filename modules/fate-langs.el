@@ -28,7 +28,8 @@
 ;; Lisp
 
 (eval-when-compile
-  (require 'core-packages))
+  (require 'core-packages)
+  (require 'treesit))
 
 (use-package reformatter
   :defer t)
@@ -51,7 +52,7 @@
   "Install treesitter so for configured major modes.
 When FORCE is set, clone and reinstall grammer."
   (interactive "P")
-  (dolist (lang '(python rust typescript javascript tsx graphql c cpp css cmake toml yaml json bash))
+  (dolist (lang (mapcar 'car treesit-language-source-alist))
     (when (or force
             (not (treesit-language-available-p lang)))
       (treesit-install-language-grammar lang))))
@@ -101,7 +102,9 @@ When FORCE is set, clone and reinstall grammer."
       "go" ("go" "install" "-v" "-x") fate/go-tools (lambda (tool) (concat tool "@latest"))))
   :custom
   (gofmt-command (if (executable-find "goimports") "goimports" "gofmt"))
-  :hook (before-save . gofmt-before-save))
+  :hook
+  (before-save . gofmt-before-save)
+  (go-mode . (lambda () (treesit-parser-create 'go))))
 
 (use-package rust-mode
   :init
