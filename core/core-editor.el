@@ -83,6 +83,10 @@
   (lazy-count-prefix-format "%s/%s "))
 
 (use-package casual
+  :defer t)
+
+(use-package casual-isearch
+  :ensure nil
   :bind (:map isearch-mode-map
          ("<f2>" . casual-isearch-tmenu)))
 
