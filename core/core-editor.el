@@ -235,7 +235,8 @@ EXTRACTED-TEXT is output from copy-as-format--extract-text."
   (if (use-region-p)
     (save-excursion
       (goto-char (region-beginning))
-      (let* ((file-name-linenum (concat (fate/repo-dir-file-name) ":" (format-mode-line "%l")))
+      (let* ((file-name-linenum (concat (fate/repo-dir-file-name) ":"
+                                  (number-to-string (line-number-at-pos (region-beginning)))))
              (mode (buffer-local-value 'major-mode (current-buffer))))
         (with-temp-buffer
           (funcall mode)

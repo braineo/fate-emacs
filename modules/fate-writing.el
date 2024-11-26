@@ -88,6 +88,7 @@
     "Given a file, F, this captures the currently selected text
   within an Org SRC block with a language based on the current mode
   and a backlink to the function and the file."
+
     (with-current-buffer (find-buffer-visiting filename)
       (let* ((org-src-mode (replace-regexp-in-string "-mode" "" (format "%s" major-mode)))
              (func-name (which-function))
@@ -96,11 +97,12 @@
              (file-base   (file-name-nondirectory file-name))
              (line-number (line-number-at-pos (region-beginning)))
              (initial-txt (if (null func-name)
-                             (format "From [[file:%s::%s][%s]]:"
-                                     file-name line-number file-base)
+                            (format "From [[file:%s::%s][%s]]:"
+                              file-name line-number file-base)
                            (format "From ~%s~ (in [[file:%s::%s][%s]]):"
-                                   func-name file-name line-number
-                                   file-base))))
+                             func-name file-name line-number
+                             file-base))))
+
         (format " %s
 #+begin_src %s
   %s
