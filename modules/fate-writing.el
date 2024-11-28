@@ -56,13 +56,14 @@
 
 (use-package org
   :ensure nil
-  :hook (org-mode . (lambda() (set-fill-column 100))))
+  :hook (org-mode . (lambda() (set-fill-column 120)))
+  :config
+  (add-to-list 'org-export-backends '(pandoc)))
 
 (use-package org-modern
   :hook (org-mode . org-modern-mode))
 
-(use-package ox-pandoc
-  :defer t)
+(use-package ox-pandoc)
 
 (use-package org-capture
   :ensure nil
