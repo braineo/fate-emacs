@@ -27,7 +27,7 @@ pip3 install epc orjson sexpdata six setuptools paramiko rapidfuzz
 deactivate
 
 echo "install packages for python"
-if command -v cargo >/dev/null 2>&1; then
+if command -v pipx >/dev/null 2>&1; then
     pipx ensurepath
     pipx install ruff-lsp
     pipx install ruff

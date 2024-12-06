@@ -1,0 +1,2 @@
+# -*- mode: bash-ts -*-
+emacs -nw -Q --batch -l "$HOME"/.emacs.d/bin/update_forge_repos.el
