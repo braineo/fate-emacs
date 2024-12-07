@@ -64,5 +64,44 @@
   (ediff-split-window-function 'split-window-horizontally)
   :hook (ediff-quit . winner-undo))
 
+(defun fate/ediff-any (&optional major-mode-name)
+    "Open two temporary buffers, launch ediff to compare them, and clean up on exit."
+    (interactive (list (read-minibuffer "Optional major mode (e.g., json): ")))
+    ;; Save current window configuration
+    (let ((buf1 (generate-new-buffer "*ediff-buffer-1*"))
+          (buf2 (generate-new-buffer "*ediff-buffer-2*")))
+      ;; Display the buffers side by side
+      (delete-other-windows)
+      (switch-to-buffer buf1)
+      (message (concat "Buffer 1: Enter content and press "
+                 (propertize "C-c C-c" 'face 'help-key-binding)
+                 " to proceed to the next buffer."))
+      (let ((map (make-sparse-keymap)))
+        (define-key map (kbd "C-c C-c")
+          (lambda  ()
+            (interactive)
+            (delete-other-windows)
+            (switch-to-buffer buf2)
+            (message (concat "Buffer 2: Enter content and press "
+                       (propertize "C-c C-c" 'face 'help-key-binding)
+                       "to start ediff."))
+            (let ((map (make-sparse-keymap)))
+              (define-key map (kbd "C-c C-c")
+                (lambda ()
+                  (interactive)
+                  (when major-mode
+                    (with-current-buffer buf1
+                      (funcall (intern (concat (symbol-name major-mode-name) "-mode"))))
+                    (with-current-buffer buf2
+                      (funcall (intern (concat (symbol-name major-mode-name) "-mode"))))
+                    (when (string-prefix-p "json" (symbol-name major-mode-name))
+                      (mapc (lambda (buf)
+                              (with-current-buffer buf
+                                (fate/json-pretty-print)))
+                        '(buf1 buf2))))
+                  (ediff-buffers buf1 buf2))
+                (use-local-map map))))
+          (use-local-map map)))))
+
 (provide 'fate-git)
 ;;; fate-git.el ends here
