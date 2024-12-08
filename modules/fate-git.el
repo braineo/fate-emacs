@@ -66,41 +66,59 @@
 
 (defun fate/ediff-any (&optional major-mode-name)
     "Open two temporary buffers, launch ediff to compare them, and clean up on exit."
-    (interactive (list (read-minibuffer "Optional major mode (e.g., json): ")))
-    ;; Save current window configuration
-    (let* ((buf1 (generate-new-buffer "*ediff-buffer-1*"))
-           (buf2 (generate-new-buffer "*ediff-buffer-2*"))
-           (mode-sym (and major-mode-name
-                        (intern (concat (symbol-name major-mode-name) "-mode")))))
-      ;; Display the buffers side by side
-      (delete-other-windows)
-      (switch-to-buffer buf1)
-      (message (concat "Buffer 1: Enter content and press "
-                 (propertize "C-c C-c" 'face 'help-key-binding)
-                 " to proceed to the next buffer."))
-      (let ((buf1-map (make-sparse-keymap)))
-        (define-key buf1-map (kbd "C-c C-c")
-          (lambda  ()
-            (interactive)
-            (delete-other-windows)
-            (switch-to-buffer buf2)
-            (message (concat "Buffer 2: Enter content and press "
-                       (propertize "C-c C-c" 'face 'help-key-binding)
-                       "to start ediff."))
-            (let ((buf2-map (make-sparse-keymap)))
-              (define-key buf2-map (kbd "C-c C-c")
-                (lambda ()
-                  (interactive)
-                  (when mode-sym
-                    (with-current-buffer buf1 (funcall mode-sym))
-                    (with-current-buffer buf2 (funcall mode-sym))
-                    (when (string-prefix-p "json" (symbol-name major-mode-name))
-                      (dolist (buf (list buf1 buf2))
-                        (with-current-buffer buf
-                          (fate/json-pretty-print)))))
-                  (ediff-buffers buf1 buf2))
-                (use-local-map buf2-map))))
-          (use-local-map buf1-map)))))
+  (interactive
+    (list (let ((input (read-from-minibuffer "highlight major mode (press ENTER to skip): ")))
+            (unless (string-empty-p input) input))))
+
+  ;; Validate major mode name if provided
+  (when (and major-mode-name
+          (not (fboundp (intern (concat (symbol-name major-mode-name) "-mode")))))
+    (user-error "Invalid major mode: %s" major-mode-name))
+  ;; Save current window configuration
+  (let* ((buf1 (generate-new-buffer "*ediff-buffer-1*"))
+         (buf2 (generate-new-buffer "*ediff-buffer-2*"))
+         (mode-sym (and major-mode-name
+                     (intern (concat (symbol-name major-mode-name) "-mode"))))
+         (original-window-config (current-window-configuration))
+         (restore-fn (lambda ()
+                        (set-window-configuration original-window-config)
+                        (dolist (buf (list buf1 buf2))
+                          (when (buffer-live-p buf) (kill-buffer buf))))))
+    (unwind-protect
+      (progn
+        ;; Display the buffers side by side
+        (delete-other-windows)
+        (switch-to-buffer buf1)
+        (message (concat "Buffer 1: Enter content and press "
+                   (propertize "C-c C-c" 'face 'help-key-binding)
+                   " to proceed to the next buffer."))
+        (let ((buf1-map (make-sparse-keymap)))
+          (define-key buf1-map (kbd "C-c C-c")
+            (lambda  ()
+              (interactive)
+              (delete-other-windows)
+              (switch-to-buffer buf2)
+              (message (concat "Buffer 2: Enter content and press "
+                         (propertize "C-c C-c" 'face 'help-key-binding)
+                         " to start ediff."))
+              (let ((buf2-map (make-sparse-keymap)))
+                (define-key buf2-map (kbd "C-c C-c")
+                  (lambda ()
+                    (interactive)
+                    (when mode-sym
+                      (with-current-buffer buf1 (funcall mode-sym))
+                      (with-current-buffer buf2 (funcall mode-sym))
+                      (when (string-prefix-p "json" (symbol-name major-mode-name))
+                        (dolist (buf (list buf1 buf2))
+                          (with-current-buffer buf
+                            (fate/json-pretty-print)))))
+                    (ediff-buffers buf1 buf2)
+                    (add-hook 'ediff-quit-hook restore-fn 'local))
+                  (use-local-map buf2-map))))
+            (use-local-map buf1-map))))
+      ;; Cleanup form: ensure buffers are deleted if something goes wrong
+      (unless (and (buffer-live-p buf1) (buffer-live-p buf2))
+        (funcall restore-fn)))))
 
 (provide 'fate-git)
 ;;; fate-git.el ends here
