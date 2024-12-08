@@ -62,7 +62,14 @@
   :custom
   (ediff-window-setup-function 'ediff-setup-windows-plain)
   (ediff-split-window-function 'split-window-horizontally)
-  :hook (ediff-quit . winner-undo))
+  :hook (ediff-quit . winner-undo)
+  :custom-face
+  (ediff-current-diff-A   ((t (:inherit 'diff-removed))))
+  (ediff-fine-diff-A   ((t (:inherit 'diff-refine-removed))))
+  (ediff-current-diff-B   ((t (:inherit 'diff-added))))
+  (ediff-fine-diff-B   ((t (:inherit 'diff-refine-added))))
+  (ediff-current-diff-C   ((t (:inherit 'diff-changed))))
+  (ediff-fine-diff-C   ((t (:inherit 'diff-refine-changed)))))
 
 (defun fate/ediff-any (&optional major-mode-name)
     "Open two temporary buffers, launch ediff to compare them, and clean up on exit."
@@ -72,13 +79,13 @@
 
   ;; Validate major mode name if provided
   (when (and major-mode-name
-          (not (fboundp (intern (concat (symbol-name major-mode-name) "-mode")))))
+          (not (fboundp (intern (concat major-mode-name "-mode")))))
     (user-error "Invalid major mode: %s" major-mode-name))
   ;; Save current window configuration
   (let* ((buf1 (generate-new-buffer "*ediff-buffer-1*"))
          (buf2 (generate-new-buffer "*ediff-buffer-2*"))
          (mode-sym (and major-mode-name
-                     (intern (concat (symbol-name major-mode-name) "-mode"))))
+                     (intern (concat major-mode-name "-mode"))))
          (original-window-config (current-window-configuration))
          (restore-fn (lambda ()
                         (set-window-configuration original-window-config)
@@ -108,7 +115,7 @@
                     (when mode-sym
                       (with-current-buffer buf1 (funcall mode-sym))
                       (with-current-buffer buf2 (funcall mode-sym))
-                      (when (string-prefix-p "json" (symbol-name major-mode-name))
+                      (when (string-prefix-p "json" major-mode-name)
                         (dolist (buf (list buf1 buf2))
                           (with-current-buffer buf
                             (fate/json-pretty-print)))))
