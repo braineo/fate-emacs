@@ -71,7 +71,7 @@
   (ediff-current-diff-C   ((t (:inherit 'diff-changed))))
   (ediff-fine-diff-C   ((t (:inherit 'diff-refine-changed)))))
 
-(defun fate/ediff-any (&optional major-mode-name)
+(defun fate/diff-temp-buffers (&optional major-mode-name)
     "Open two temporary buffers, launch ediff to compare them, and clean up on exit."
   (interactive
     (list (let ((input (read-from-minibuffer "highlight major mode (press ENTER to skip): ")))
