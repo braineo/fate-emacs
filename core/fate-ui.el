@@ -13,6 +13,7 @@
 
 (require 'fate-const)
 (require 'fate-hints)
+(require 'fate-custom)
 (eval-when-compile
  (require 'core-load-paths))
 
@@ -133,10 +134,10 @@
 ;; Theme
 (use-package doom-themes
   :config
-  (load-theme 'doom-one t)
+  (load-theme fate/theme t)
   ;; new font-lock since 29.1 for tree sitter
   (custom-theme-set-faces
-    'doom-one
+    fate/theme
     ;; '(font-lock-bracket-face) ;; punctuation
     ;; '(font-lock-delimiter-face) ;; punctuation
     '(font-lock-escape-face ((t (:inherit font-lock-keyword-face))))
@@ -150,7 +151,7 @@
     ;; '(font-lock-regexp-face) ;; defined
     ;; '(font-lock-variable-use-face)) ;; variable-name
 
-  (enable-theme 'doom-one))
+  (enable-theme fate/theme))
 
 (use-package solaire-mode
   :config

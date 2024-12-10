@@ -44,5 +44,8 @@
 ;;; Forge
 ;; (setq fate/forge-alist '(("git.site.com" "git.site.com/api/v4" "git.site.com" forge-github-repository)))
 
+;;; Theme
+;; (setq fate/theme 'doom-tokyo-night)
+
 (provide 'custom)
 ;;; custom.el ends here
