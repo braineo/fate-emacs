@@ -38,5 +38,11 @@
                      (string :tag "ID")
                      (symbol :tag "Repository class"))))
 
+(defcustom fate/theme
+  'doom-one
+  "One of the doom themes"
+  :group 'fate
+  :type '(symbol))
+
 (provide 'fate-custom)
 ;;; fate-custom.el ends here
