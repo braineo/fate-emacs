@@ -18,12 +18,15 @@ if command -v go >/dev/null 2>&1; then
     go install mvdan.cc/sh/v3/cmd/shfmt@latest
 fi
 
-echo "install packages for jinx and lsp bridge"
-sudo apt install libenchant-2-dev pkg-config python3-venv pipx pandoc
+
+if command -v apt >/dev/null 2>&1; then
+    echo "install packages for jinx and lsp bridge"
+    sudo apt install libenchant-2-dev pkg-config python3-venv pipx pandoc
+fi
 
 python3 -m venv .venv
 source .venv/bin/activate
-pip3 install epc orjson sexpdata six setuptools paramiko rapidfuzz
+pip3 install epc orjson sexpdata six setuptools paramiko rapidfuzz watchdog
 deactivate
 
 echo "install packages for python"
