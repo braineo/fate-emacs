@@ -5,36 +5,40 @@
 **Table of Contents**
 
 - [Get Started](#get-started)
-    - [Backup](#backup)
-    - [Install](#install)
-    - [Try it in docker](#try-it-in-docker)
+  - [Backup](#backup)
+  - [Install](#install)
+  - [Try it in docker](#try-it-in-docker)
 - [External tools](#external-tools)
-    - [ripgrep](#ripgrep)
-    - [fd](#fd)
-    - [enchant](#enchant)
-    - [Python Tools](#python-tools)
-    - [Go Tools](#go-tools)
-    - [JavaScript/JSON Tools](#javascriptjson-tools)
-    - [Shell Tools](#shell-tools)
-    - [nerd-icons](#nerd-icons)
+  - [ripgrep](#ripgrep)
+  - [fd](#fd)
+  - [enchant](#enchant)
+  - [Python Tools](#python-tools)
+  - [Go Tools](#go-tools)
+  - [JavaScript/JSON Tools](#javascriptjson-tools)
+  - [Shell Tools](#shell-tools)
+  - [nerd-icons](#nerd-icons)
 - [Customize](#customize)
-    - [Custom.el](#customel)
-        - [exec-path](#exec-path)
-        - [Setting ENV variables](#setting-env-variables)
-        - [Custom variable for packages](#custom-variable-for-packages)
-    - [EditorConfig (Code style)](#editorconfig-code-style)
+  - [Custom.el](#customel)
+    - [exec-path](#exec-path)
+    - [Setting ENV variables](#setting-env-variables)
+    - [Custom variable for packages](#custom-variable-for-packages)
+  - [EditorConfig (Code style)](#editorconfig-code-style)
 - [Install and Update Language Servers](#install-and-update-language-servers)
-    - [Language servers implemented in NodeJS](#language-servers-implemented-in-nodejs)
-    - [Python](#python)
-    - [Clangd](#clangd)
+  - [Language servers implemented in NodeJS](#language-servers-implemented-in-nodejs)
+  - [Python](#python)
+  - [Clangd](#clangd)
 - [Vterm](#vterm)
-- [GPT](#gpt)
-    - [Install CUDA](#install-cuda)
-    - [llama.cpp](#llamacpp)
-        - [Build](#build)
-        - [Run](#run)
-    - [Ollama](#ollama)
-- [Useful links](#useful-links)
+- [LLM](#llm)
+  - [Install CUDA](#install-cuda)
+  - [llama.cpp](#llamacpp)
+    - [Build](#build)
+    - [Run](#run)
+  - [Ollama](#ollama)
+- [Tree sitter](#tree-sitter)
+  - [Build parser from source](#build-parser-from-source)
+- [Misc. tips](#misc-tips)
+  - [Updating magit tracking repos hourly](#updating-magit-tracking-repos-hourly)
+  - [Useful links](#useful-links)
 
 <!-- markdown-toc end -->
 
@@ -48,13 +52,13 @@ backup your `.emacs` and `.emacs.d`, rename them to something else because emacs
 
 ### Install
 
-``` shell
+```shell
 git clone https://github.com/braineo/fate-emacs.git ~/.emacs.d
 ```
 
 ### Try it in docker
 
-``` shell
+```shell
 docker pull braineo/fate-emacs
 # run in terminal
 docker run -it --rm braineo/fate-emacs
@@ -71,7 +75,7 @@ ripgrep is basically a fast grep written in Rust.
 
 Download ripgrep release from https://github.com/BurntSushi/ripgrep/releases
 
-``` shell
+```shell
 # example
 wget https://github.com/BurntSushi/ripgrep/releases/download/0.10.0/ripgrep_0.10.0_amd64.deb && dpkg -i ripgrep_0.10.0_amd64.deb
 # or
@@ -84,7 +88,7 @@ cargo install ripgrep
 
 `fd` is a replacement for `find`
 
-``` shell
+```shell
 sudo apt install fd-find
 # or
 cargo install fd-find
@@ -94,17 +98,16 @@ cargo install fd-find
 
 `enchant` is a library for spell checking
 
-``` shell
+```shell
 ## Debian
 sudo apt install libenchant-2-dev pkg-config
 ```
-
 
 ### Python Tools
 
 Directly install via `pip install` causes warnings in Debian 12. To use packages newer than the system provided packages, use `venv` or `pipx` instead.
 
-``` shell
+```shell
 # use venv
 sudo apt install python3-venv
 python3 -m venv .venv
@@ -113,7 +116,7 @@ pip install requests
 deactivate
 ```
 
-``` shell
+```shell
 # for executables, use pipx
 sudo apt install pipx
 pipx ensurepath
@@ -129,7 +132,7 @@ pipx install ruff-lsp
 ### JavaScript/JSON Tools
 
 | Name           | Installation command                  | Description                                              |
-|----------------|---------------------------------------|----------------------------------------------------------|
+| -------------- | ------------------------------------- | -------------------------------------------------------- |
 | prettier       | npm i -g prettier                     | Formater for JavaScript, TypeScript, CSS, JSON, and more |
 | linter LSP     | npm i -g vscode-langservers-extracted | Language server of eslint, HTML, CSS                     |
 | TypeScript LSP | npm i -g typescript-language-server   |                                                          |
@@ -139,10 +142,9 @@ or `M-x` `fate/js-install-tools`
 ### Shell Tools
 
 | Name       | Installation command                       | Description                                           |
-|------------|--------------------------------------------|-------------------------------------------------------|
+| ---------- | ------------------------------------------ | ----------------------------------------------------- |
 | shellcheck | apt install shellcheck                     | A great teacher helping you write better shell script |
 | shfmt      | go install mvdan.cc/sh/v3/cmd/shfmt@latest | A shell script formatter                              |
-
 
 ### nerd-icons
 
@@ -160,13 +162,13 @@ Especially for macOS users, because `exec-path-from-shell` is slow that I did no
 
 #### exec-path
 
-``` emacs-lisp
+```emacs-lisp
 (setq exec-path (append exec-path '("/path/to/bin")))
 ```
 
 #### Setting ENV variables
 
-``` emacs-lisp
+```emacs-lisp
 (setenv "LD_LIBRARY_PATH"
   (let ((current (getenv "LD_LIBRARY_PATH"))
         (new "/path/to/lib/"))
@@ -175,7 +177,7 @@ Especially for macOS users, because `exec-path-from-shell` is slow that I did no
 
 #### Custom variable for packages
 
-``` emacs-lisp
+```emacs-lisp
 (setq lsp-python-ms-extra-paths
   '("/path/to/a/site-packages"
     "/path/to/b/site-packages"))
@@ -185,7 +187,7 @@ Especially for macOS users, because `exec-path-from-shell` is slow that I did no
 
 EditorConfig helps maintain consistent coding styles for multiple developers working on the same project across various editors and IDEs. The EditorConfig project consists of a file format for defining coding styles and a collection of text editor plugins that enable editors to read the file format and adhere to defined styles. EditorConfig files are easily readable and they work nicely with version control systems.
 
-``` shell
+```shell
 wget https://github.com/braineo/configs/blob/master/editorconfig/.editorconfig ~/.editorconfig
 ```
 
@@ -195,17 +197,14 @@ Optional configuration, take a look at my [configs](https://github.com/braineo/c
 
 ## Install and Update Language Servers
 
-
-
 Previously [lsp-mode](https://emacs-lsp.github.io/lsp-mode/) was used as LSP client. The configuration now migrates to [lsp-bridge](https://github.com/manateelazycat/lsp-bridge), a client emphasizes performance. It has not covered all the features in lsp-mode, but it is **really** fast.
 
-``` shell
+```shell
 # install dependencies for lsp-bridge
 pip3 install epc orjson sexpdata six setuptools paramiko rapidfuzz
 ```
 
 For each language server, refer to the configuration guide in [lsp-bridge](https://github.com/manateelazycat/lsp-bridge)
-
 
 ### Language servers implemented in NodeJS
 
@@ -216,8 +215,6 @@ Language servers implemented in NodeJS can obtain directly by doing `lsp-install
 | TypeScript/JavaScript | npm i -g typescript-language-server; npm i -g typescript |
 | JSON                  | npm i -g vscode-json-languageserver                      |
 | Dockerfile            | npm install -g dockerfile-language-server-nodejs         |
-
-
 
 ### Python
 
@@ -231,7 +228,7 @@ Language servers implemented in NodeJS can obtain directly by doing `lsp-install
 
 <!-- end list -->
 
-``` shell
+```shell
 git clone https://github.com/Microsoft/python-language-server.git
 cd python-language-server/src/LanguageServer/Impl
 dotnet build -c Release
@@ -243,7 +240,7 @@ change the value of the `-r` flag depending on your architecture and operating s
 
 Then, link the executable to somewhere on your path, e.g.
 
-``` shell
+```shell
 ln -sf $(git rev-parse --show-toplevel)/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer ~/.emacs.d/mspyls/
 ln -sf $(git rev-parse --show-toplevel)/output/bin/Release/osx-x64/publish/Microsoft.Python.LanguageServer ~/.emacs.d/mspyls/
 ```
@@ -252,11 +249,11 @@ Credit to [lsp-python-ms](https://github.com/emacs-lsp/lsp-python-ms/blob/master
 
 Because Microsoft’s Python language server does not ship with a linter, need to install flake8
 
-``` shell
+```shell
 pip install flake8
 ```
 
-``` emacs-lisp
+```emacs-lisp
 ;; Configure extra search path
 (setq lsp-python-ms-extra-paths
   '("path1"
@@ -265,6 +262,7 @@ pip install flake8
 ;; If you need to work on some python2 projects, make sure use a right flake8
 (setq flycheck-python-flake8-executable "python2")
 ```
+
 </details>
 
 ### Clangd
@@ -276,7 +274,7 @@ For cmake project, passing `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON` to `cmake` can g
 
 Pitfalls for `compile_commands.json`. By default `CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES` are not exported into `compile_commands.json`. With `compile_commands.json` clangd might still not able to figure out the include paths. In that case you can try adding following lines to the beginning of `CMakeLists.txt`. [See cmake issue](https://gitlab.kitware.com/cmake/cmake/-/issues/20912)
 
-``` cmake
+```cmake
 if(CMAKE_EXPORT_COMPILE_COMMANDS)
     set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
 endif()
@@ -284,13 +282,13 @@ endif()
 
 But again, if the project is using `gcc` instead of `clang`, you might see some errors like this from clangd. That's because the previous lines add `-isystem /usr/lib/gcc/x86_64-linux-gnu/14/include` and it is not compatible with clang. You can manually remove it and fine tune the CMake.
 
-``` text
+```text
 E[12:12:01.769] [builtin_definition] Line 18: in included file: definition of builtin function '_mm_getcsr'
 ```
 
 To manually verify if clangd works. You can run
 
-``` shell
+```shell
 clangd --compile-commands-dir="."  --query-driver="clang-tidy" --check="path/to/some.cpp"
 ```
 
@@ -298,7 +296,7 @@ clangd --compile-commands-dir="."  --query-driver="clang-tidy" --check="path/to/
 
 To make vterm handy, you need some shell-side configuration, add following to `.zshrc` or `.bashrc`
 
-``` shell
+```shell
 if [[ "$INSIDE_EMACS" = 'vterm' ]] \
     && [[ -n ${EMACS_VTERM_PATH} ]] \
     && [[ -f ${EMACS_VTERM_PATH}/etc/emacs-vterm-zsh.sh ]]; then
@@ -306,7 +304,7 @@ if [[ "$INSIDE_EMACS" = 'vterm' ]] \
 fi
 ```
 
-## GPT
+## LLM
 
 You can choose to use OpenAI, if you want to keep the prompt to yourself. Hosting a local LLM is not difficult either.
 
@@ -316,7 +314,7 @@ follow guide in [nvidia site](https://docs.nvidia.com/cuda/cuda-installation-gui
 
 TL;DR
 
-``` shell
+```shell
 wget https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64//cuda-keyring_1.1-1_all.deb
 sudo dpkg -i cuda-keyring_1.1-1_all.deb
 sudo apt-get install -y nvidia-kernel-open-dkms
@@ -328,7 +326,7 @@ sudo apt install nvidia-cuda-toolkit
 
 #### Build
 
-``` shell
+```shell
 git clone git@github.com:ggerganov/llama.cpp.git
 
 mkdir build
@@ -341,7 +339,7 @@ cmake --build . --config Release
 
 Run following command in `build` folder, api server will spin up at `localhost:8080`
 
-``` shell
+```shell
 ./bin/server --model /path/to/models/dolphin-2.6-mistral-7b-dpo-laser.Q5_K_M.gguf --n-gpu-layers 400
 ```
 
@@ -349,7 +347,7 @@ Run following command in `build` folder, api server will spin up at `localhost:8
 
 Or use Ollama as frontend
 
-``` shell
+```shell
 curl -fsSL https://ollama.com/install.sh | sh
 ollama run dolphin-mixtral
 ```
@@ -368,14 +366,25 @@ Although `fate/treesit-install-language-grammars` or the built-in `treesit-insta
 
 In case you need to test your modification locally and build it from source.
 
-``` shell
+```shell
 git clone git@github.com:tree-sitter/tree-sitter-rust.git
 cd tree-sitter-rust/src
 cc parser.c scanner.c -fPIC -I. --shared -o libtree-sitter-rust.so
 mv libtree-sitter-rust.so ~/.emacs.d/tree-sitter
 ```
 
-## Useful links
+## Misc. tips
 
-  - [How to change fonts](https://www.gnu.org/software/emacs/manual/html_node/emacs/Fonts.html)
-  - [Emacs documents](https://www.gnu.org/software/emacs/documentation.html)
+### Updating magit tracking repos hourly
+
+This script has been very useful for me to have up-to-date repo status with issue and pull requests.
+Add it to crontab job and run hourly.
+
+``` crontab
+@hourly /usr/local/bin/emacs -nw -Q --batch -l /home/user/.emacs.d/bin/update_forge_repos.el
+```
+
+### Useful links
+
+- [How to change fonts](https://www.gnu.org/software/emacs/manual/html_node/emacs/Fonts.html)
+- [Emacs documents](https://www.gnu.org/software/emacs/documentation.html)
