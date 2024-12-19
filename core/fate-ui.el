@@ -206,7 +206,7 @@
              (,(when (display-graphic-p)
                  (nerd-icons-mdicon "nf-md-update"))
                "Update" "Update Fate Emacs"
-               (lambda (&rest _) (fate-update))))))
+               (lambda (&rest _) (fate/update-configuration))))))
     (dashboard-setup-startup-hook)))
 
 (use-package nerd-icons)
