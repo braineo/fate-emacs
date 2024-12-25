@@ -49,8 +49,8 @@
       (when (and (string-match-p extension buffer-file-name)
               ;; Do not auto format anything inside node_modules
               (or (not (string-match-p "node_modules" buffer-file-name))
-                (not string-match-p "^/run/" buffer-file-name)
-                (not string-match-p "^/te?mp/" buffer-file-name)))
+                  (not (string-match-p "^/run/" buffer-file-name))
+                  (not (string-match-p "^/te?mp/" buffer-file-name))))
         (prettier-js-mode)
         (cl-return)))))
 
