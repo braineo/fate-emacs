@@ -70,7 +70,7 @@ Function definition:
                        :stream t
                        :protocol "http"
                        :host "localhost:8080"
-                       :models '(any))))  ; Use symbol 'any instead of string "any"
+                       :models '(any))))
     (if ollama-models
       (setq-default
         gptel-backend (gptel-make-ollama "Ollama"
@@ -80,7 +80,7 @@ Function definition:
         gptel-model (car ollama-models))
       (setq-default
         gptel-backend llama-cpp
-        gptel-model 'any))))  ; Use symbol 'any instead of string "any"
+        gptel-model 'any))))
 
 (transient-define-suffix fate/gptel-suffix-docstring ()
   "Generate docstring for region contents."
