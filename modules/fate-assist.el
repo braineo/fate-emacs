@@ -55,6 +55,8 @@ Function definition:
 - Now write %s docstring for this function.
 - Return the inline docstring only.
 - Do not output code or explanation.
+- Do not output markdown codeblock.
+- Add linebreak at the end.
 - Response concisely.
 ")
 
@@ -86,7 +88,7 @@ Function definition:
   :description "Docstring"
   :if (and (derived-mode-p 'prog-mode) (use-region-p))
   (interactive)
-  (let* ((lang (substring (symbol-name major-mode) nil -5))
+  (let* ((lang (if (listp mode-name) (car mode-name) mode-name))
          (prompt (format fate/docstring-prompt-template
                         (buffer-substring-no-properties
                           (region-beginning) (region-end))
