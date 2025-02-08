@@ -352,6 +352,21 @@ curl -fsSL https://ollama.com/install.sh | sh
 ollama run dolphin-mixtral
 ```
 
+#### Debug ollama failed running on Nvidia graphics card
+If the system has an Nvidia graphics card but showing 100% CPU when running `ollama ps`
+
+``` text
+NAME               ID              SIZE      PROCESSOR    UNTIL
+deepseek-r1:14b    ea35dfe18182    9.9 GB    100% CPU     4 minutes from now
+```
+
+refer to https://github.com/ollama/ollama/blob/main/docs/troubleshooting.md#container-fails-to-run-on-nvidia-gpu and check logs from following
+
+``` shell
+sudo systemctl stop ollama
+OLLAMA_DEBUG=1 ollama serve 2>&1 | tee server.log
+```
+
 ## Tree sitter
 
 Tree-sitter is a parser generator tool and an incremental parsing
