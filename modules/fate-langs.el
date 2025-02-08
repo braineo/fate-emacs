@@ -55,6 +55,7 @@ When FORCE is set, clone and reinstall grammer."
   (dolist (lang (mapcar 'car treesit-language-source-alist))
     (when (or force
             (not (treesit-language-available-p lang)))
+      (message (format "installing %s grammer" lang))
       (treesit-install-language-grammar lang))))
 
 (defgroup taplo nil
