@@ -18,8 +18,8 @@
 
 (pcase-dolist (`(,name ,id)
                (forge-sql [:select [name id] :from repository
-                           :where (= class 'gitlab)
-                            :order-by [(asc owner) (asc name)]]))
+                           ;;:where (= class 'gitlab)
+                           :order-by [(asc owner) (asc name)]]))
   (progn
     (setq forge-pull-total (1+ forge-pull-total))
     (when-let ((repo (forge-get-repository :id id))
