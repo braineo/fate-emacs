@@ -57,7 +57,7 @@
 (require 'fate-transient)
 (require 'fate-docker)
 (require 'fate-vterm)
-
+(require 'fate-rg)
 (when IS-MAC
   (require 'fate-macos))
 
