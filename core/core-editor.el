@@ -26,6 +26,7 @@
 (eval-when-compile
   (require 'core-load-paths))
 
+(require 'posframe)
 (require 're-builder)
 
 ;; Death to the tabs!  However, tabs historically indent to the next
@@ -74,13 +75,54 @@
   :custom
   (tramp-default-method "ssh"))
 
+(defconst regex-cheatsheet-posframe-name "*Regex Cheat Sheet*")
+
+(defconst fate/regex-cheatsheet-string
+  "| Function                   | PCRE                  | Emacs                              |
+|----------------------------|-----------------------|------------------------------------|
+| Group, Count, Alternation  | (cat|dog){3}          | \\(cat\\|dog\\)\\{3\\}                  |
+| Classes                    | \\w \\d \\s              | [[:word:]] [[:digit:]] [[:space:]] |
+| Word Constituent           | \\w does not match ' \" | \\w match syntax table text         |
+| New line                   | \\n                    | C-q C-j                            |
+| Start/End Of Buffer/String |                       | \\` \\'                              |
+| Captured                   | $1 $2                 | \\1 \\2                              |")
+
+(defun fate/toggle-regex-cheatsheet-posframe ()
+  "Toggle display of a floating regex help posframe during search.
+When called, if the posframe is already visible, it is dismissed.
+Otherwise, it is shown at point without disturbing your current window layout."
+  (interactive)
+  (if (get-buffer regex-cheatsheet-posframe-name)
+    (posframe-delete regex-cheatsheet-posframe-name)
+    (posframe-show regex-cheatsheet-posframe-name
+                   :string fate/regex-cheatsheet-string
+                   :poshandler #'posframe-poshandler-window-bottom-right-corner
+                   :border-width 1
+                   :border-color "gray"
+                   :accept-focus nil
+                   :timeout 0)))
+
+(defun fate/close-regex-cheatsheet-posframe ()
+  (when (get-buffer regex-cheatsheet-posframe-name)
+    (posframe-delete regex-cheatsheet-posframe-name)))
+
 (use-package isearch
   :ensure nil
   :bind (:map isearch-mode-map
-         ([remap isearch-delete-char] . isearch-del-char))
+              ([remap isearch-delete-char] . isearch-del-char)
+              ("C-c C-h" . fate/toggle-regex-cheatsheet-posframe))
+  :hook
+  (isearch-mode-end . fate/close-regex-cheatsheet-posframe)
   :custom
   (isearch-lazy-count t)
   (lazy-count-prefix-format "%s/%s "))
+
+(use-package replace
+  :ensure nil
+  :hook
+  ((minibuffer-setup . (lambda ()
+                         (define-key minibuffer-local-map (kbd "C-c C-h") #'fate/toggle-regex-cheatsheet-posframe)))
+   (minibuffer-exit . fate/close-regex-cheatsheet-posframe)))
 
 (use-package casual
   :defer t)
