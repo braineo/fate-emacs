@@ -174,30 +174,72 @@
   :shortarg "-i"
   :argument "--include=")
 
-;; Define infix commands
+(transient-define-infix fate-rg--toggle-case ()
+  :class 'transient-switch
+  :description "Case sensitive"
+  :argument "--case-sensitive"
+  :command 'fate-rg--toggle-case
+  :init-value (lambda (obj) (setq fate-rg--case-sensitive nil)))
+
+(transient-define-infix fate-rg--toggle-exact ()
+  :class 'transient-switch
+  :description "Exact match"
+  :argument "--exact"
+  :command 'fate-rg--toggle-exact
+  :init-value (lambda (obj) (setq fate-rg--exact-match nil)))
+
+(transient-define-infix fate-rg--toggle-regexp ()
+  :class 'transient-switch
+  :description "Regular expression"
+  :argument "--regexp"
+  :command 'fate-rg--toggle-regexp
+  :init-value (lambda (obj) (setq fate-rg--regexp nil)))
+
+(transient-define-infix fate-rg--toggle-preserve-case ()
+  :class 'transient-switch
+  :description "Preserve case"
+  :argument "--preserve-case"
+  :command 'fate-rg--toggle-preserve-case
+  :init-value (lambda (obj) (setq fate-rg--preserve-case nil)))
+
+(transient-define-infix fate-rg--toggle-buffers ()
+  :class 'transient-switch
+  :description "Search buffers"
+  :argument "--buffers"
+  :command 'fate-rg--toggle-buffers
+  :init-value (lambda (obj) (setq fate-rg--search-buffers nil)))
+
+(transient-define-infix fate-rg--toggle-ignore ()
+  :class 'transient-switch
+  :description "Respect ignore files"
+  :argument "--respect-ignore"
+  :command 'fate-rg--toggle-ignore
+  :init-value (lambda (obj) (setq fate-rg--respect-ignore nil)))
+
+;; Input commands
 (transient-define-infix fate-rg--set-search ()
-  :class 'transient-option
+  :class 'transient-lisp-variable
+  :variable 'fate-rg--search-string
   :description "Search string"
-  :shortarg "-s"
   :argument "--search="
   :reader (lambda (prompt _initial-input _history)
-            (setq fate-rg--search-string
-                  (read-string (format "%s: " prompt)
-                             fate-rg--search-string
-                             'fate-rg--search-history))
-            fate-rg--search-string))
+            (let ((string (read-string prompt fate-rg--search-string 'fate-rg--search-history)))
+              (progn
+                (setq fate-rg--search-string string)
+                (fate-rg-preview)
+                string))))
 
 (transient-define-infix fate-rg--set-replace ()
-  :class 'transient-option
+  :class 'transient-lisp-variable
+  :variable 'fate-rg--replace-string
   :description "Replace string"
-  :shortarg "-r"
   :argument "--replace="
   :reader (lambda (prompt _initial-input _history)
-            (setq fate-rg--replace-string
-                  (read-string (format "%s: " prompt)
-                             fate-rg--replace-string
-                             'fate-rg--replace-history))
-            fate-rg--replace-string))
+            (let ((string (read-string prompt fate-rg--replace-string 'fate-rg--replace-history)))
+              (progn
+                (setq fate-rg--replace-string string)
+                (fate-rg-preview)
+                string))))
 
 (transient-define-infix fate-rg--set-glob ()
   :class 'transient-option
@@ -205,53 +247,19 @@
   :shortarg "-i"
   :argument "--include="
   :reader (lambda (prompt _initial-input _history)
-            (let ((pattern (read-string (format "%s: " prompt)
-                                      nil
-                                      'fate-rg--glob-history)))
+            (let ((pattern (read-string prompt nil 'fate-rg--glob-history)))
               (unless (string-empty-p pattern)
-                (push pattern fate-rg--include-patterns))
+                (push pattern fate-rg--include-patterns)
+                (fate-rg-preview))
               pattern)))
 
-;; Toggle commands
-(defun fate-rg--toggle-case ()
-  "Toggle case sensitivity."
+(defun fate-rg-execute ()
+  "Execute the search/replace operation."
   (interactive)
-  (setq fate-rg--case-sensitive (not fate-rg--case-sensitive))
-  (fate-rg-preview))
-
-(defun fate-rg--toggle-exact ()
-  "Toggle exact match."
-  (interactive)
-  (setq fate-rg--exact-match (not fate-rg--exact-match))
-  (fate-rg-preview))
-
-(defun fate-rg--toggle-regexp ()
-  "Toggle regular expression search."
-  (interactive)
-  (setq fate-rg--regexp (not fate-rg--regexp))
-  (fate-rg-preview))
-
-(defun fate-rg--toggle-preserve-case ()
-  "Toggle case preservation in replacements."
-  (interactive)
-  (setq fate-rg--preserve-case (not fate-rg--preserve-case))
-  (fate-rg-preview))
-
-(defun fate-rg--toggle-buffers ()
-  "Toggle searching in open buffers only."
-  (interactive)
-  (setq fate-rg--search-buffers (not fate-rg--search-buffers))
-  (fate-rg-preview))
-
-(defun fate-rg--toggle-ignore ()
-  "Toggle respecting ignore files."
-  (interactive)
-  (setq fate-rg--respect-ignore (not fate-rg--respect-ignore))
-  (fate-rg-preview))
+  (message "Executing search with: %s" fate-rg--search-string))
 
 (transient-define-prefix fate-rg-transient ()
   "Modern ripgrep interface."
-  :value '("--smart-case")
   ["Search Options"
    :description (lambda ()
                  (format "Search: %s Replace: %s"
@@ -259,21 +267,15 @@
                          (propertize fate-rg--replace-string 'face 'transient-value)))
    ("s" fate-rg--set-search)
    ("r" fate-rg--set-replace)
-   ("c" "Case sensitive" fate-rg--toggle-case
-    :toggle fate-rg--case-sensitive)
-   ("e" "Exact match" fate-rg--toggle-exact
-    :toggle fate-rg--exact-match)
-   ("x" "Regular expression" fate-rg--toggle-regexp
-    :toggle fate-rg--regexp)
-   ("p" "Preserve case" fate-rg--toggle-preserve-case
-    :toggle fate-rg--preserve-case)]
+   ("c" fate-rg--toggle-case)
+   ("e" fate-rg--toggle-exact)
+   ("x" fate-rg--toggle-regexp)
+   ("p" fate-rg--toggle-preserve-case)]
 
   ["File Options"
    ("i" fate-rg--set-glob)
-   ("b" "Search buffers" fate-rg--toggle-buffers
-    :toggle fate-rg--search-buffers)
-   ("g" "Respect ignore files" fate-rg--toggle-ignore
-    :toggle fate-rg--respect-ignore)]
+   ("b" fate-rg--toggle-buffers)
+   ("g" fate-rg--toggle-ignore)]
 
   ["Actions"
    ("RET" "Execute" fate-rg-execute)
