@@ -52,10 +52,10 @@
 (defvar fate-rg--case-sensitive nil
   "Whether search is case sensitive.")
 
-(defvar fate-rg--exact-match nil
+(defvar fate-rg--word-regexp nil
   "Whether to search for exact matches.")
 
-(defvar fate-rg--regexp nil
+(defvar fate-rg--fixed-strings nil
   "Whether to use regular expressions.")
 
 (defvar fate-rg--preserve-case nil
@@ -70,7 +70,7 @@
 (defvar fate-rg--search-buffers nil
   "Whether to search only in open buffers.")
 
-(defvar fate-rg--respect-ignore nil
+(defvar fate-rg--no-ignore nil
   "Whether to respect .gitignore and similar files.")
 
 (defvar fate-rg--search-history nil
@@ -85,27 +85,45 @@
 ;; Core search functions
 (defun fate-rg--build-command ()
   "Build the rg command based on current settings."
-  (let ((cmd '("rg" "--color=always" "--line-number" "--no-heading")))
-    (when fate-rg--case-sensitive
-      (push "--case-sensitive" cmd))
-    (when fate-rg--exact-match
-      (push "--fixed-strings" cmd))
-    (unless fate-rg--regexp
-      (push "--fixed-strings" cmd))
-    (when fate-rg--include-patterns
-      (dolist (pattern fate-rg--include-patterns)
-        (push (format "--glob=%s" pattern) cmd)))
-    (when fate-rg--exclude-patterns
-      (dolist (pattern fate-rg--exclude-patterns)
-        (push (format "--glob=!%s" pattern) cmd)))
-    (unless fate-rg--respect-ignore
-      (push "--no-ignore" cmd))
-    (push fate-rg--search-string cmd)
-    (when fate-rg--search-buffers
-      (setq cmd (append cmd (mapcar #'buffer-file-name
-                                   (seq-filter #'buffer-file-name
-                                             (buffer-list))))))
-    (string-join (nreverse cmd) " ")))
+  (let ((command-line
+         (append
+          (list "--no-config --json --line-number --no-heading")
+
+          (when fate-rg--case-sensitive
+            (list "--case-sensitive"))
+
+          (when fate-rg--fixed-strings
+            (list "--fixed-strings"))
+
+          (when fate-rg--word-regexp
+            (list "-w"))
+
+          (when fate-rg--include-patterns
+            (mapcar (lambda (pattern)
+                     (concat "--glob=" (shell-quote-argument pattern)))
+                   fate-rg--include-patterns))
+
+          (when fate-rg--exclude-patterns
+            (mapcar (lambda (pattern)
+                     (concat "--glob=!" (shell-quote-argument pattern)))
+                   fate-rg--exclude-patterns))
+
+          (when fate-rg--no-ignore
+            (list "--no-ignore"))
+
+          ;; Search pattern using -e for better handling of special characters
+          (list (concat "-e " (shell-quote-argument fate-rg--search-string))))))
+
+    (setq command-line
+          (grep-expand-template
+            (mapconcat 'identity (cons "rg" (delete-dups command-line)) " ")
+            fate-rg--search-string
+            "everything"))
+
+    (when (memq system-type '(cygwin windows-nt ms-dos))
+      (setq command-line (encode-coding-string command-line locale-coding-system)))
+
+    command-line))
 
 (defun fate-rg--get-results ()
   "Get search results using ripgrep."
@@ -153,7 +171,47 @@
 ;;; Transient
 ;;;
 
+(defun fate-rg--toggle-case ()
+  "Toggle case sensitivity."
+  (interactive)
+  (setq fate-rg--case-sensitive (not fate-rg--case-sensitive))
+  (fate-rg-preview)
+  fate-rg--case-sensitive) ; return the new value for transient UI
 
+(defun fate-rg--toggle-word-regexp ()
+  "Toggle exact match."
+  (interactive)
+  (setq fate-rg--word-regexp (not fate-rg--word-regexp))
+  (fate-rg-preview)
+  fate-rg--word-regexp)
+
+(defun fate-rg--toggle-fixed-strings ()
+  "Toggle fixed strings search."
+  (interactive)
+  (setq fate-rg--fixed-strings (not fate-rg--fixed-strings))
+  (fate-rg-preview)
+  fate-rg--fixed-strings)
+
+(defun fate-rg--toggle-preserve-case ()
+  "Toggle case preservation in replacements."
+  (interactive)
+  (setq fate-rg--preserve-case (not fate-rg--preserve-case))
+  (fate-rg-preview)
+  fate-rg--preserve-case)
+
+(defun fate-rg--toggle-buffers ()
+  "Toggle searching in open buffers only."
+  (interactive)
+  (setq fate-rg--search-buffers (not fate-rg--search-buffers))
+  (fate-rg-preview)
+  fate-rg--search-buffers)
+
+(defun fate-rg--toggle-ignore ()
+  "Toggle respecting ignore files."
+  (interactive)
+  (setq fate-rg--no-ignore (not fate-rg--no-ignore))
+  (fate-rg-preview)
+  fate-rg--no-ignore)
 
 ;; Define transient classes for our input commands
 (transient-define-argument fate-rg--arg-search ()
@@ -178,22 +236,21 @@
   :class 'transient-switch
   :description "Case sensitive"
   :argument "--case-sensitive"
-  :command 'fate-rg--toggle-case
-  :init-value (lambda (obj) (setq fate-rg--case-sensitive nil)))
+  :variable 'fate-rg--case-sensitive)
 
-(transient-define-infix fate-rg--toggle-exact ()
+(transient-define-infix fate-rg--toggle-word-regexp ()
   :class 'transient-switch
-  :description "Exact match"
-  :argument "--exact"
-  :command 'fate-rg--toggle-exact
-  :init-value (lambda (obj) (setq fate-rg--exact-match nil)))
+  :description "Match whole word"
+  :argument "--word-regexp"
+  :command 'fate-rg--toggle-word-regexp
+  :init-value (lambda (obj) (setq fate-rg--word-regexp nil)))
 
-(transient-define-infix fate-rg--toggle-regexp ()
+(transient-define-infix fate-rg--toggle-fixed-strings ()
   :class 'transient-switch
-  :description "Regular expression"
-  :argument "--regexp"
-  :command 'fate-rg--toggle-regexp
-  :init-value (lambda (obj) (setq fate-rg--regexp nil)))
+  :description "Fixed strings"
+  :argument "--fixed-strings"
+  :command 'fate-rg--toggle-fixed-strings
+  :init-value (lambda (obj) (setq fate-rg--fixed-strings nil)))
 
 (transient-define-infix fate-rg--toggle-preserve-case ()
   :class 'transient-switch
@@ -211,10 +268,10 @@
 
 (transient-define-infix fate-rg--toggle-ignore ()
   :class 'transient-switch
-  :description "Respect ignore files"
-  :argument "--respect-ignore"
+  :description "No ignore files"
+  :argument "--no-ignore"
   :command 'fate-rg--toggle-ignore
-  :init-value (lambda (obj) (setq fate-rg--respect-ignore nil)))
+  :init-value (lambda (obj) (setq fate-rg--no-ignore nil)))
 
 ;; Input commands
 (transient-define-infix fate-rg--set-search ()
@@ -268,14 +325,14 @@
    ("s" fate-rg--set-search)
    ("r" fate-rg--set-replace)
    ("c" fate-rg--toggle-case)
-   ("e" fate-rg--toggle-exact)
-   ("x" fate-rg--toggle-regexp)
+   ("w" fate-rg--toggle-word-regexp)
+   ("f" fate-rg--toggle-fixed-strings)
    ("p" fate-rg--toggle-preserve-case)]
 
   ["File Options"
    ("i" fate-rg--set-glob)
    ("b" fate-rg--toggle-buffers)
-   ("g" fate-rg--toggle-ignore)]
+   ("u" fate-rg--toggle-ignore)]
 
   ["Actions"
    ("RET" "Execute" fate-rg-execute)
@@ -329,6 +386,12 @@
 (defun fate-rg--format-preview (results)
   "Format RESULTS for preview buffer."
   (with-temp-buffer
+    ;; First insert the executed command
+    (let ((command (fate-rg--build-command)))
+      (insert (propertize "Command: " 'face 'bold)
+              (propertize command 'face 'font-lock-comment-face)
+              "\n\n"))
+
     (maphash
      (lambda (file matches)
        (let ((count (length matches)))
@@ -358,7 +421,7 @@
 
 (defun fate-rg--preview-replacement (line)
   "Preview replacement in LINE."
-  (let* ((regexp (if fate-rg--regexp
+  (let* ((regexp (if fate-rg--fixed-strings
                      fate-rg--search-string
                    (regexp-quote fate-rg--search-string)))
          (case-fold-search (not fate-rg--case-sensitive)))
