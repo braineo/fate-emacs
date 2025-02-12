@@ -26,7 +26,6 @@
 (eval-when-compile
   (require 'core-load-paths))
 
-(require 'posframe)
 (require 're-builder)
 
 ;; Death to the tabs!  However, tabs historically indent to the next
@@ -74,6 +73,8 @@
   :ensure nil
   :custom
   (tramp-default-method "ssh"))
+
+(use-package posframe)
 
 (defconst regex-cheatsheet-posframe-name "*Regex Cheat Sheet*")
 
