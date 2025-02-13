@@ -49,8 +49,10 @@
 (defvar fate-rg--replace-string ""
   "Current replace string.")
 
-(defvar fate-rg--case-sensitive nil
-  "Whether search is case sensitive.")
+(defcustom fate-rg--case-sensitive nil
+  "Whether search is case sensitive."
+  :type 'boolean
+  :group 'fate-rg)
 
 (defvar fate-rg--word-regexp nil
   "Whether to search for exact matches.")
@@ -171,13 +173,6 @@
 ;;; Transient
 ;;;
 
-(defun fate-rg--toggle-case ()
-  "Toggle case sensitivity."
-  (interactive)
-  (setq fate-rg--case-sensitive (not fate-rg--case-sensitive))
-  (fate-rg-preview)
-  fate-rg--case-sensitive) ; return the new value for transient UI
-
 (defun fate-rg--toggle-word-regexp ()
   "Toggle exact match."
   (interactive)
@@ -232,11 +227,17 @@
   :shortarg "-i"
   :argument "--include=")
 
-(transient-define-infix fate-rg--toggle-case ()
+(transient-define-suffix fate-rg--toggle-case ()
   :class 'transient-switch
   :description "Case sensitive"
   :argument "--case-sensitive"
-  :variable 'fate-rg--case-sensitive)
+  :init-value (lambda (_obj) fate-rg--case-sensitive)
+  :command (lambda (_)
+             (message "blahblahblah")
+             (setq fate-rg--case-sensitive (not fate-rg--case-sensitive))
+             (fate-rg-preview)
+             fate-rg--case-sensitive))
+
 
 (transient-define-infix fate-rg--toggle-word-regexp ()
   :class 'transient-switch
