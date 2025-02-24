@@ -44,7 +44,7 @@
 
 ## Get Started
 
-Only tested with \>= Emacs 29.3 in Debian
+Only tested with \>= Emacs 30.1 in Debian
 
 ### Backup
 
