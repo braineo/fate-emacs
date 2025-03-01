@@ -40,7 +40,7 @@
 
 (setq package-enable-at-startup nil) ;; don't auto-initialize!
 
-(when (fboundp 'startup-redirect-eln-cache)
+(when (boundp 'native-comp-eln-load-path)
   (let ((eln-path (convert-standard-filename (expand-file-name "var/eln-cache/" user-emacs-directory))))
    (if (version< emacs-version "29")
      (add-to-list 'native-comp-eln-load-path eln-path)
