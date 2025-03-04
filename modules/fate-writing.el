@@ -58,7 +58,12 @@
   :ensure nil
   :hook (org-mode . (lambda() (set-fill-column 120)))
   :config
-  (add-to-list 'org-export-backends '(pandoc)))
+  (add-to-list 'org-export-backends '(pandoc))
+  :custom
+  (org-babel-load-languages '((emacs-lisp . t)
+                              (shell . t)
+                              (js . t)
+                              (python . t))))
 
 (use-package org-modern
   :hook (org-mode . org-modern-mode))

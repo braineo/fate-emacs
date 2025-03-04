@@ -480,6 +480,7 @@ more information."
    ([remap kill-whole-line] . crux-kill-whole-line)))
 
 (use-package editorconfig
+  :ensure nil
   :config
   (editorconfig-mode t))
 
