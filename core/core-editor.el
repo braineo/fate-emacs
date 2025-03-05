@@ -174,9 +174,10 @@ surrounded by word boundaries."
   ;; dired - reuse current buffer
   (put 'dired-find-alternate-file 'disabled nil)
   ;; always delete and copy recursively
-  (setq dired-recursive-deletes 'always)
-  (setq dired-recursive-copies 'always)
-
+  :custom
+  (dired-recursive-deletes 'always)
+  (dired-recursive-copies 'always)
+  (dired-movement-style 'cycle)
 
   (setq dired-dwim-target t)
   :custom
