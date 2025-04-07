@@ -184,7 +184,8 @@ surrounded by word boundaries."
   (dired-listing-switches "-alh" "show human readable size")
   ;; if there is a dired buffer displayed in the next window, use its
   ;; current subdir, instead of the current subdir of this dired buffer
-  (dired-kill-when-opening-new-dired-buffer t))
+  (dired-kill-when-opening-new-dired-buffer t)
+  (dired-dwim-target t "guess where to copy to"))
 
 ;; Core package Projectile
 (use-package projectile
