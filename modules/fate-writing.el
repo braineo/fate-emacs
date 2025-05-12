@@ -133,7 +133,8 @@
   :commands (atomic-chrome-start-server)
   :config (atomic-chrome-start-server)
   :custom
-  (atomic-chrome-url-major-mode-alist '(("git" . gfm-mode))))
+  (atomic-chrome-url-major-mode-alist '(("git" . gfm-mode)
+                                        ("\\(mattermost\\|slack\\)" . gfm-mode))))
 
 (provide 'fate-writing)
 ;;; fate-writing.el ends here
