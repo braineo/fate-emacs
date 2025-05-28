@@ -140,29 +140,30 @@
 (defun fate/format-gitlab-json-to-markdown ()
   "Format GitLab issues JSON in current buffer to markdown list in temp buffer."
   (interactive)
-  (let ((json-data (json-read-from-string (buffer-string)))
+  (let ((json-data (json-parse-string (buffer-string)))
         (markdown-lines '()))
 
     ;; Extract issues vector from the nested JSON structure
-    (let ((issues (cdr (assoc 'nodes
-                              (cdr (assoc 'issues
-                                         (cdr (assoc 'project
-                                                    (cdr (assoc 'data json-data))))))))))
+    (let ((issues (gethash "nodes"
+                         (gethash "issues"
+                           (gethash "project"
+                             (gethash "data" json-data))))))
 
       ;; Process each issue (issues is a vector, so use dotimes)
       (dotimes (i (length issues))
         (let* ((issue (aref issues i))
-               (title (cdr (assoc 'title issue)))
-               (web-url (cdr (assoc 'webUrl issue)))
-               (assignees-nodes (cdr (assoc 'nodes
-                                           (cdr (assoc 'assignees issue)))))
+               (title (gethash "title" issue))
+               (web-url (gethash "webUrl" issue))
+               (assignees-nodes (gethash "nodes"
+                                  (gethash "assignees" issue)))
+
                (assignee-names '()))
 
           ;; Extract assignee names (assignees-nodes is also a vector)
           (when assignees-nodes
             (dotimes (j (length assignees-nodes))
               (let ((assignee (aref assignees-nodes j)))
-                (push (cdr (assoc 'name assignee)) assignee-names))))
+                (push (gethash "name" assignee) assignee-names))))
 
           (let ((assignees-str (if assignee-names
                                   (string-join (reverse assignee-names) " and ")
