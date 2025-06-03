@@ -214,5 +214,8 @@ When FORCE is set, clone and reinstall grammer."
   :bind (:map sh-mode-map
           ("C-c C-l" . shfmt-buffer)))
 
+(use-package typst-ts-mode
+  :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git"))
+
 (provide 'fate-langs)
 ;;; fate-langs.el ends here

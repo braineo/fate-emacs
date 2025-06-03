@@ -29,14 +29,53 @@
   (require 'copy-as-format))
 
 ;; Markdown
+
 (use-package markdown-mode
-  :mode (("\\.md\\'" . gfm-mode)
-         ("\\.markdown\\'" . gfm-mode))
+  :defer t)
+
+(use-package markdown-ts-mode
+  :mode (("\\.md\\'" . markdown-ts-mode))
   :config
-  (setq markdown-fontify-code-blocks-natively t)
-  :hook (markdown-mode . (lambda()
-                           (setq-local prettier-js-args
-                            '("--parser" "markdown")))))
+  ;; (setq markdown-fontify-code-blocks-natively t)
+  :hook (markdown-ts-mode . (lambda()
+                              (setq-local prettier-js-args
+                               '("--parser" "markdown"))))
+
+  :custom
+  (markdown-ts--treesit-settings
+    (treesit-font-lock-rules
+     :language 'markdown-inline
+     :override t
+     :feature 'delimiter
+     '([ "[" "]" "(" ")" ] @shadow)
+
+     :language 'markdown
+     :feature 'paragraph
+     '([((setext_heading) @font-lock-function-name-face)
+        ((atx_heading) @font-lock-function-name-face)
+        ((thematic_break) @shadow)
+        ((indented_code_block) @font-lock-comment-face)
+        (list_item (list_marker_star) @font-lock-constant-face)
+        (list_item (list_marker_plus) @font-lock-constant-face)
+        (list_item (list_marker_minus) @font-lock-constant-face)
+        (list_item (list_marker_dot) @font-lock-constant-face)
+        (fenced_code_block (fenced_code_block_delimiter) @font-lock-doc-face)
+        (fenced_code_block (code_fence_content) @font-lock-comment-face)
+        ((block_quote_marker) @font-lock-comment-face)
+        (block_quote (paragraph) @font-lock-comment-face)
+        (block_quote (block_quote_marker) @font-lock-comment-face)])
+
+     :language 'markdown-inline
+     :feature 'paragraph-inline
+     '([
+        ((image_description) @link)
+        ((link_destination) @font-lock-comment-face)
+        ((code_span) @font-lock-comment-face)
+        ((emphasis) @underline)More actions
+        ((strong_emphasis) @bold)
+        (inline_link (link_text) @link)
+        (inline_link (link_destination) @font-lock-comment-face)
+        (shortcut_link (link_text) @link)]))))
 
 (use-package markdown-toc
   :defer)
@@ -48,7 +87,7 @@
     (jinx-mode)))
 
 (use-package jinx
-  :hook ((markdown-mode text-mode) . fate/enable-jinx)
+  :hook ((markdown-ts-mode text-mode) . fate/enable-jinx)
   :bind ([remap ispell-word] . jinx-correct)
   :config
   ;; disable checking spell of Chinses
@@ -133,8 +172,8 @@
   :commands (atomic-chrome-start-server)
   :config (atomic-chrome-start-server)
   :custom
-  (atomic-chrome-url-major-mode-alist '(("git" . gfm-mode)
-                                        ("\\(mattermost\\|slack\\)" . gfm-mode))))
+  (atomic-chrome-url-major-mode-alist '(("git" . markdown-ts-mode)
+                                        ("\\(mattermost\\|slack\\)" . markdown-ts-mode))))
 
 
 (defun fate/format-gitlab-json-to-markdown ()
@@ -179,7 +218,7 @@
           (erase-buffer)
           (insert (string-join (reverse markdown-lines) "\n"))
           (insert "\n")
-          (markdown-mode))
+          (markdown-ts-mode))
         (pop-to-buffer temp-buffer)))))
 
 (provide 'fate-writing)
