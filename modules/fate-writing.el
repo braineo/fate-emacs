@@ -28,6 +28,9 @@
   (require 'which-func)
   (require 'copy-as-format))
 
+(use-package typst-ts-mode
+  :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git"))
+
 ;; Markdown
 (use-package markdown-mode
   :mode (("\\.md\\'" . gfm-mode)
