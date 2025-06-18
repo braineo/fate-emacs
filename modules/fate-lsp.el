@@ -45,6 +45,7 @@
   (acm-backend-lsp-match-mode "fuzzy")
   (lsp-bridge-user-langserver-dir (expand-file-name "langserver" fate-directory))
   (lsp-bridge-enable-completion-in-string t)
+  (lsp-bridge-markdown-lsp-server "harper-ls")
   :bind
   (:map lsp-bridge-mode-map
     ([remap xref-find-definitions] . lsp-bridge-find-def)

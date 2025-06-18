@@ -1,0 +1,11 @@
+{
+  "name": "harper-ls",
+  "languageId": "plaintext",
+  "command": ["harper-ls", "--stdio"],
+  "settings": {
+    "harper-ls": {
+      "userDictPath": "~/.config/enchant/en_US.dic"
+    }
+  },
+  "initializationOptions": {}
+}
