@@ -26,7 +26,8 @@
 
 (eval-when-compile
   (require 'which-func)
-  (require 'copy-as-format))
+  (require 'copy-as-format)
+  (require 'org))
 
 (use-package typst-ts-mode
   :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git"))
@@ -184,6 +185,62 @@
           (insert "\n")
           (markdown-mode))
         (pop-to-buffer temp-buffer)))))
+
+(defun fate/fill-iteration-dates ()
+  "Fill in iteration dates in markdown templates.
+Prompts for start and end dates, calculates endgame dates,
+and replaces template strings in the current buffer."
+  (interactive)
+  (let* ((start-date (org-read-date nil nil nil "Start date: "))
+         (end-date (org-read-date nil nil nil "End date: "))
+         (end-date-time (org-time-string-to-time end-date))
+         (endgame-end-date (format-time-string "%Y-%m-%d"
+                                             (subtract-working-days end-date-time 0)))
+         (endgame-start-date (format-time-string "%Y-%m-%d"
+                                               (subtract-working-days
+                                                (org-time-string-to-time endgame-end-date) 3))))
+
+    ;; Replace template strings in buffer
+    (save-excursion
+      (goto-char (point-min))
+      (while (search-forward "<start_date>" nil t)
+        (replace-match start-date))
+
+      (goto-char (point-min))
+      (while (search-forward "<end_date>" nil t)
+        (replace-match end-date))
+
+      (goto-char (point-min))
+      (while (search-forward "<endgame_start_date>" nil t)
+        (replace-match endgame-start-date))
+
+      (goto-char (point-min))
+      (while (search-forward "<endgame_end_date>" nil t)
+        (replace-match endgame-end-date)))
+
+    (message "Iteration dates filled: %s to %s (endgame: %s to %s)"
+             start-date end-date endgame-start-date endgame-end-date)))
+
+(defun subtract-working-days (date-time num-days)
+  "Subtract NUM-DAYS working days from DATE-TIME.
+Working days are Monday through Friday.
+If DATE-TIME is a weekend, first moves to the previous Friday."
+  (let ((current-time date-time)
+        (days-subtracted 0))
+    (while (or (< days-subtracted num-days)
+             (not (is-weekday current-time)))
+      (when (is-weekday current-time)
+        (setq days-subtracted (1+ days-subtracted)))
+      (setq current-time (time-subtract current-time (days-to-time 1))))
+
+    current-time))
+
+(defun is-weekday (date-time)
+  (let ((day-of-week (string-to-number (format-time-string "%w" date-time))))
+    (and (>= day-of-week 1) (<= day-of-week 5))))
+
+;; Optional: bind to a key for quick access
+;; (global-set-key (kbd "C-c d") 'fill-iteration-dates)
 
 (provide 'fate-writing)
 ;;; fate-writing.el ends here
