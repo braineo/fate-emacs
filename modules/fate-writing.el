@@ -141,9 +141,19 @@
                                         ("\\(mattermost\\|slack\\)" . gfm-mode))))
 
 
-(defun fate/format-gitlab-json-to-markdown ()
+(defun fate/format-gitlab-json (format-type)
+  (interactive
+   (list (intern (completing-read "Format type: "
+                                  '("email" "planning")
+                                  nil t))))
+  (fate/format-gitlab-json-to-markdown
+   (cond
+    ((eq format-type 'email) #'fate/gitlab-email-formatter)
+    ((eq format-type 'planning) #'fate/gitlab-planning-formatter)
+    (t (error "Unknown format type: %s" (symbol-name format-type))))))
+
+(defun fate/format-gitlab-json-to-markdown (formatter-fn)
   "Format GitLab issues JSON in current buffer to markdown list in temp buffer."
-  (interactive)
   (let ((json-data (json-parse-string (buffer-string)))
         (markdown-lines '()))
 
@@ -153,29 +163,15 @@
                            (gethash "project"
                              (gethash "data" json-data))))))
 
-      ;; Process each issue (issues is a vector, so use dotimes)
       (dotimes (i (length issues))
         (let* ((issue (aref issues i))
-               (title (gethash "title" issue))
-               (web-url (gethash "webUrl" issue))
-               (assignees-nodes (gethash "nodes"
-                                  (gethash "assignees" issue)))
+               (assignees-nodes (gethash "nodes" (gethash "assignees" issue)))
+               (assignees '()))
 
-               (assignee-names '()))
-
-          ;; Extract assignee names (assignees-nodes is also a vector)
           (when assignees-nodes
             (dotimes (j (length assignees-nodes))
-              (let ((assignee (aref assignees-nodes j)))
-                (push (gethash "name" assignee) assignee-names))))
-
-          (let ((assignees-str (if assignee-names
-                                  (string-join (reverse assignee-names) " and ")
-                                "Unassigned")))
-
-            ;; Create markdown line
-            (push (format "* [%s](%s) by %s" title web-url assignees-str)
-                  markdown-lines))))
+              (push (aref assignees-nodes j) assignees)))
+          (push (funcall formatter-fn issue (reverse assignees)) markdown-lines)))
 
       ;; Create temp buffer and insert formatted markdown
       (let ((temp-buffer (get-buffer-create "*GitLab Issues Markdown*")))
@@ -185,6 +181,25 @@
           (insert "\n")
           (markdown-mode))
         (pop-to-buffer temp-buffer)))))
+
+
+(defun fate/gitlab-planning-formatter (issue assignees)
+  "Format issue for planning."
+  (format "- [ ] %s %s %s"
+          (gethash "title" issue)
+          (gethash "reference" issue)
+          (if assignees
+              (string-join (mapcar (lambda (a) (concat "@" (gethash "username" a))) assignees) " ")
+            "Unassigned")))
+
+(defun fate/gitlab-email-formatter (issue assignees)
+  "Format issue for email/slack."
+  (format "- [%s](%s) by %s"
+          (gethash "title" issue)
+          (gethash "webUrl" issue)
+          (if assignees
+              (string-join (mapcar (lambda (a) (gethash "name" a)) assignees) ", ")
+            "Unassigned")))
 
 (defun fate/fill-iteration-dates ()
   "Fill in iteration dates in markdown templates.
@@ -238,9 +253,6 @@ If DATE-TIME is a weekend, first moves to the previous Friday."
 (defun is-weekday (date-time)
   (let ((day-of-week (string-to-number (format-time-string "%w" date-time))))
     (and (>= day-of-week 1) (<= day-of-week 5))))
-
-;; Optional: bind to a key for quick access
-;; (global-set-key (kbd "C-c d") 'fill-iteration-dates)
 
 (provide 'fate-writing)
 ;;; fate-writing.el ends here
