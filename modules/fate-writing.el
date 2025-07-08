@@ -130,6 +130,18 @@
     (interactive)
     (org-capture nil "cf")))
 
+(use-package org-mem
+  :defer
+  (org-mem-updater-mode)
+  :custom
+  (org-mem-do-sync-with-org-id t))
+
+(use-package org-node
+  :init
+  :config
+  (org-node-cache-mode)
+  :custom
+  (org-node-file-directory-ask t))
 
 (use-package atomic-chrome
   :demand t
