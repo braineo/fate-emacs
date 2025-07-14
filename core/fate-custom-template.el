@@ -47,5 +47,9 @@
 ;;; Theme
 ;; (setq fate/theme 'doom-tokyo-night)
 
+;;; Notes
+
+;; (setq org-mem-watch-dirs '("/home/user/notes"))
+
 (provide 'custom)
 ;;; custom.el ends here
