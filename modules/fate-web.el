@@ -146,8 +146,8 @@ OUTPUT is parsed path list."
 (use-package jtsx
   :mode
   (("\\.[cm]?jsx?\\'" . jtsx-jsx-mode)
-   ("\\.tsx\\'" . jtsx-tsx-mode)
-   ("\\.ts\\'" . jtsx-typescript-mode))
+   ("\\.m?tsx\\'" . jtsx-tsx-mode)
+   ("\\.m?ts\\'" . jtsx-typescript-mode))
   :hook ((javascript-ts-mode typescript-ts-mode tsx-ts-mode) . fate/prettier-minor-mode)
   :config
   (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.ts\\'" "\\1.spec.ts"))

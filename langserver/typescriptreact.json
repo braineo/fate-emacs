@@ -9,7 +9,8 @@
   "initializationOptions": {
     "preferences": {
       "includeCompletionsForModuleExports": true,
-      "importModuleSpecifierPreference": "relative"
+      "importModuleSpecifierPreference": "relative",
+      "autoImportSpecifierExcludeRegexes": ["^@mui/[^/]+$", "^@babylonjs/[^/]+$"]
     }
   }
 }
