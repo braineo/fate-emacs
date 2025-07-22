@@ -34,7 +34,7 @@
   :after magit
   :config
   (if 'fate/forge-alist
-    (add-to-list 'forge-alist fate/forge-alist)))
+    (setq forge-alist (append forge-alist fate/forge-alist))))
 
 (use-package git-modes
   :defer t)
