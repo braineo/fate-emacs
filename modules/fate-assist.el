@@ -106,7 +106,9 @@ Function definition:
   (fate/gptel-backend-setup)
   (with-eval-after-load 'gptel-transient
     (transient-insert-suffix 'gptel-menu '(2 -1)
-      ["Document" :if use-region-p (fate/gptel-suffix-docstring)])))
+      ["Document" :if use-region-p (fate/gptel-suffix-docstring)]))
+  :custom
+  (gptel-include-reasoning nil "do not include thinking in the response"))
 
 (use-package helpful
   :bind
