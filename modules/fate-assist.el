@@ -110,6 +110,12 @@ Function definition:
   :custom
   (gptel-include-reasoning nil "do not include thinking in the response"))
 
+
+(use-package inline-diff
+  :vc (:url "https://code.tecosaur.net/tec/inline-diff")
+  :after gptel-rewrite)
+
+
 (use-package helpful
   :bind
   ([remap describe-function] . helpful-callable)
