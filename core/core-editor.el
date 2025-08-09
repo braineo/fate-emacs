@@ -283,7 +283,7 @@ EXTRACTED-TEXT is output from copy-as-format--extract-text."
                                   (number-to-string (line-number-at-pos (region-beginning)))))
              (mode (buffer-local-value 'major-mode (current-buffer))))
         (with-temp-buffer
-          (funcall mode)
+          (delay-mode-hooks (funcall mode))
           (insert file-name-linenum)
           (comment-line 1)
           (goto-char (point-max))
