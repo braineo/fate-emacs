@@ -44,6 +44,63 @@
         ("h" "GitHub" engine/search-github)]))
   (engine-mode t))
 
+(defvar fate/docstring-language-configs
+  '((rust
+     :modes (rust-mode rust-ts-mode)
+     :docstring-position before
+     :prompt-template "Generate detailed Rust documentation comments for the following function. Use /// style comments with proper sections like Arguments, Returns, Panics, and Errors where applicable:\n\n%s")
+    (typescript
+     :modes (typescript-mode typescript-ts-mode tsx-ts-mode js-mode js-ts-mode jtsx-tsx-mode jtsx-typescript-mode)
+     :docstring-position before
+     :prompt-template "Generate comprehensive JSDoc documentation for the following TypeScript function. Include @param, @returns, and @throws sections where appropriate:\n\n%s")
+    (go
+     :modes (go-mode go-ts-mode)
+     :docstring-position before
+     :prompt-template "Generate Go documentation comments for the following function. Follow Go documentation conventions with a comment starting with the function name:\n\n%s")
+    (python
+     :modes (python-mode python-ts-mode)
+     :docstring-position inside
+     :prompt-template "Generate a comprehensive Python docstring for the following function. Use Google style with Args, Returns, and Raises sections:\n\n%s")
+    (emacs-lisp
+     :modes (emacs-lisp-mode lisp-interaction-mode)
+     :docstring-position inside
+     :prompt-template "Generate detailed Emacs Lisp documentation for the following function. Include parameter descriptions, and return value:\n\n%s")
+    (c++
+     :modes (c++-mode c++-ts-mode)
+     :docstring-position before
+     :prompt-template "Generate comprehensive Doxygen-style documentation for the following C++ function. Include @brief, @param, @return, and @throws sections:\n\n%s"))
+  "Configuration for different programming languages and their docstring formats.")
+
+
+(defun fate/get-language-config ()
+  "Get the docstring configuration for the current major mode."
+  (cl-find-if (lambda (config)
+                (memq major-mode (plist-get (cdr config) :modes)))
+              fate/docstring-language-configs))
+
+(defun fate/extract-function-context ()
+  "Extract the function definition around the cursor position using
+beginning-of-defun and end-of-defun."
+  (let* ((config-entry (fate/get-language-config))
+         (config (cdr config-entry)))
+    (unless config
+      (error "No configuration found for %s" major-mode))
+
+    (save-excursion
+      (condition-case nil
+          (progn
+            (beginning-of-defun)
+            (let ((func-start (point))
+                  (func-end))
+              ;; Get the end of the function
+              (end-of-defun)
+              (setq func-end (point))
+
+              (list :start func-start
+                    :end func-end
+                    :text (buffer-substring-no-properties func-start func-end))))
+        (error nil)))))
+
 
 (defconst fate/docstring-prompt-template "You are going to write docstring comment.
 
@@ -86,18 +143,35 @@ Function definition:
   "Generate docstring for region contents."
   :key "D"
   :description "Docstring"
-  :if (and (derived-mode-p 'prog-mode) (use-region-p))
+  :if (derived-mode-p 'prog-mode)
   (interactive)
-  (let* ((lang (if (listp mode-name) (car mode-name) mode-name))
-         (prompt (format fate/docstring-prompt-template
-                        (buffer-substring-no-properties
-                          (region-beginning) (region-end))
-                        lang)))
-    (gptel-request
-      prompt
-      :stream t
-      :position (region-beginning)
-      :system (format "You are an expert %s programmer writing docstring for a function." lang))))
+  (let* ((config-entry (fate/get-language-config))
+         (config (cdr config-entry)))
+    (unless config
+      (user-error "Docstring generation not supported for %s" major-mode))
+
+    (let* ((func-context (fate/extract-function-context)))
+      (unless func-context
+        (user-error "No function found around cursor position"))
+
+      (let* ((func-text (plist-get func-context :text))
+             (template (plist-get config :prompt-template))
+             (prompt (format template func-text))
+             (insertion-point (plist-get func-context :start)))
+
+        (message "Generating docstring...")
+        (gptel-request
+          prompt
+          :callback
+          (lambda (response info)
+            (if (not response)
+                (message "Failed to geneerate docstring: %s" (plist-get info :status))
+              (let* ((docstring-text (string-trim response)))
+                (save-excursion
+                  (goto-char insertion-point)
+                  (insert docstring-text)))))
+          :system "You are a helpful programming assistant that generates clear, comprehensive documentation for functions. Return only the documentation content without any additional text or formatting.")))))
+
 
 
 (use-package gptel
@@ -106,7 +180,7 @@ Function definition:
   (fate/gptel-backend-setup)
   (with-eval-after-load 'gptel-transient
     (transient-insert-suffix 'gptel-menu '(2 -1)
-      ["Document" :if use-region-p (fate/gptel-suffix-docstring)]))
+      ["Document" (fate/gptel-suffix-docstring)]))
   :custom
   (gptel-include-reasoning nil "do not include thinking in the response"))
 

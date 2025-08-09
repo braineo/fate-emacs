@@ -47,34 +47,6 @@ Argument ARG is ignored."
     (hs-grok-mode-type)))
 
 
-(defun fate/pydocstring ()
-  "Insert docstring for function at point."
-  (interactive)
-  (let* ((indent (save-excursion
-                   (beginning-of-line)
-                   (back-to-indentation)
-                   (current-indentation)))
-         (current-buffer (current-buffer))
-         (file-path (buffer-file-name))
-         (line-number (line-number-at-pos)))
-    (with-temp-buffer
-      (insert (shell-command-to-string
-                (format "pydocstring -f google %s '(%d,)'"
-                  file-path
-                  (+ 1 line-number))))
-      (goto-char (point-min))
-      (kill-line)
-      (kill-line)
-      (set-mark (point-min))
-      (goto-char (point-max))
-      (indent-rigidly (region-beginning) (region-end) (+ indent 4))
-      (let* ((docstring (buffer-substring-no-properties (point-min) (point-max))))
-        (with-current-buffer current-buffer
-          (save-excursion
-             (forward-line)
-             (beginning-of-line)
-             (insert docstring)))))))
-
 (defun fate/ruff-make-args ()
   "Construct args with BEG and END position for ruff."
   (append
