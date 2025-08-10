@@ -2,8 +2,8 @@
 
 ;; Copyright (C) 2018  Binbin Ye
 
-;; Author: Binbin Ye <braineo@Binbins-iMac.local>
-;; Keywords: 
+;; Author: Binbin Ye
+;; Keywords: python
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -76,7 +76,6 @@ Argument ARG is ignored."
     '("ruff-lsp"
       "ruff"
       "basedpyright"
-      "pydocstring"
       ;; lsp bridge dependencies
       "epc" "orjson" "sexpdata" "six" "setuptools" "paramiko" "rapidfuzz")
 
@@ -88,10 +87,8 @@ Argument ARG is ignored."
 
   :bind
   (:map python-mode-map
-   ("C-c M-d" . fate/pydocstring)
    ("C-c C-l" . fate/ruff-fmt)
    :map python-ts-mode-map
-   ("C-c M-d" . fate/pydocstring)
    ("C-c C-l" . fate/ruff-fmt))
   :hook
   (python-mode . fate/python-setup-hs-mode))
