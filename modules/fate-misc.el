@@ -39,7 +39,7 @@
 
 (defun fate/draw-file-tree (file-tree &optional level branch prefix)
   "FILE-TREE is an S-expression of file system structure.
-LEVEL is indent level of current recurssion.
+LEVEL is indent level of current recursion.
 BRANCH is either ├ or └.   PREFIX is the prefix before branch and bar.
 \=(foo (bar a) b) stands for folder foo has folder bar and file b,
 folder bar has file a."
