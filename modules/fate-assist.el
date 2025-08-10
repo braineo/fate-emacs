@@ -47,27 +47,21 @@
 (defvar fate/docstring-language-configs
   '((rust
      :modes (rust-mode rust-ts-mode)
-     :docstring-position before
      :prompt-template "Generate comprehensive documentation for the following function. Use /// style comments that is compatible with rustdoc, with proper sections like Arguments, Returns, Panics, Errors and Examples where applicable:\n\n%s")
     (typescript
      :modes (typescript-mode typescript-ts-mode tsx-ts-mode js-mode js-ts-mode jtsx-tsx-mode jtsx-typescript-mode)
-     :docstring-position before
      :prompt-template "Generate comprehensive JSDoc documentation for the following TypeScript function. Include @param, @returns, and @throws sections where appropriate:\n\n%s")
     (go
      :modes (go-mode go-ts-mode)
-     :docstring-position before
      :prompt-template "Generate Go documentation comments for the following function. Follow Go documentation conventions with a comment starting with the function name:\n\n%s")
     (python
      :modes (python-mode python-ts-mode)
-     :docstring-position inside
      :prompt-template "Generate a comprehensive Python docstring for the following function. Use Google style with Args, Returns, and Raises sections. Do not output function signature, only the comments:\n\n%s")
     (emacs-lisp
      :modes (emacs-lisp-mode lisp-interaction-mode)
-     :docstring-position inside
      :prompt-template "Generate detailed Emacs Lisp documentation for the following function. Include parameter descriptions, and return value:\n\n%s")
     (c++
      :modes (c++-mode c++-ts-mode)
-     :docstring-position before
      :prompt-template "Generate comprehensive Doxygen-style documentation for the following C++ function. Include @brief, @param, @return, and @throws sections:\n\n%s"))
   "Configuration for different programming languages and their docstring formats.")
 
