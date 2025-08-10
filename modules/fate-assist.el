@@ -48,7 +48,7 @@
   '((rust
      :modes (rust-mode rust-ts-mode)
      :docstring-position before
-     :prompt-template "Generate detailed Rust documentation comments for the following function. Use /// style comments with proper sections like Arguments, Returns, Panics, and Errors where applicable:\n\n%s")
+     :prompt-template "Generate comprehensive documentation for the following function. Use /// style comments that is compatible with rustdoc, with proper sections like Arguments, Returns, Panics, Errors and Examples where applicable:\n\n%s")
     (typescript
      :modes (typescript-mode typescript-ts-mode tsx-ts-mode js-mode js-ts-mode jtsx-tsx-mode jtsx-typescript-mode)
      :docstring-position before
@@ -102,21 +102,6 @@ beginning-of-defun and end-of-defun."
         (error nil)))))
 
 
-(defconst fate/docstring-prompt-template "You are going to write docstring comment.
-
-Function definition:
-```
-%s
-```
-
-- Now write %s docstring for this function.
-- Return the inline docstring only.
-- Do not output code or explanation.
-- Do not output markdown codeblock.
-- Add linebreak at the end.
-- Response concisely.
-")
-
 (defun fate/gptel-backend-setup ()
   "Setup additional model backend for gptel."
   (let* ((ollama-models (mapcar #'intern  ;; Convert strings to symbols
@@ -145,6 +130,10 @@ Function definition:
   :description "Docstring"
   :if (derived-mode-p 'prog-mode)
   (interactive)
+  (fate/gptel-generate-and-insert-docstring))
+
+(defun fate/gptel-generate-and-insert-docstring ()
+
   (let* ((config-entry (fate/get-language-config))
          (config (cdr config-entry)))
     (unless config
@@ -156,23 +145,31 @@ Function definition:
 
       (let* ((func-text (plist-get func-context :text))
              (template (plist-get config :prompt-template))
-             (prompt (format template func-text))
-             (insertion-point (plist-get func-context :start)))
+             (prompt (format template func-text)))
 
         (message "Generating docstring...")
+
         (gptel-request
           prompt
+          :system "You are a helpful programming assistant that generates clear, comprehensive documentation for functions. Return only the documentation content without any additional text or formatting."
           :callback
           (lambda (response info)
-            (if (not response)
-                (message "Failed to geneerate docstring: %s" (plist-get info :status))
-              (let* ((docstring-text (string-trim response)))
-                (save-excursion
-                  (goto-char insertion-point)
-                  (insert docstring-text)))))
-          :system "You are a helpful programming assistant that generates clear, comprehensive documentation for functions. Return only the documentation content without any additional text or formatting.")))))
+            (cond
+              ((not response) (message "Failed to geneerate docstring: %s" (plist-get info :status)))
+              ((listp response) nil) ;; reasoning response, ignore
+              (t (fate/format-and-insert-docstring response func-context)))))))))
 
 
+(defun fate/format-and-insert-docstring (input func-context)
+  (let* ((trimmed (string-trim input))
+         (cleaned (replace-regexp-in-string "\\(^```[^\n]*\n?\\|```$\\)" "" trimmed))
+         (insertion-point (plist-get func-context :start)))
+    (save-excursion
+      (goto-char insertion-point)
+      (open-line 1)
+      (indent-according-to-mode)
+      (insert cleaned)
+      (delete-trailing-whitespace insertion-point (point)))))
 
 (use-package gptel
   :commands (gptel-request)
