@@ -54,7 +54,7 @@
         (prettier-js-mode)
         (cl-return)))))
 
-(defvar-local jq-foramt-args '())
+(defvar-local jq-format-args '())
 
 (defun fate/json-get-path (current-node output)
   "Get path to json value at cursor position.  CURRENT-NODE is a tree-sitter-node.
@@ -103,14 +103,14 @@ OUTPUT is parsed path list."
   "Pretty-print current buffer.  when MINIMIZE is set, minimize JSON document."
   (interactive "P")
   (when minimize
-    (setq-local jq-foramt-args '("-c")))
+    (setq-local jq-format-args '("-c")))
   (when (use-region-p)
     (cond ((executable-find "jq") (json-jq-region (region-beginning) (region-end) nil))
           (t (json-pretty-print (region-beginning) (region-end) minimize))))
   (cond ((executable-find "jq") (json-jq-buffer nil))
         (t (json-pretty-print (point-min) (point-max) minimize)))
 
-  (setq-local jq-foramt-args '()))
+  (setq-local jq-format-args '()))
 
 
 (defgroup jqfmt nil
@@ -124,7 +124,7 @@ OUTPUT is parsed path list."
 
 (reformatter-define json-jq
   :program jqfmt-command
-  :args jq-foramt-args
+  :args jq-format-args
   :lighter "JQ"
   :group 'jqfmt)
 
@@ -170,7 +170,7 @@ OUTPUT is parsed path list."
           "\\.html\\'")
   :custom
   (web-mode-enable-auto-indentation nil "Use prettier on save instead")
-  (web-mode-enable-auto-quoting nil "annoying when writting arrow function in a tag")
+  (web-mode-enable-auto-quoting nil "annoying when writing arrow function in a tag")
   :hook (web-mode . fate/prettier-minor-mode))
 
 (use-package graphql-ts-mode

@@ -32,7 +32,7 @@
 
   (flycheck-def-executable-var qt-qmllint "qmllint")
   (flycheck-define-checker qt-qmllint
-      "A QML syntatic validity checker provided by QT
+      "A QML syntactic validity checker provided by QT
 `flycheck-qt-qmllint-executable'.
 See URL `https://doc.qt.io/qt-6/qtquick-tool-qmllint.html'."
      :command ("qmllint" source)

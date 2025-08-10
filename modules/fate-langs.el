@@ -50,12 +50,12 @@
 
 (defun fate/treesit-install-language-grammars (&optional force)
   "Install treesitter so for configured major modes.
-When FORCE is set, clone and reinstall grammer."
+When FORCE is set, clone and reinstall grammar."
   (interactive "P")
   (dolist (lang (mapcar 'car treesit-language-source-alist))
     (when (or force
             (not (treesit-language-available-p lang)))
-      (message (format "installing %s grammer" lang))
+      (message (format "installing %s grammar" lang))
       (treesit-install-language-grammar lang))))
 
 (defgroup taplo nil

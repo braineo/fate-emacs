@@ -59,13 +59,13 @@
     (set-frame-position frame (/ (display-pixel-width) 4) 0)))
 
 
-;; right border takes 1 pixel on right splited buffer, make fringe visible
+;; right border takes 1 pixel on right split buffer, make fringe visible
 (setq-default window-divider-default-places t
   window-divider-default-bottom-width 1
   window-divider-default-right-width 1)
 (window-divider-mode)
 
-;; When it is macOS and verison number is higher than 26.0
+;; When it is macOS and version number is higher than 26.0
 (when (and IS-MAC (>= emacs-major-version 26))
   (setq default-frame-alist '((ns-transparent-titlebar . t) (ns-appearance . dark))))
 

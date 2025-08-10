@@ -86,7 +86,7 @@ beginning-of-defun and end-of-defun."
             (beginning-of-defun)
             (let ((func-start (point))
                   (func-end))
-              ;; Get the end of the function
+
               (end-of-defun)
               (setq func-end (point))
 
@@ -148,7 +148,7 @@ beginning-of-defun and end-of-defun."
           :callback
           (lambda (response info)
             (cond
-              ((not response) (message "Failed to geneerate docstring: %s" (plist-get info :status)))
+              ((not response) (message "Failed to generate docstring: %s" (plist-get info :status)))
               ((listp response) nil) ;; reasoning response, ignore
               (t (fate/format-and-insert-docstring response func-context)))))))))
 

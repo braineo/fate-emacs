@@ -74,7 +74,7 @@
 `NAME' is function and buffer name it generates.
 `COMMAND' is the full command without package name
 `TOOLS' is the list of packages to install.
-`TOOL-NAME-FUN' is for tranforming package name"
+`TOOL-NAME-FUN' is for transforming package name"
   (let* ((executable (car command)))
 
     `(defun ,(intern (format "fate/%s-install-tools" name)) ()
