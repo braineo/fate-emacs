@@ -160,15 +160,33 @@ beginning-of-defun and end-of-defun."
 
 
 (defun fate/format-and-insert-docstring (input func-context)
-  (let* ((trimmed (string-trim input))
-         (cleaned (replace-regexp-in-string "\\(^```[^\n]*\n?\\|```$\\)" "" trimmed))
-         (insertion-point (plist-get func-context :start)))
-    (save-excursion
-      (goto-char insertion-point)
-      (open-line 1)
-      (indent-according-to-mode)
-      (insert cleaned)
-      (delete-trailing-whitespace insertion-point (point)))))
+ (let* ((trimmed (string-trim input))
+        (cleaned (replace-regexp-in-string "\\(^```[^\n]*\n?\\|```$\\)" "" trimmed))
+        (func-start (plist-get func-context :start))
+        (func-end (plist-get func-context :end))
+        (insert-point nil))
+   (save-excursion
+     (goto-char func-start)
+     (cond
+       ((memq major-mode '(python-mode python-ts-mode))
+        (when (re-search-forward ":" func-end t)
+          (forward-line)))
+       ((memq major-mode '(emacs-lisp-mode lisp-interaction-mode))
+        (down-list 2)
+        (backward-char)
+        (forward-sexp)
+        (forward-line)))
+     (back-to-indentation)
+     (setq insert-point (point))
+     (let* ((indent (make-string (current-column) ?\s))
+            (indented
+              (mapconcat (lambda (line)
+                           (concat indent line))
+                (split-string cleaned "\n")
+                "\n")))
+       (insert indented)
+       (newline)
+       (delete-trailing-whitespace insert-point (point))))))
 
 (use-package gptel
   :commands (gptel-request)
