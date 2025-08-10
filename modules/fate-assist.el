@@ -60,7 +60,7 @@
     (python
      :modes (python-mode python-ts-mode)
      :docstring-position inside
-     :prompt-template "Generate a comprehensive Python docstring for the following function. Use Google style with Args, Returns, and Raises sections:\n\n%s")
+     :prompt-template "Generate a comprehensive Python docstring for the following function. Use Google style with Args, Returns, and Raises sections. Do not output function signature, only the comments:\n\n%s")
     (emacs-lisp
      :modes (emacs-lisp-mode lisp-interaction-mode)
      :docstring-position inside
@@ -148,10 +148,9 @@ beginning-of-defun and end-of-defun."
              (prompt (format template func-text)))
 
         (message "Generating docstring...")
-
         (gptel-request
           prompt
-          :system "You are a helpful programming assistant that generates clear, comprehensive documentation for functions. Return only the documentation content without any additional text or formatting."
+          :system "You are a helpful programming assistant that generates clear, comprehensive documentation for functions. Return only the documentation content without any additional text or code or formatting."
           :callback
           (lambda (response info)
             (cond
