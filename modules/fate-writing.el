@@ -218,6 +218,57 @@
               (string-join (mapcar (lambda (a) (gethash "name" a)) assignees) ", ")
             "Unassigned")))
 
+(defun fate/sync-gitlab-todo ()
+  (interactive)
+  (let ((source-buffer (current-buffer))
+        (target-buffer (get-buffer (read-buffer "Target buffer: " (other-buffer) t)))
+        (updated-count 0)
+        (added-count 0))
+
+    (with-current-buffer source-buffer
+      (save-excursion
+        (goto-char (point-min))
+        ;; Loop through each line that starts with "- [ ]"
+        (while (re-search-forward "^- \\[ \\] .*$" nil t)
+          (let* ((current-line (match-string 0))
+                 (issue-number (when (string-match "#\\([0-9]+\\)" current-line)
+                                  (match-string 1 current-line))))
+
+            (if issue-number
+                ;; Has issue number - search in target buffer
+                (with-current-buffer target-buffer
+                  (save-excursion
+                    (goto-char (point-min))
+                    (if (re-search-forward (concat "#" issue-number) nil t)
+                        ;; Found - update the line
+                        (progn
+                          (beginning-of-line)
+                          (when (looking-at "^- \\[ \\] .*$")
+                            (replace-match current-line)
+                            (setq updated-count (1+ updated-count))))
+                      ;; Not found - append to end
+                      (goto-char (point-max))
+                      (unless (bolp) (insert "\n"))
+                      (insert current-line "\n")
+                      (setq added-count (1+ added-count)))))
+              ;; No issue number - append to end
+              (with-current-buffer target-buffer
+                (goto-char (point-max))
+                (unless (bolp) (insert "\n"))
+                (insert current-line "\n")
+                (setq added-count (1+ added-count))))))))
+
+    ;; Report results
+    (cond
+     ((and (> added-count 0) (> updated-count 0))
+      (message "Added %d new items and updated %d existing items" added-count updated-count))
+     ((> added-count 0)
+      (message "Added %d new items" added-count))
+     ((> updated-count 0)
+      (message "Updated %d existing items" updated-count))
+     (t
+      (message "No todo items found to sync")))))
+
 (defun fate/fill-iteration-dates ()
   "Fill in iteration dates in markdown templates.
 Prompts for start and end dates, calculates endgame dates,
@@ -230,7 +281,7 @@ and replaces template strings in the current buffer."
                                              (subtract-working-days end-date-time 0)))
          (endgame-start-date (format-time-string "%Y-%m-%d"
                                                (subtract-working-days
-                                                (org-time-string-to-time endgame-end-date) 3))))
+                                                (org-time-string-to-time endgame-end-date) 4))))
 
     ;; Replace template strings in buffer
     (save-excursion
