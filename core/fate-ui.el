@@ -99,6 +99,7 @@
       (python     . ("https://github.com/tree-sitter/tree-sitter-python"))
       (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript/src"))
       (tsx        . ("https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx/src"))
+      (typst      . ("https://github.com/uben0/tree-sitter-typst" "master" "src" nil nil))
       (ruby       . ("https://github.com/tree-sitter/tree-sitter-ruby"))
       (rust       . ("https://github.com/tree-sitter/tree-sitter-rust"))
       (sql        . ("https://github.com/m-novikov/tree-sitter-sql"))
