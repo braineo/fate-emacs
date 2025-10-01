@@ -241,8 +241,10 @@
   (prog-mode . highlight-numbers-mode)
   (asm-mode . highlight-numbers--turn-off))
 
-;; Highlight TODO keywords FIXME HACK DONE FAIL OKAY)
+;; Highlight TODO keywords FIXME HACK DONE FAIL OKAY CR)
 (use-package hl-todo
+  :config
+  (add-to-list 'hl-todo-keyword-faces '("CR"  . "#e57b8b"))
   :hook
   ((prog-mode text-mode) . hl-todo-mode))
 
