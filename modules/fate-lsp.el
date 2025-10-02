@@ -26,7 +26,8 @@
 
 (eval-when-compile
   (require 'core-load-paths)
-  (require 'fate-flycheck))
+  (require 'fate-flycheck)
+  (require 'transient))
 
 
 (use-package lsp-bridge
@@ -37,7 +38,8 @@
     'lsp-bridge-single-lang-server-extension-list
     '(("less") . "vscode-css-language-server"))
   (with-eval-after-load 'fate-flycheck-bridge
-    (add-hook 'lsp-bridge-mode-hook #'flycheck-lsp-bridge-setup))
+    (add-hook 'lsp-bridge-mode-hook #'flycheck-lsp-bridge-setup)
+    (add-hook 'lsp-bridge-mode-hook #'lsp-bridge-breadcrumb-mode))
   :custom
   (lsp-bridge-signature-function 'eldoc-message)
   (acm-markdown-render-font-height 80)
