@@ -197,7 +197,27 @@ surrounded by word boundaries."
   :hook (after-init . projectile-mode)
   :init
   (setq projectile-sort-order 'recentf)
-  :custom projectile-switch-project-action 'projectile-dired)
+  :config
+  (nconc projectile-other-file-alist
+    '(
+       ("graphql" . ("gql.ts"))
+       ("gql.ts" . ("graphql"))
+       ("ts" . ("spec.ts"))
+       ("spec.ts" . ("ts"))
+       ("tsx" . ("spec.tsx" "less" "module.less" "scss" "module.scss" "css" "module.css" "sass" "module.sass"))
+       ("spec.tsx" . ("tsx"))
+       ("less" . ("tsx"))
+       ("module.less" . ("tsx"))
+       ("scss" . ("tsx"))
+       ("module.scss" . ("tsx"))
+       ("css" . ("tsx"))
+       ("module.css" . ("tsx"))
+       ("sass" . ("tsx"))
+       ("module.sass" . ("tsx"))))
+  :custom
+  (projectile-switch-project-action 'projectile-vc)
+  (projectile-auto-cleanup-known-projects t))
+
 
 (use-package recentf
   :hook

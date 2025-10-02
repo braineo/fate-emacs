@@ -184,16 +184,6 @@
                        (thing-at-point 'symbol))))
       (consult-ripgrep dir initial))))
 
-(use-package consult-projectile
-  :after consult
-  :bind
-  (
-    ([remap projectile-find-file] . consult-projectile-find-file)
-    ([remap projectile-switch-project] . consult-projectile-switch-project))
-  :config
-  (setq consult-projectile-use-projectile-switch-project t))
-
-
 (use-package consult-flycheck
   :bind
   ("M-g f" . consult-flycheck))
