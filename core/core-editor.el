@@ -193,7 +193,6 @@ surrounded by word boundaries."
   :commands projectile-project-root
   :bind
   (:map projectile-mode-map
-        ("C-," . projectile-find-file)
         ("C-c p" . projectile-command-map))
   :hook (after-init . projectile-mode)
   :init

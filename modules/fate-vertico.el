@@ -92,6 +92,7 @@
 
          ;; M-s bindings in `search-map'
          ("M-s d" . consult-fd)
+         ("C-," .   consult-fd)
          ("M-s D" . consult-locate)
          ("M-s g" . consult-grep)
          ("M-s G" . consult-git-grep)
