@@ -24,7 +24,6 @@
 
 ;;; Code:
 
-
 (use-package vertico
   :bind (:map vertico-map
           ("RET" . vertico-directory-enter)
