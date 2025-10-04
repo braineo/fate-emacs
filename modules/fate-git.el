@@ -42,6 +42,7 @@
   (if 'fate/forge-alist
     (setq forge-alist (append forge-alist fate/forge-alist)))
 
+  :init
   (defun fate/forge-topic-user-completion-at-point()
     (let ((bol (line-beginning-position))
           repo)
@@ -55,7 +56,7 @@
             (lambda (row)
               ;; user id and user name
               (propertize (car row)
-                :title (format " %s" (cadr row))))
+                :title (format " %s" (or (cadr row) ""))))
             (forge-sql [:select [login name]
                          :from assignee
                          :where (= repository $s1)]
@@ -66,6 +67,9 @@
     (when-let ((repo (forge-get-repository :tracked?)))
       (add-hook 'completion-at-point-functions
         #'fate/forge-topic-user-completion-at-point nil t)))
+  ;; Add user name highlight
+  (font-lock-add-keywords 'forge-post-mode
+   '(("\\(?:^\\|[^[:alnum:]]\\)\\(@[[:alnum:]._-]+\\)" 1 'markdown-link-face)))
   :custom
   (forge-post-mode-hook '(visual-line-mode
                            fate/forge-user-reference-setup) "exclude flyspell since jinx is running."))
