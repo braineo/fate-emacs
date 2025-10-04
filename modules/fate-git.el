@@ -33,8 +33,16 @@
 (use-package forge
   :after magit
   :config
+  (with-eval-after-load 'lsp-bridge
+    (setq global-corfu-modes
+      `((not ,@(mapcar (lambda (hook)
+                         (intern (string-remove-suffix "-hook" (symbol-name hook))))
+                 lsp-bridge-default-mode-hooks)
+         t))))
   (if 'fate/forge-alist
-    (setq forge-alist (append forge-alist fate/forge-alist))))
+    (setq forge-alist (append forge-alist fate/forge-alist)))
+  :custom
+  (forge-post-mode-hook '(visual-line-mode) "exclude flyspell since jinx is running."))
 
 (use-package git-modes
   :defer t)
