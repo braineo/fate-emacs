@@ -40,7 +40,7 @@
     (let ((bol (line-beginning-position))
           repo)
       (and
-        (looking-back "@\\(?2:[[:alnum:]]*\\)" bol)
+        (looking-back "@\\(?2:[[:alnum:]._-]*\\)" bol)
         (setq repo (forge-get-repository :tracked))
         (list
           (match-beginning 2)
