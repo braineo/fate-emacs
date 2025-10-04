@@ -33,16 +33,9 @@
 (use-package forge
   :after magit
   :config
-  (with-eval-after-load 'lsp-bridge
-    (setq global-corfu-modes
-      `((not ,@(mapcar (lambda (hook)
-                         (intern (string-remove-suffix "-hook" (symbol-name hook))))
-                 lsp-bridge-default-mode-hooks)
-         t))))
   (if 'fate/forge-alist
     (setq forge-alist (append forge-alist fate/forge-alist)))
 
-  :init
   (defun fate/forge-topic-user-completion-at-point()
     (let ((bol (line-beginning-position))
           repo)

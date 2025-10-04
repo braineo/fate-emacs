@@ -37,6 +37,7 @@
   (add-to-list
     'lsp-bridge-single-lang-server-extension-list
     '(("less") . "vscode-css-language-server"))
+  (nconc acm-backend-capf-mode-list '(forge-post-mode))
   (with-eval-after-load 'fate-flycheck-bridge
     (add-hook 'lsp-bridge-mode-hook #'flycheck-lsp-bridge-setup)
     (add-hook 'lsp-bridge-mode-hook #'lsp-bridge-breadcrumb-mode))
@@ -44,6 +45,7 @@
   (lsp-bridge-signature-function 'eldoc-message)
   (acm-markdown-render-font-height 80)
   (acm-enable-tabnine nil)
+  (acm-enable-capf t)
   (acm-backend-lsp-match-mode "fuzzy")
   (lsp-bridge-user-langserver-dir (expand-file-name "langserver" fate-directory))
   (lsp-bridge-enable-completion-in-string t)
