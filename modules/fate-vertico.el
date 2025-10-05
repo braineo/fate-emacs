@@ -24,7 +24,6 @@
 
 ;;; Code:
 
-
 (use-package vertico
   :bind (:map vertico-map
           ("RET" . vertico-directory-enter)
@@ -92,6 +91,7 @@
 
          ;; M-s bindings in `search-map'
          ("M-s d" . consult-fd)
+         ("C-," .   consult-fd)
          ("M-s D" . consult-locate)
          ("M-s g" . consult-grep)
          ("M-s G" . consult-git-grep)
@@ -182,16 +182,6 @@
                          (buffer-substring-no-properties (region-beginning) (region-end)))
                        (thing-at-point 'symbol))))
       (consult-ripgrep dir initial))))
-
-(use-package consult-projectile
-  :after consult
-  :bind
-  (
-    ([remap projectile-find-file] . consult-projectile-find-file)
-    ([remap projectile-switch-project] . consult-projectile-switch-project))
-  :config
-  (setq consult-projectile-use-projectile-switch-project t))
-
 
 (use-package consult-flycheck
   :bind

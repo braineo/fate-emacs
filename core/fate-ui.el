@@ -99,6 +99,7 @@
       (python     . ("https://github.com/tree-sitter/tree-sitter-python"))
       (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript/src"))
       (tsx        . ("https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx/src"))
+      (typst      . ("https://github.com/uben0/tree-sitter-typst" "master" "src" nil nil))
       (ruby       . ("https://github.com/tree-sitter/tree-sitter-ruby"))
       (rust       . ("https://github.com/tree-sitter/tree-sitter-rust"))
       (sql        . ("https://github.com/m-novikov/tree-sitter-sql"))
@@ -240,8 +241,10 @@
   (prog-mode . highlight-numbers-mode)
   (asm-mode . highlight-numbers--turn-off))
 
-;; Highlight TODO keywords FIXME HACK DONE FAIL OKAY)
+;; Highlight TODO keywords FIXME HACK DONE FAIL OKAY CR)
 (use-package hl-todo
+  :config
+  (add-to-list 'hl-todo-keyword-faces '("CR"  . "#e57b8b"))
   :hook
   ((prog-mode text-mode) . hl-todo-mode))
 

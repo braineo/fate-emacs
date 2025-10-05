@@ -34,7 +34,38 @@
   :after magit
   :config
   (if 'fate/forge-alist
-    (setq forge-alist (append forge-alist fate/forge-alist))))
+    (setq forge-alist (append forge-alist fate/forge-alist)))
+
+  (defun fate/forge-topic-user-completion-at-point()
+    (let ((bol (line-beginning-position))
+          repo)
+      (and
+        (looking-back "@\\(?2:[[:alnum:]._-]*\\)" bol)
+        (setq repo (forge-get-repository :tracked))
+        (list
+          (match-beginning 2)
+          (match-end 0)
+          (mapcar
+            (lambda (row)
+              ;; user id and user name
+              (propertize (car row)
+                :title (format " %s" (or (cadr row) ""))))
+            (forge-sql [:select [login name]
+                         :from assignee
+                         :where (= repository $s1)]
+              (oref repo id)))
+          :annotation-function (##get-text-property 0 :title %)))))
+
+  (defun fate/forge-user-reference-setup()
+    (when-let ((repo (forge-get-repository :tracked?)))
+      (add-hook 'completion-at-point-functions
+        #'fate/forge-topic-user-completion-at-point nil t)))
+  ;; Add user name highlight
+  (font-lock-add-keywords 'forge-post-mode
+   '(("\\(?:^\\|[^[:alnum:]]\\)\\(@[[:alnum:]._-]+\\)" 1 'markdown-link-face)))
+  :custom
+  (forge-post-mode-hook '(visual-line-mode
+                           fate/forge-user-reference-setup) "exclude flyspell since jinx is running."))
 
 (use-package git-modes
   :defer t)

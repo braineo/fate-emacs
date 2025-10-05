@@ -21,7 +21,7 @@ fi
 
 if command -v apt >/dev/null 2>&1; then
     echo "install packages for jinx and lsp bridge"
-    sudo apt install libenchant-2-dev pkg-config python3-venv pipx pandoc
+    sudo apt install libenchant-2-dev pkg-config python3-venv pipx pandoc fonts-jetbrains-mono
 fi
 
 python3 -m venv .venv
