@@ -48,12 +48,9 @@
           (mapcar
             (lambda (row)
               ;; user id and user name
-              (propertize (car row)
-                :title (format " %s" (or (cadr row) ""))))
-            (forge-sql [:select [login name]
-                         :from assignee
-                         :where (= repository $s1)]
-              (oref repo id)))
+              (propertize (cadr row)
+                :title (format " %s" (or (caddr row) ""))))
+            (oref repo assignees))
           :annotation-function (##get-text-property 0 :title %)))))
 
   (defun fate/forge-user-reference-setup()
