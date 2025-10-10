@@ -36,9 +36,13 @@
 (use-package markdown-mode
   :mode (("\\.md\\'" . gfm-mode)
          ("\\.markdown\\'" . gfm-mode))
-  :config
-  (setq markdown-fontify-code-blocks-natively t)
+  :custom
+  (markdown-gfm-use-electric-backquote nil)
+  (markdown-fontify-code-blocks-natively t)
   :hook (markdown-mode . (lambda()
+                           (setq-local electric-pair-pairs
+                                       (append electric-pair-pairs '((?` . ?`))))
+                           (setq-local electric-pair-text-pairs '((?` . ?`)))
                            (setq-local prettier-js-args
                             '("--parser" "markdown")))))
 
