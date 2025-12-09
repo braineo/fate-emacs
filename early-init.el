@@ -50,12 +50,12 @@
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
 
-(setq frame-inhibit-implied-resize t)
-(setq frame-resize-pixelwise t)
+(setopt frame-inhibit-implied-resize t)
+(setopt frame-resize-pixelwise t)
 ;; Always load newest byte code
-(setq load-prefer-newer t)
+(setopt load-prefer-newer t)
 
-(setq initial-scratch-message "")
+(setopt initial-scratch-message "")
 
 (provide 'early-init)
 ;;; early-init.el ends here
