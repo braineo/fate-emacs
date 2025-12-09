@@ -11,7 +11,7 @@ if command -v npm >/dev/null 2>&1; then
     echo "Configure npm to install to ~/.local"
     npm config set prefix "$HOME/.local/"
     echo "installing language servers"
-    npm install -g prettier typescript-language-server vscode-langservers-extracted bash-language-server yaml-language-server graphql-language-service-cli
+    npm install -g prettier @typescript/native-preview vscode-langservers-extracted bash-language-server yaml-language-server graphql-language-service-cli
 fi
 
 if command -v go >/dev/null 2>&1; then

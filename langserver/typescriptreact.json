@@ -1,16 +1,16 @@
 {
   "name": "typescriptreact",
   "languageId": "typescriptreact",
-  "command": [
-    "typescript-language-server",
-    "--stdio"
-  ],
+  "command": ["tsgo", "--lsp", "-stdio"],
   "settings": {},
   "initializationOptions": {
     "preferences": {
       "includeCompletionsForModuleExports": true,
       "importModuleSpecifierPreference": "relative",
-      "autoImportSpecifierExcludeRegexes": ["^@mui/[^/]+$", "^@babylonjs/[^/]+$"]
+      "autoImportSpecifierExcludeRegexes": [
+        "^@mui/[^/]+$",
+        "^@babylonjs/[^/]+$"
+      ]
     }
   }
 }

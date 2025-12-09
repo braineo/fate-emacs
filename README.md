@@ -135,7 +135,7 @@ pipx install ruff-lsp
 |----------------|---------------------------------------|-----------------------------------------------------------|
 | prettier       | npm i -g prettier                     | Formatter for JavaScript, TypeScript, CSS, JSON, and more |
 | linter LSP     | npm i -g vscode-langservers-extracted | Language server of eslint, HTML, CSS                      |
-| TypeScript LSP | npm i -g typescript-language-server   |                                                           |
+| TypeScript LSP | npm i -g @typescript/native-preview   |                                                           |
 
 or `M-x` `fate/js-install-tools`
 
@@ -212,7 +212,7 @@ Language servers implemented in NodeJS can obtain directly by doing `lsp-install
 
 | Language              | Installation command                                     |
 | --------------------- | -------------------------------------------------------- |
-| TypeScript/JavaScript | npm i -g typescript-language-server; npm i -g typescript |
+| TypeScript/JavaScript | npm i -g @typescript/native-preview; npm i -g typescript |
 | JSON                  | npm i -g vscode-json-languageserver                      |
 | Dockerfile            | npm install -g dockerfile-language-server-nodejs         |
 

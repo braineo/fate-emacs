@@ -31,7 +31,7 @@
 (defconst fate/js-tools
    '("prettier"
      "vscode-langservers-extracted"
-     "typescript-language-server")
+     "@typescript/native-preview")
     "Web development tools.")
 
 (fate/create-install-tools!
