@@ -136,6 +136,7 @@
 
 (use-package org-mem
   :defer
+  :config
   (org-mem-updater-mode)
   :custom
   (org-mem-do-sync-with-org-id t))
