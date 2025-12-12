@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.com/braineo/fate-emacs.svg?branch=master)](https://travis-ci.com/braineo/fate-emacs)
 ![GitHub](https://img.shields.io/github/license/braineo/fate-emacs)
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
