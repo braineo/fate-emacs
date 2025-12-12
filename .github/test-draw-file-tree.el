@@ -75,6 +75,26 @@
 "))
     (should (string= (fate/draw-file-tree tree) expected))))
 
+(ert-deftest test-draw-file-tree-duplicate ()
+  "Test a duplication in same children tree."
+  (let* ((tree '("app"
+                 "Makefile"
+                 ("src" "main.c" "utils.c" "main.c" "main.c")
+                 ("include" "utils.h")
+                 "LICENSE"))
+         (expected "app
+├── Makefile
+├── src
+│   ├── main.c
+│   ├── utils.c
+│   ├── main.c
+│   └── main.c
+├── include
+│   └── utils.h
+└── LICENSE
+"))
+    (should (string= (fate/draw-file-tree tree) expected))))
+
 ;; Run tests if executed as a script
 (when noninteractive
   (ert-run-tests-batch-and-exit))
