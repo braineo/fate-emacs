@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   test:
@@ -12,24 +12,27 @@ jobs:
     strategy:
       matrix:
         emacs_version:
-          - 'snapshot'
+          - "snapshot"
       fail-fast: false
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Emacs
-      uses: purcell/setup-emacs@master
-      with:
-        version: ${{ matrix.emacs_version }}
+      - name: Set up Emacs
+        uses: purcell/setup-emacs@master
+        with:
+          version: ${{ matrix.emacs_version }}
 
-    - name: Display Emacs version
-      run: emacs --version
+      - name: Display Emacs version
+        run: emacs --version
 
-    - name: Test fate/draw-file-tree function
-      run: |
-        emacs -nw --batch \
-          --eval '(progn
-                     (add-to-list (quote load-path) "modules")
-                     (load-file ".github/test-draw-file-tree.el"))'
+      - name: Run tests
+        run: |
+          for file in .github/test-*.el; do
+            echo "Running tests in $file"
+            emacs -nw --batch \
+              -L modules \
+              -l "$file" \
+              -f ert-run-tests-batch-and-exit
+          done
