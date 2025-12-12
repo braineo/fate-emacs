@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        emacs_version:
+          - 'snapshot'
+      fail-fast: false
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Emacs
+      uses: purcell/setup-emacs@master
+      with:
+        version: ${{ matrix.emacs_version }}
+
+    - name: Display Emacs version
+      run: emacs --version
+
+    - name: Test configuration startup
+      run: ./.github/test-startup.sh
+
+    - name: Test fate/draw-file-tree function
+      run: |
+        emacs -nw --batch \
+          --eval '(let ((debug-on-error t)
+                        (url-show-status nil)
+                        (user-emacs-directory default-directory)
+                        (user-init-file (expand-file-name "init.el"))
+                        (load-path (delq default-directory load-path)))
+                     (load-file user-init-file)
+                     (run-hooks (quote after-init-hook))
+                     (load-file ".github/test-draw-file-tree.el"))'
