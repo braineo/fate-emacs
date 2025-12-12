@@ -53,15 +53,13 @@ IS-LAST indicates if this is the last child at current level."
                             (t (concat prefix "│   ")))))
     (concat result
             (mapconcat
-             (lambda (child)
-               (if (stringp child)
-                   ;; Leaf node
-                   (let* ((is-last-child (eq child (car (last children))))
-                          (child-branch (if is-last-child "└── " "├── ")))
-                     (concat child-prefix child-branch child "\n"))
-                 ;; Subtree
-                 (let ((is-last-child (eq child (car (last children)))))
-                   (fate/draw-file-tree child child-prefix is-last-child))))
+              (lambda (child)
+                (let* ((is-last-child (eq child (car (last children)))))
+                  (if (stringp child)
+                    ;; Leaf node
+                    (concat child-prefix (if is-last-child "└── " "├── ") child "\n")
+                    ;; Subtree
+                    (fate/draw-file-tree child child-prefix is-last-child))))
              children
              ""))))
 
