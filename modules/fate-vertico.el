@@ -187,6 +187,10 @@
   :bind
   ("M-g f" . consult-flycheck))
 
+(use-package consult-jq
+  :vc (:url "https://github.com/bigbuger/consult-jq")
+  :custom
+  (consult-jq-completion-styles '(basic partial-completion)))
 
 (use-package embark
   :bind (("s-."   . embark-act)
