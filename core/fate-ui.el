@@ -132,6 +132,7 @@
 
 ;; Theme
 (use-package doom-themes
+  :if fate/theme
   :config
   (load-theme fate/theme t)
   ;; new font-lock since 29.1 for tree sitter
@@ -152,20 +153,39 @@
 
   (enable-theme fate/theme))
 
+(use-package modus-themes
+  :if (not fate/theme)
+  :config
+  ;; Your customizations here:
+  (setopt modus-themes-to-toggle '(modus-operandi modus-vivendi)
+        modus-themes-to-rotate modus-themes-items
+        modus-themes-italic-constructs t
+        modus-themes-bold-constructs t
+        modus-themes-completions '((t . (bold)))
+        modus-themes-prompts '(bold))
+
+  (setopt modus-themes-common-palette-overrides
+    '((border-mode-line-active unspecified)
+      (border-mode-line-inactive unspecified)
+      (underline-warning warning)))
+
+  (defun fate/modus-themes-custom-faces (&rest _)
+    (modus-themes-with-colors
+      (custom-set-faces
+       `(forge-pullreq-merged ((,c :inherit default)))
+       `(forge-pullreq-open ((,c :inherit bold)))
+       `(forge-pullreq-rejected ((,c :inherit default))))))
+  (add-hook 'modus-themes-after-load-theme-hook #'fate/modus-themes-custom-faces)
+  (modus-themes-load-theme 'modus-vivendi))
+
 (use-package solaire-mode
+  :if fate/theme
   :config
   (solaire-global-mode +1))
 
 (use-package doom-modeline
   :config
-  (doom-modeline-def-modeline 'doom-fate
-    '(bar workspace-name window-number modals matches buffer-info remote-host buffer-position word-count parrot selection-info)
-    '(objed-state misc-info persp-name grip gnus debug lsp minor-modes input-method indent-info buffer-encoding major-mode vcs check))
-  (defun fate-doom-modeline ()
-    "Setup custom doom modeline."
-    (doom-modeline-set-modeline 'doom-fate 'default))
-  :hook ((after-init . doom-modeline-mode)
-         (doom-modeline-mode . fate-doom-modeline))
+  :hook ((after-init . doom-modeline-mode))
   :custom
   (doom-modeline-buffer-file-name-style 'truncate-upto-project))
 
