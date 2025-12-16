@@ -174,7 +174,7 @@
   (defun fate/modus-themes-custom-faces (&rest _)
     (modus-themes-with-colors
       (custom-set-faces
-       `(font-lock-escape-face ((,c :forground green)))
+       `(font-lock-escape-face ((,c :foreground green)))
        `(font-lock-regexp-face ((,c :foreground ,blue-faint)))
        `(font-lock-property-use-face ((,c :foreground ,slate)))
        `(forge-pullreq-merged ((,c :inherit default)))
