@@ -165,13 +165,18 @@
         modus-themes-prompts '(bold))
 
   (setopt modus-themes-common-palette-overrides
-    '((border-mode-line-active unspecified)
+    '((string green-faint)
+      (type yellow-cooler)
+      (border-mode-line-active unspecified)
       (border-mode-line-inactive unspecified)
       (underline-warning warning)))
 
   (defun fate/modus-themes-custom-faces (&rest _)
     (modus-themes-with-colors
       (custom-set-faces
+       `(font-lock-escape-face ((,c :forground green)))
+       `(font-lock-regexp-face ((,c :foreground ,blue-faint)))
+       `(font-lock-property-use-face ((,c :foreground ,slate)))
        `(forge-pullreq-merged ((,c :inherit default)))
        `(forge-pullreq-open ((,c :inherit bold)))
        `(forge-pullreq-rejected ((,c :inherit default))))))
