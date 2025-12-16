@@ -135,6 +135,16 @@
   :if fate/theme
   :config
   (load-theme fate/theme t)
+  (custom-set-faces
+   `(color-rg-font-lock-header-line-text ((t (:foreground ,(doom-color 'base7)))))
+   `(color-rg-font-lock-header-line-keyword ((t (:foreground ,(doom-color 'red)))))
+   `(color-rg-font-lock-header-line-directory ((t (:foreground ,(doom-color 'blue)))))
+   `(color-rg-font-lock-header-line-edit-mode ((t (:foreground ,(doom-color 'magenta)))))
+   `(color-rg-font-lock-command ((t (:background ,(doom-color 'modeline-bg) :foreground ,(doom-color 'comments)))))
+   `(color-rg-font-lock-file ((t (:foreground ,(doom-color 'blue)))))
+   `(color-rg-font-lock-line-number ((t (:foreground ,(doom-color 'comments)))))
+   `(color-rg-font-lock-column-number ((t (:foreground ,(doom-color 'comments)))))
+   `(color-rg-font-lock-match ((t (:foreground ,(doom-color 'red))))))
   ;; new font-lock since 29.1 for tree sitter
   (custom-theme-set-faces
     fate/theme
@@ -165,16 +175,34 @@
         modus-themes-prompts '(bold))
 
   (setopt modus-themes-common-palette-overrides
-    '((border-mode-line-active unspecified)
+    '((string green-faint)
+      (type yellow-cooler)
+      (border-mode-line-active unspecified)
       (border-mode-line-inactive unspecified)
       (underline-warning warning)))
 
   (defun fate/modus-themes-custom-faces (&rest _)
     (modus-themes-with-colors
       (custom-set-faces
-       `(forge-pullreq-merged ((,c :inherit default)))
-       `(forge-pullreq-open ((,c :inherit bold)))
-       `(forge-pullreq-rejected ((,c :inherit default))))))
+        ;; font-lock
+        `(font-lock-escape-face ((,c :foreground ,green)))
+        `(font-lock-regexp-face ((,c :foreground ,blue-faint)))
+        `(font-lock-property-use-face ((,c :foreground ,slate)))
+        ;; forge
+        `(forge-pullreq-merged ((,c :inherit default)))
+        `(forge-pullreq-open ((,c :inherit bold)))
+        `(forge-pullreq-rejected ((,c :inherit default)))
+        :; color-rg
+        `(color-rg-font-lock-header-line-text ((,c :foreground ,fg-main)))
+        `(color-rg-font-lock-header-line-keyword ((,c :foreground ,red)))
+        `(color-rg-font-lock-header-line-directory ((,c :foreground ,blue)))
+        `(color-rg-font-lock-header-line-edit-mode ((,c :foreground ,magenta)))
+        `(color-rg-font-lock-command ((,c :background ,bg-dim :foreground ,comment)))
+        `(color-rg-font-lock-file ((,c :foreground ,blue)))
+        `(color-rg-font-lock-line-number ((,c :foreground ,comment)))
+        `(color-rg-font-lock-column-number ((,c :foreground ,comment)))
+        `(color-rg-font-lock-match ((,c :foreground ,red))))))
+
   (add-hook 'modus-themes-after-load-theme-hook #'fate/modus-themes-custom-faces)
   (modus-themes-load-theme 'modus-vivendi))
 

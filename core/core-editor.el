@@ -520,18 +520,7 @@ more information."
   :vc (:url "https://github.com/manateelazycat/color-rg")
   :custom
   (color-rg-search-no-ignore-file nil)
-  (color-rg-mac-load-path-from-shell nil)
-  :config
-  (custom-set-faces
-   `(color-rg-font-lock-header-line-text ((t (:foreground ,(doom-color 'base7)))))
-   `(color-rg-font-lock-header-line-keyword ((t (:foreground ,(doom-color 'red)))))
-   `(color-rg-font-lock-header-line-directory ((t (:foreground ,(doom-color 'blue)))))
-   `(color-rg-font-lock-header-line-edit-mode ((t (:foreground ,(doom-color 'magenta)))))
-   `(color-rg-font-lock-command ((t (:background ,(doom-color 'modeline-bg) :foreground ,(doom-color 'comments)))))
-   `(color-rg-font-lock-file ((t (:foreground ,(doom-color 'blue)))))
-   `(color-rg-font-lock-line-number ((t (:foreground ,(doom-color 'comments)))))
-   `(color-rg-font-lock-column-number ((t (:foreground ,(doom-color 'comments)))))
-   `(color-rg-font-lock-match ((t (:foreground ,(doom-color 'red)))))))
+  (color-rg-mac-load-path-from-shell nil))
 
 (defun fate/kill-buffer (prefix path-pattern)
   "Kill buffer with patterns.  PATH-PATTERN is pattern to compare with buffer name.
