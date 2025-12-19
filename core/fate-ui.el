@@ -179,6 +179,9 @@
       (type yellow-cooler)
       (border-mode-line-active unspecified)
       (border-mode-line-inactive unspecified)
+      (modeline-err err)
+      (modeline-warning warning)
+      (modeline-info info)
       (underline-warning warning)))
 
   (defun fate/modus-themes-custom-faces (&rest _)
