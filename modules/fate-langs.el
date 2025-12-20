@@ -28,7 +28,7 @@
 ;; Lisp
 
 (eval-when-compile
-  (require 'core-packages)
+  (require 'fate-misc)
   (require 'treesit))
 
 (use-package reformatter

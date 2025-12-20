@@ -26,7 +26,7 @@
 
 (require 'treesit)
 (eval-when-compile
-  (require 'core-packages))
+  (require 'fate-misc))
 
 (defconst fate/js-tools
    '("prettier"
