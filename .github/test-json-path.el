@@ -3,9 +3,8 @@
 ;; Test script for JSON path functions
 
 (require 'ert)
-(require 'fate-web)
+(require 'fate-json)
 (require 'json-ts-mode)
-(require 'treesit)
 
 (defun test-json-path--get-path-at-string (content search-str)
   "Get JSON path at position of SEARCH-STR in CONTENT using tree-sitter."
