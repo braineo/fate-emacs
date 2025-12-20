@@ -56,28 +56,7 @@
 
 (defvar-local jq-format-args '())
 
-(defun fate/json-get-path (current-node output)
-  "Get path to json value at cursor position.  CURRENT-NODE is a tree-sitter-node.
-OUTPUT is parsed path list."
-  (let* ((parent-node (treesit-node-parent current-node)))
-    (if parent-node
-      (progn
-        (when (equal (treesit-node-type parent-node) "array")
-          (let ((index -1)
-                (cursor (treesit-node-child parent-node 0)))
-            (while (not (treesit-node-eq current-node cursor))
-                (progn
-                  (setq cursor (treesit-node-next-sibling cursor t))
-                  (if cursor
-                    (progn
-                      (setq index (+ index 1))))))
-            (setq output (push index output))))
-        (when (equal (treesit-node-type current-node) "pair")
-            (setq output (push (substring-no-properties (treesit-node-text (treesit-node-child current-node 0))) output)))
-        (fate/json-get-path parent-node output))
-      output)))
-
-(defun fate/json-get-path2 (node)
+(defun fate/json-get-path (node)
   "Get a path list from root of JSON to NODE.  NODE is a tree-sitter-node.
 OUTPUT is parsed path list."
   (let* ((path '())
@@ -98,7 +77,7 @@ OUTPUT is parsed path list."
     path))
 
 ;;;###autoload
-(defun fate/json-print-path-js2 ()
+(defun fate/json-print-path-js ()
   "Show JSON path at point in JavaScript/jq format in minibuffer."
   (interactive)
   (message
@@ -111,7 +90,7 @@ OUTPUT is parsed path list."
              (if (string-match-p "[^[:word:]]" trimmed)
                (format "[%s]" elt)
                (format ".%s" trimmed))))))
-      (fate/json-get-path2 (treesit-node-at (point))) "")))
+      (fate/json-get-path (treesit-node-at (point))) "")))
 
 (defun fate/json-print-path-python ()
   "Show JSON path at point in Python format in minibuffer."
@@ -122,29 +101,13 @@ OUTPUT is parsed path list."
         (cond
           ((numberp elt) (format "[%d]" elt))
           ((stringp elt) (format "[%s]" elt))))
-      (fate/json-get-path2 (treesit-node-at (point))) "")))
-
-
-;;;###autoload
-(defun fate/json-print-path-js ()
-  "Show JSON path at point in JavaScript/jq format in minibuffer."
-  (interactive)
-  (let (json-path)
-    (dolist (elt (fate/json-get-path2 (treesit-node-at (point))) json-path)
-      (when (stringp elt)
-        (let* ((trimmed-elt (string-trim elt "\"" "\"")))
-          (if (string-match-p "[^[:word:]]" trimmed-elt)
-            (setq json-path (concat json-path "[\"" trimmed-elt "\"]"))
-            (setq json-path (concat json-path "." trimmed-elt)))))
-      (when (numberp elt)
-        (setq json-path (concat json-path "[" (number-to-string elt) "]"))))
-    (message json-path)))
+      (fate/json-get-path (treesit-node-at (point))) "")))
 
 ;;;###autoload
 (defun fate/json-kill-path-js ()
   "Save json path to kill ring."
   (interactive)
-  (kill-new (fate/json-print-path-js2)))
+  (kill-new (fate/json-print-path-js)))
 
 ;;;###autoload
 (defun fate/json-pretty-print (&optional minimize)
