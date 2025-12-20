@@ -21,54 +21,63 @@
 
 (ert-deftest test-json-get-path-simple-object ()
   "Test path parsing for a simple object property."
+  (skip-unless (treesit-ready-p 'json t))
   (let* ((json "{\"name\": \"John\"}")
          (path (test-json-path--get-path-at-string json "John")))
     (should (equal path '("\"name\"")))))
 
 (ert-deftest test-json-get-path-nested-object ()
   "Test path parsing for nested object properties."
+  (skip-unless (treesit-ready-p 'json t))
   (let* ((json "{\"user\": {\"name\": \"John\"}}")
          (path (test-json-path--get-path-at-string json "John")))
     (should (equal path '("\"user\"" "\"name\"")))))
 
 (ert-deftest test-json-get-path-array-element ()
   "Test path parsing for array element."
+  (skip-unless (treesit-ready-p 'json t))
   (let* ((json "{\"items\": [1, 2, 3]}")
          (path (test-json-path--get-path-at-string json "2")))
     (should (equal path '("\"items\"" 1)))))
 
 (ert-deftest test-json-get-path-first-array-element ()
   "Test path parsing for first array element."
+  (skip-unless (treesit-ready-p 'json t))
   (let* ((json "{\"items\": [\"first\", \"second\"]}")
          (path (test-json-path--get-path-at-string json "first")))
     (should (equal path '("\"items\"" 0)))))
 
 (ert-deftest test-json-get-path-nested-array ()
   "Test path parsing for nested array element."
+  (skip-unless (treesit-ready-p 'json t))
   (let* ((json "{\"matrix\": [[1, 2], [3, 4]]}")
          (path (test-json-path--get-path-at-string json "4")))
     (should (equal path '("\"matrix\"" 1 1)))))
 
 (ert-deftest test-json-get-path-object-in-array ()
   "Test path parsing for object property inside array."
+  (skip-unless (treesit-ready-p 'json t))
   (let* ((json "{\"users\": [{\"name\": \"Alice\"}, {\"name\": \"Bob\"}]}")
          (path (test-json-path--get-path-at-string json "Bob")))
     (should (equal path '("\"users\"" 1 "\"name\"")))))
 
 (ert-deftest test-json-get-path-deep-nesting ()
   "Test path parsing for deeply nested structure."
+  (skip-unless (treesit-ready-p 'json t))
   (let* ((json "{\"a\": {\"b\": {\"c\": {\"d\": \"value\"}}}}")
          (path (test-json-path--get-path-at-string json "value")))
     (should (equal path '("\"a\"" "\"b\"" "\"c\"" "\"d\"")))))
 
 (ert-deftest test-json-get-path-complex-array-object ()
   "Test path parsing for complex array and object mix."
+  (skip-unless (treesit-ready-p 'json t))
   (let* ((json "{\"data\": [{\"items\": [1, 2]}, {\"items\": [3, 4]}]}")
          (path (test-json-path--get-path-at-string json "4")))
     (should (equal path '("\"data\"" 1 "\"items\"" 1)))))
 
 (ert-deftest test-json-get-path-special-key-names ()
   "Test path parsing for keys with special characters."
+  (skip-unless (treesit-ready-p 'json t))
   (let* ((json "{\"user-name\": \"test\", \"email@domain\": \"test@example.com\"}")
          (path (test-json-path--get-path-at-string json "test@example.com")))
     (should (equal path '("\"email@domain\"")))))
