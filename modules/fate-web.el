@@ -77,12 +77,32 @@ OUTPUT is parsed path list."
         (fate/json-get-path parent-node output))
       output)))
 
+(defun fate/json-get-path2 (node)
+  "Get a path list from root of JSON to NODE.  NODE is a tree-sitter-node.
+OUTPUT is parsed path list."
+  (let* ((path '())
+         (current node))
+    (while current
+      (let ((parent (treesit-node-parent current)))
+        (cond
+          ((string= (treesit-node-type parent) "array")
+           (let ((cursor (treesit-node-child parent 0))
+                 (index -1))
+             (while (not (treesit-node-eq current cursor))
+               (setq cursor (treesit-node-next-sibling cursor t))
+               (when cursor (setq index (1+ index))))
+             (push index path)))
+          ((string= (treesit-node-type current) "pair")
+           (push (substring-no-properties (treesit-node-text (treesit-node-child current 0))) path)))
+        (setq current parent)))
+    path))
+
 ;;;###autoload
 (defun fate/json-print-path-js ()
   "Show json path in minibuffer in JavaScript, jq format."
   (interactive)
   (let (json-path)
-    (dolist (elt (fate/json-get-path (treesit-node-at (point)) '()) json-path)
+    (dolist (elt (fate/json-get-path2 (treesit-node-at (point))) json-path)
       (when (stringp elt)
         (let* ((trimmed-elt (string-trim elt "\"" "\"")))
           (if (string-match-p "[^[:word:]]" trimmed-elt)
