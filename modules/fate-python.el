@@ -26,7 +26,7 @@
 
 (require 'hideshow)
 (eval-when-compile
-  (require 'core-packages))
+  (require 'fate-misc))
 
 (defun fate/python-hideshow-forward-sexp-function (arg)
   "Python specific `forward-sexp' function for `hs-minor-mode'.
