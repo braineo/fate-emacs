@@ -98,8 +98,36 @@ OUTPUT is parsed path list."
     path))
 
 ;;;###autoload
+(defun fate/json-print-path-js2 ()
+  "Show JSON path at point in JavaScript/jq format in minibuffer."
+  (interactive)
+  (message
+    (mapconcat
+      (lambda (elt)
+        (cond
+          ((numberp elt) (format "[%d]" elt))
+          ((stringp elt)
+           (let ((trimmed (string-trim elt "\"" "\"")))
+             (if (string-match-p "[^[:word:]]" trimmed)
+               (format "[%s]" elt)
+               (format ".%s" trimmed))))))
+      (fate/json-get-path2 (treesit-node-at (point))) "")))
+
+(defun fate/json-print-path-python ()
+  "Show JSON path at point in Python format in minibuffer."
+  (interactive)
+  (message
+    (mapconcat
+      (lambda (elt)
+        (cond
+          ((numberp elt) (format "[%d]" elt))
+          ((stringp elt) (format "[%s]" elt))))
+      (fate/json-get-path2 (treesit-node-at (point))) "")))
+
+
+;;;###autoload
 (defun fate/json-print-path-js ()
-  "Show json path in minibuffer in JavaScript, jq format."
+  "Show JSON path at point in JavaScript/jq format in minibuffer."
   (interactive)
   (let (json-path)
     (dolist (elt (fate/json-get-path2 (treesit-node-at (point))) json-path)
@@ -116,7 +144,7 @@ OUTPUT is parsed path list."
 (defun fate/json-kill-path-js ()
   "Save json path to kill ring."
   (interactive)
-  (kill-new (fate/json-print-path-js)))
+  (kill-new (fate/json-print-path-js2)))
 
 ;;;###autoload
 (defun fate/json-pretty-print (&optional minimize)
