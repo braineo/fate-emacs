@@ -72,7 +72,7 @@ OUTPUT is parsed path list."
                (when cursor (setq index (1+ index))))
              (push index path)))
           ((string= (treesit-node-type current) "pair")
-           (push (substring-no-properties (treesit-node-text (treesit-node-child current 0))) path)))
+           (push (treesit-node-text (treesit-node-child current 0) t) path)))
         (setq current parent)))
     path))
 
@@ -80,17 +80,21 @@ OUTPUT is parsed path list."
 (defun fate/json-print-path-js ()
   "Show JSON path at point in JavaScript/jq format in minibuffer."
   (interactive)
-  (message
-    (mapconcat
-      (lambda (elt)
-        (cond
-          ((numberp elt) (format "[%d]" elt))
-          ((stringp elt)
-           (let ((trimmed (string-trim elt "\"" "\"")))
-             (if (string-match-p "[^[:word:]]" trimmed)
-               (format "[%s]" elt)
-               (format ".%s" trimmed))))))
-      (fate/json-get-path (treesit-node-at (point))) "")))
+  (message (fate/json-get-path-string-js
+             (fate/json-get-path (treesit-node-at (point))))))
+
+(defun fate/json-get-path-string-js (path)
+  "Convert PATH list to JavaScript/jq format."
+  (mapconcat
+    (lambda (elt)
+      (cond
+        ((numberp elt) (format "[%d]" elt))
+        ((stringp elt)
+         (let ((trimmed (string-trim elt "\"" "\"")))
+           (if (or (string-match-p "[^[:word:]]" trimmed) (string-match-p "^[[:digit:]]+$" trimmed))
+             (format "[%s]" elt)
+             (format ".%s" trimmed))))))
+    path ""))
 
 (defun fate/json-print-path-python ()
   "Show JSON path at point in Python format in minibuffer."

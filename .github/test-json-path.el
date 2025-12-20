@@ -1,4 +1,4 @@
-;;; test-json-path.el --- Test for fate/json-get-path and fate/json-print-path-js functions  -*- lexical-binding: t; -*-
+;;; test-json-path.el --- Test for fate/json-get-path and fate/json-get-path-string-js functions  -*- lexical-binding: t; -*-
 
 ;; Test script for JSON path functions
 
@@ -74,90 +74,76 @@
          (path (test-json-path--get-path-at-string json "test@example.com")))
     (should (equal path '("\"email@domain\"")))))
 
-;;; Tests for fate/json-print-path-js - String serialization
-
-(defun test-json-format-path (path-list)
-  "Format PATH-LIST using the same logic as fate/json-print-path-js."
-  (mapconcat
-   (lambda (elt)
-     (cond
-      ((numberp elt) (format "[%d]" elt))
-      ((stringp elt)
-       (let ((trimmed (string-trim elt "\"" "\"")))
-         (if (string-match-p "[^[:word:]]" trimmed)
-             (format "[%s]" elt)
-           (format ".%s" trimmed))))))
-   path-list ""))
 
 (ert-deftest test-json-print-path-js-simple-key ()
   "Test serialization of simple object key."
-  (let ((result (test-json-format-path '("\"name\""))))
+  (let ((result (fate/json-get-path-string-js '("\"name\""))))
     (should (string= result ".name"))))
 
 (ert-deftest test-json-print-path-js-nested-keys ()
   "Test serialization of nested object keys."
-  (let ((result (test-json-format-path '("\"user\"" "\"name\""))))
+  (let ((result (fate/json-get-path-string-js '("\"user\"" "\"name\""))))
     (should (string= result ".user.name"))))
 
 (ert-deftest test-json-print-path-js-single-array-index ()
   "Test serialization of single array index."
-  (let ((result (test-json-format-path '("\"items\"" 1))))
+  (let ((result (fate/json-get-path-string-js '("\"items\"" 1))))
     (should (string= result ".items[1]"))))
 
 (ert-deftest test-json-print-path-js-zero-index ()
   "Test serialization of zero array index."
-  (let ((result (test-json-format-path '("\"items\"" 0))))
+  (let ((result (fate/json-get-path-string-js '("\"items\"" 0))))
     (should (string= result ".items[0]"))))
 
 (ert-deftest test-json-print-path-js-multiple-array-indices ()
   "Test serialization of multiple array indices."
-  (let ((result (test-json-format-path '("\"matrix\"" 1 1))))
+  (let ((result (fate/json-get-path-string-js '("\"matrix\"" 1 1))))
     (should (string= result ".matrix[1][1]"))))
 
 (ert-deftest test-json-print-path-js-mixed-path ()
   "Test serialization of mixed object and array path."
-  (let ((result (test-json-format-path '("\"users\"" 1 "\"name\""))))
+  (let ((result (fate/json-get-path-string-js '("\"users\"" 1 "\"name\""))))
     (should (string= result ".users[1].name"))))
 
 (ert-deftest test-json-print-path-js-hyphen-key ()
   "Test serialization of key with hyphen."
-  (let ((result (test-json-format-path '("\"user-name\""))))
+  (let ((result (fate/json-get-path-string-js '("\"user-name\""))))
     (should (string= result "[\"user-name\"]"))))
 
 (ert-deftest test-json-print-path-js-at-sign-key ()
   "Test serialization of key with @ symbol."
-  (let ((result (test-json-format-path '("\"email@domain\""))))
+  (let ((result (fate/json-get-path-string-js '("\"email@domain\""))))
     (should (string= result "[\"email@domain\"]"))))
 
 (ert-deftest test-json-print-path-js-space-key ()
   "Test serialization of key with space."
-  (let ((result (test-json-format-path '("\"first name\""))))
+  (let ((result (fate/json-get-path-string-js '("\"first name\""))))
     (should (string= result "[\"first name\"]"))))
 
 (ert-deftest test-json-print-path-js-dot-key ()
   "Test serialization of key with dot."
-  (let ((result (test-json-format-path '("\"file.ext\""))))
+  (let ((result (fate/json-get-path-string-js '("\"file.ext\""))))
     (should (string= result "[\"file.ext\"]"))))
 
 (ert-deftest test-json-print-path-js-complex-path ()
   "Test serialization of complex path with mixed elements."
-  (let ((result (test-json-format-path '("\"data\"" "\"users\"" 0 "\"profile\"" "\"first-name\""))))
+  (let ((result (fate/json-get-path-string-js '("\"data\"" "\"users\"" 0 "\"profile\"" "\"first-name\""))))
     (should (string= result ".data.users[0].profile[\"first-name\"]"))))
 
 (ert-deftest test-json-print-path-js-all-arrays ()
   "Test serialization of path with only array indices."
-  (let ((result (test-json-format-path '("\"deep\"" 0 1 2))))
+  (let ((result (fate/json-get-path-string-js '("\"deep\"" 0 1 2))))
     (should (string= result ".deep[0][1][2]"))))
 
 (ert-deftest test-json-print-path-js-underscore-key ()
   "Test serialization of key with underscore (valid word char)."
-  (let ((result (test-json-format-path '("\"user_name\""))))
+  (let ((result (fate/json-get-path-string-js '("\"user_name\""))))
     (should (string= result "[\"user_name\"]"))))
 
 (ert-deftest test-json-print-path-js-number-key ()
   "Test serialization of numeric key name."
-  (let ((result (test-json-format-path '("\"123\""))))
-    (should (string= result ".123"))))
+  (let ((result (fate/json-get-path-string-js '("\"123\""))))
+    (should (string= result "[\"123\"]"))))
 
 ;; Run tests if executed as a script
 (when noninteractive
