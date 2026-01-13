@@ -102,9 +102,17 @@ cargo install fd-find
 sudo apt install libenchant-2-dev pkg-config
 ```
 
+### mdopen
+
+`mdopen` is for live markdown preview
+
+``` sh
+cargo install mdopen
+```
+
 ### Python Tools
 
-Directly install via `pip install` causes warnings in Debian 12. To use packages newer than the system provided packages, use `venv` or `pipx` instead.
+Directly install via `pip install` causes warnings after Debian 12. To use packages newer than the system provided packages, use `venv` or `pipx` instead.
 
 ```shell
 # use venv

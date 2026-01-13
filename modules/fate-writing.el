@@ -36,9 +36,15 @@
 (use-package markdown-mode
   :mode (("\\.md\\'" . gfm-mode)
          ("\\.markdown\\'" . gfm-mode))
+  :config
+  (add-to-list 'markdown-code-lang-modes '("mermaid" . mermaid-mode))
   :custom
   (markdown-gfm-use-electric-backquote nil)
   (markdown-fontify-code-blocks-natively t)
+  (markdown-enable-wiki-links t)
+  (markdown-make-gfm-checkboxes-buttons t)
+  (markdown-open-command "mdopen")
+
   :hook (markdown-mode . (lambda()
                            (setq-local electric-pair-pairs
                                        (append electric-pair-pairs '((?` . ?`))))
@@ -48,6 +54,17 @@
 
 (use-package markdown-toc
   :defer)
+
+(use-package mermaid-mode
+  :defer)
+
+(use-package grip-mode
+  :autoload grip-mode
+  :init
+  (with-eval-after-load 'markdown-mode
+    (bind-key "g" #'grip-mode markdown-mode-command-map))
+  :custom
+  (grip-use-mdopen t))
 
 
 (defun fate/enable-jinx ()
