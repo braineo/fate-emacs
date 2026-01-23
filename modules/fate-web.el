@@ -25,7 +25,8 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'fate-misc))
+  (require 'fate-misc)
+  (require 'fate-json))
 
 (defconst fate/js-tools
    '("prettier"
