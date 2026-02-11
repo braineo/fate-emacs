@@ -24,11 +24,6 @@ if command -v apt >/dev/null 2>&1; then
     sudo apt install libenchant-2-dev pkg-config python3-venv pipx pandoc fonts-jetbrains-mono
 fi
 
-python3 -m venv .venv
-source .venv/bin/activate
-pip3 install epc orjson sexpdata six setuptools paramiko rapidfuzz watchdog
-deactivate
-
 echo "install packages for python"
 if command -v pipx >/dev/null 2>&1; then
     pipx ensurepath
