@@ -95,6 +95,7 @@
       (lua        . ("https://github.com/Azganoth/tree-sitter-lua"))
       (make       . ("https://github.com/alemuller/tree-sitter-make"))
       (markdown   . ("https://github.com/MDeiml/tree-sitter-markdown" nil "tree-sitter-markdown/src"))
+      (markdown-inline   . ("https://github.com/MDeiml/tree-sitter-markdown" nil "tree-sitter-markdown-inline/src"))
       (org        . ("https://github.com/milisims/tree-sitter-org"))
       (python     . ("https://github.com/tree-sitter/tree-sitter-python"))
       (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript/src"))

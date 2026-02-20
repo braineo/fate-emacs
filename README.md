@@ -112,22 +112,16 @@ cargo install mdopen
 
 ### Python Tools
 
-Directly install via `pip install` causes warnings after Debian 12. To use packages newer than the system provided packages, use `venv` or `pipx` instead.
+Directly install via `pip install` causes warnings after Debian 12. To use packages newer than the system provided packages, use `uv`
+
 
 ```shell
-# use venv
-sudo apt install python3-venv
-python3 -m venv .venv
-source .venv/bin/activate
-pip install requests
-deactivate
-```
+curl -LsSf https://astral.sh/uv/install.sh | less
+```xo
 
 ```shell
-# for executables, use pipx
-sudo apt install pipx
-pipx ensurepath
-pipx install ruff-lsp
+uv tool install ty@latest
+uv tool install ruff@latest
 ```
 
 `M-x` `fate/python-install-tools`
@@ -205,11 +199,6 @@ Optional configuration, take a look at my [configs](https://github.com/braineo/c
 ## Install and Update Language Servers
 
 Previously [lsp-mode](https://emacs-lsp.github.io/lsp-mode/) was used as LSP client. The configuration now migrates to [lsp-bridge](https://github.com/manateelazycat/lsp-bridge), a client emphasizes performance. It has not covered all the features in lsp-mode, but it is **really** fast.
-
-```shell
-# install dependencies for lsp-bridge
-pip3 install epc orjson sexpdata six setuptools paramiko rapidfuzz
-```
 
 For each language server, refer to the configuration guide in [lsp-bridge](https://github.com/manateelazycat/lsp-bridge)
 

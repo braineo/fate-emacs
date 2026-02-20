@@ -18,7 +18,6 @@ if command -v go >/dev/null 2>&1; then
     go install mvdan.cc/sh/v3/cmd/shfmt@latest
 fi
 
-
 if command -v apt >/dev/null 2>&1; then
     echo "install packages for jinx and lsp bridge"
     sudo apt install libenchant-2-dev pkg-config python3-venv pipx pandoc fonts-jetbrains-mono
@@ -26,7 +25,6 @@ fi
 
 echo "install packages for python"
 if command -v uv >/dev/null 2>&1; then
-    pipx ensurepath
     uv tool install ty@latest
     uv tool install ruff@latest
 fi
