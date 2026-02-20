@@ -25,8 +25,8 @@ if command -v apt >/dev/null 2>&1; then
 fi
 
 echo "install packages for python"
-if command -v pipx >/dev/null 2>&1; then
+if command -v uv >/dev/null 2>&1; then
     pipx ensurepath
-    pipx install ruff-lsp
-    pipx install ruff
+    uv tool install ty@latest
+    uv tool install ruff@latest
 fi

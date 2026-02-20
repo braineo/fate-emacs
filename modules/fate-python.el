@@ -73,17 +73,13 @@ Argument ARG is ignored."
   (setq python-shell-completion-native-enable nil)
 
   (defconst fate/python-tools
-    '("ruff-lsp"
-      "ruff"
-      "basedpyright"
-      ;; lsp bridge dependencies
-      "epc" "orjson" "sexpdata" "six" "setuptools" "paramiko" "rapidfuzz")
-
+    '("ruff"
+      "ty")
    "python cli tools")
 
   (with-eval-after-load 'core-packages
     (fate/create-install-tools!
-      "python" ("pip3" "install" "--upgrade") fate/python-tools))
+      "uv" ("tool" "install") fate/python-tools))
 
   :bind
   (:map python-mode-map
