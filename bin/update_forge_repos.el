@@ -21,7 +21,7 @@
 
 (pcase-dolist (`(,name ,id)
                (forge-sql [:select [name id] :from repository
-                           ;;:where (= class 'gitlab)
+                           :where (not (isnull issues_until))
                            :order-by [(asc owner) (asc name)]]))
   (progn
     (setq forge-pull-total (1+ forge-pull-total))
