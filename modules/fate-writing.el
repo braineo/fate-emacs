@@ -240,8 +240,10 @@
 Prompts for start and end dates, calculates endgame dates,
 and replaces template strings in the current buffer."
   (interactive)
-  (let* ((start-date (org-read-date nil nil nil "Start date: "))
-         (end-date (org-read-date nil nil nil "End date: "))
+  (let* ((start-date (org-read-date nil nil nil "Start date: " nil "-1mon"))
+         (start-time (org-time-string-to-time start-date))
+         ;; Pre-fill the prompt with "++4fri" (4th friday from start-time)
+         (end-date (org-read-date nil nil nil "End date: " start-time "++4fri"))
          (end-date-time (org-time-string-to-time end-date))
          (endgame-end-date (format-time-string "%Y-%m-%d"
                                              (subtract-working-days end-date-time 0)))
