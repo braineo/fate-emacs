@@ -243,13 +243,10 @@ and replaces template strings in the current buffer."
   (let* ((start-date (org-read-date nil nil nil "Start date: " nil "-1mon"))
          (start-time (org-time-string-to-time start-date))
          ;; Pre-fill the prompt with "++4fri" (4th friday from start-time)
-         (end-date (org-read-date nil nil nil "End date: " start-time "++4fri"))
+         (end-date (org-read-date nil nil nil "End date: " start-time "++4sun"))
          (end-date-time (org-time-string-to-time end-date))
-         (endgame-end-date (format-time-string "%Y-%m-%d"
-                                             (subtract-working-days end-date-time 0)))
-         (endgame-start-date (format-time-string "%Y-%m-%d"
-                                               (subtract-working-days
-                                                (org-time-string-to-time endgame-end-date) 3))))
+         (endgame-end-date (org-read-date nil nil "--fri" nil end-date-time))
+         (endgame-start-date (org-read-date nil nil "--mon" nil end-date-time)))
 
     ;; Replace template strings in buffer
     (save-excursion
@@ -272,23 +269,6 @@ and replaces template strings in the current buffer."
     (message "Iteration dates filled: %s to %s (endgame: %s to %s)"
              start-date end-date endgame-start-date endgame-end-date)))
 
-(defun subtract-working-days (date-time num-days)
-  "Subtract NUM-DAYS working days from DATE-TIME.
-Working days are Monday through Friday.
-If DATE-TIME is a weekend, first moves to the previous Friday."
-  (let ((current-time date-time)
-        (days-subtracted 0))
-    (while (or (< days-subtracted num-days)
-             (not (is-weekday current-time)))
-      (when (is-weekday current-time)
-        (setq days-subtracted (1+ days-subtracted)))
-      (setq current-time (time-subtract current-time (days-to-time 1))))
-
-    current-time))
-
-(defun is-weekday (date-time)
-  (let ((day-of-week (string-to-number (format-time-string "%w" date-time))))
-    (and (>= day-of-week 1) (<= day-of-week 5))))
 
 (provide 'fate-writing)
 ;;; fate-writing.el ends here
