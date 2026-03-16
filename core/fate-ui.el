@@ -183,7 +183,10 @@
       (modeline-err err)
       (modeline-warning warning)
       (modeline-info info)
-      (underline-warning warning)))
+      (underline-warning warning)
+      (fg-heading-1 blue-cooler)
+      (fg-heading-2 cyan-intense)
+      (fg-heading-3 yellow-warmer)))
 
   (defun fate/modus-themes-custom-faces (&rest _)
     (modus-themes-with-colors
