@@ -246,8 +246,8 @@ surrounded by word boundaries."
 ;; Pair parentheses, brace, quotes
 (use-package elec-pair
   :ensure nil
-  :hook (after-init . electric-pair-mode)
-  :custom (electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit))
+  :hook ((after-init . electric-pair-mode)
+         (minibuffer-setup . (lambda () (electric-pair-local-mode -1)))))
 
 ;; Core package move to beginning of code first
 (use-package mwim
