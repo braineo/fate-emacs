@@ -199,7 +199,7 @@
         `(forge-pullreq-merged ((,c :inherit default)))
         `(forge-pullreq-open ((,c :inherit bold)))
         `(forge-pullreq-rejected ((,c :inherit default)))
-        :; color-rg
+        ;; color-rg
         `(color-rg-font-lock-header-line-text ((,c :foreground ,fg-main)))
         `(color-rg-font-lock-header-line-keyword ((,c :foreground ,red)))
         `(color-rg-font-lock-header-line-directory ((,c :foreground ,blue)))
