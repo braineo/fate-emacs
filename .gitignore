@@ -28,6 +28,7 @@ projectile-bookmarks.eld
 tramp
 elnode/
 var/
+etc/
 crown/
 *.stackdump
 bookmarks

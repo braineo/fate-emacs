@@ -224,17 +224,15 @@ surrounded by word boundaries."
   (after-init . recentf-mode)
   :commands (recentf-expand-file-name)
   :config
-  (progn
-    (setq
-        recentf-max-saved-items 500
-        recentf-max-menu-items 15
-        ;; disable recentf-cleanup on Emacs start, because it can cause
-        ;; problems with remote files
-        recentf-auto-cleanup 'never)
-    (add-to-list 'recentf-exclude (recentf-expand-file-name fate-cache-directory))
-    (add-to-list 'recentf-exclude (recentf-expand-file-name package-user-dir))
-    (add-to-list 'recentf-exclude no-littering-var-directory)
-    (add-to-list 'recentf-exclude no-littering-etc-directory)))
+  (setq
+      recentf-max-saved-items 500
+      recentf-max-menu-items 15
+      ;; disable recentf-cleanup on Emacs start, because it can cause
+      ;; problems with remote files
+      recentf-auto-cleanup 'never)
+  (add-to-list 'recentf-exclude (recentf-expand-file-name fate-cache-directory))
+  (add-to-list 'recentf-exclude (recentf-expand-file-name package-user-dir)))
+
 
 ;; Power package visualizing undo redo history
 (use-package undo-redo

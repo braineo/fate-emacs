@@ -64,7 +64,11 @@
   (package-upgrade-all))
 
 
-(use-package no-littering)
+(use-package no-littering
+  :config
+  (with-eval-after-load 'recentf
+    (add-to-list 'recentf-exclude (recentf-expand-file-name no-littering-var-directory))
+    (add-to-list 'recentf-exclude (recentf-expand-file-name no-littering-etc-directory))))
 
 (when (native-comp-available-p)
   (setq native-comp-async-report-warnings-errors 'silent))

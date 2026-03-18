@@ -200,6 +200,9 @@
   :custom
   (consult-jq-completion-styles '(basic partial-completion)))
 
+(use-package wgrep
+  :defer t)
+
 (use-package embark
   :bind (("s-."   . embark-act)
          ([remap describe-bindings] . embark-bindings))
