@@ -62,6 +62,7 @@
                               "*Compile-Log*"
                               "Output\\*$"
                               "\\*Async Shell Command\\*"
+                              "\\*color-rg\\*"
                               help-mode  helpful-mode
                               compilation-mode)))
 

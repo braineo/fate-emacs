@@ -518,6 +518,14 @@ more information."
 
 (use-package color-rg
   :vc (:url "https://github.com/manateelazycat/color-rg")
+  :config
+  (add-to-list 'display-buffer-alist
+             '("\\*color-rg\\*"
+               (display-buffer-in-side-window)
+               (side . right)
+               (window-width . 0.35) ; Take up 35% of the screen width
+               (window-parameters . ((no-other-window . t)
+                                     (no-delete-other-windows . t)))))
   :custom
   (color-rg-search-no-ignore-file nil)
   (color-rg-mac-load-path-from-shell nil))
