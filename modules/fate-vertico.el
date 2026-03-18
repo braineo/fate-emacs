@@ -150,11 +150,19 @@
 
   (defun fate/consult-to-color-rg ()
     (interactive)
-    (pcase-let* ((`(,arg . ,opts) (consult--command-split (minibuffer-contents)))
-                 (`(,re . ,hl) (funcall consult--regexp-compiler arg 'pcre nil)))
-      (embark--become-command
-        #'color-rg-search-input (if re (consult--join-regexps re 'pcre)
-                                  ""))))
+    (let* ((input (minibuffer-contents))
+           ;; get style (:initial 35 :function consult--split-perl)
+           (style (alist-get (or consult-async-split-style 'none)
+                             consult-async-split-styles-alist))
+           (async-input (if style
+                            ;; call (consult--split-perl input style)
+                            (car (funcall (plist-get style :function) input style))
+                          input)))
+      (pcase-let* ((`(,arg . ,opts) (consult--command-split async-input))
+                   (`(,re . ,hl) (funcall consult--regexp-compiler arg 'pcre nil)))
+        (embark--become-command
+          #'color-rg-search-input (if re (consult--join-regexps re 'pcre)
+                                    "")))))
 
   (defvar fate/consult-rg-map
     (let ((map (make-sparse-keymap)))
