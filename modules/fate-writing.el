@@ -91,7 +91,17 @@
                               (python . t))))
 
 (use-package org-modern
-  :hook (org-mode . org-modern-mode))
+  :hook (org-mode . org-modern-mode)
+  :config
+  (with-eval-after-load 'modus-themes
+    (modus-themes-with-colors
+      (setq org-modern-todo-faces
+            `(("BACKLOG"   . (:background ,bg-dim :foreground ,fg-main))
+              ("CONCEPT"   . (:background ,blue-intense :foreground ,bg-main))
+              ("DESIGN"    . (:background ,magenta-intense :foreground ,bg-main))
+              ("IMPLEMENT" . (:background ,yellow-intense :foreground ,bg-main))
+              ("REVIEW"    . (:background ,cyan-intense :foreground ,bg-main))
+              ("DROPPED"   . (:background ,red-intense :foreground ,bg-main :strike-through t)))))))
 
 (use-package ox-pandoc)
 
