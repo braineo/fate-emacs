@@ -335,13 +335,7 @@
   :hook
   (prog-mode text-mode))
 
-;; Show whitespaces
-(use-package whitespace
-  :hook
-  ((prog-mode text-mode) . whitespace-mode)
-  :init
-  (progn
-    (setq whitespace-style '(face tabs empty trailing))))
+(setopt show-trailing-whitespace t)
 
 (defun set-font-size ()
     "Set font size."
