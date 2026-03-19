@@ -335,7 +335,8 @@
   :hook
   (prog-mode text-mode))
 
-(setopt show-trailing-whitespace t)
+(dolist (hook '(prog-mode-hook text-mode-hook))
+  (add-hook hook (lambda () (setq-local show-trailing-whitespace t))))
 
 (defun set-font-size ()
     "Set font size."
