@@ -84,6 +84,14 @@
   :hook (org-mode . (lambda() (set-fill-column 120)))
   :config
   (add-to-list 'org-export-backends '(pandoc))
+  (dolist (lang-mode '(("bash" . bash-ts)
+                       ("python" . python-ts)
+                       ("tsx" . jtsx-tsx)
+                       ("typescript" . jtsx-typescript)
+                       ("jsx" . jtsx-jsx)
+                       ("javascript" . jtsx-jsx)))
+    (add-to-list 'org-src-lang-modes lang-mode))
+  (defalias 'org-babel-execute:jsx 'org-babel-execute:js)
   :custom
   (org-babel-load-languages '((emacs-lisp . t)
                               (shell . t)
@@ -184,7 +192,27 @@ If resuming, it prompts to select an existing file."
   and a backlink to the function and the file."
 
     (with-current-buffer (find-buffer-visiting filename)
-      (let* ((org-src-mode (replace-regexp-in-string "-mode" "" (format "%s" major-mode)))
+      (let* ((mode-name-no-mode (intern (replace-regexp-in-string "-mode\\'" "" (symbol-name major-mode))))
+             (org-src-mode (cond
+                            ;; Shell scripts dynamically sniffed from shebang or extension
+                            ((memq major-mode '(sh-mode bash-ts-mode))
+                             (let ((ext (and buffer-file-name (file-name-extension buffer-file-name)))
+                                   (shebang (save-excursion
+                                              (goto-char (point-min))
+                                              (when (looking-at "^#![ \t]*\\(?:/usr/bin/env +\\)?\\(?:.+/\\)?\\(bash\\|zsh\\|ksh\\|sh\\|fish\\)\\b")
+                                                (match-string 1)))))
+                               (cond (shebang shebang)
+                                     ((member ext '("bash" "zsh" "ksh" "sh" "fish")) ext)
+                                     (t "bash"))))
+                            ;; jtsx-jsx-mode is a many-to-one mode for js/jsx, dynamically fetch from file extension
+                            ((eq major-mode 'jtsx-jsx-mode)
+                             (if (and buffer-file-name (string= (file-name-extension buffer-file-name) "jsx"))
+                                 "jsx"
+                               "javascript"))
+                            ;; Otherwise do a reverse lookup
+                            (t
+                             (or (car (rassq mode-name-no-mode org-src-lang-modes))
+                                 (symbol-name mode-name-no-mode)))))
              (func-name (which-function))
              (extracted-text (copy-as-format--extract-text))
              (file-name   (buffer-file-name))
