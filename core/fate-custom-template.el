@@ -50,6 +50,7 @@
 ;;; Notes
 
 ;; (setq org-mem-watch-dirs '("/home/user/notes"))
+;; (setopt org-directory "/home/user/notes")
 
 (provide 'custom)
 ;;; custom.el ends here

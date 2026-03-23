@@ -92,7 +92,12 @@
                        ("javascript" . jtsx-jsx)))
     (add-to-list 'org-src-lang-modes lang-mode))
   (defalias 'org-babel-execute:jsx 'org-babel-execute:js)
+  (defalias 'org-babel-execute:javascript 'org-babel-execute:js)
+  (defalias 'org-babel-execute:typescript 'org-babel-execute:js)
+  (defalias 'org-babel-execute:tsx 'org-babel-execute:js)
   :custom
+  (org-babel-js-cmd "bun")
+  (org-babel-python-command (if (executable-find "uv") "uv run python" "python3"))
   (org-babel-load-languages '((emacs-lisp . t)
                               (shell . t)
                               (js . t)
