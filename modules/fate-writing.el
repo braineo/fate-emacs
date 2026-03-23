@@ -108,21 +108,74 @@
 (use-package org-capture
   :ensure nil
   :bind
-  ("C-c m" . (lambda () "Open tmp capture window"
-               (interactive)
-               (org-capture nil "t")))
+  (("C-c c" . org-capture))
+  :init
+  (defvar fate-code-capture-session-file nil
+    "The file used for the active code capturing session.")
+
+  (defun fate/start-code-capturing-session ()
+    "Start or resume a code capturing session.
+
+If creating a new session, it prompts for a title and a destination folder.
+The filename is generated from the title by lowercasing it, replacing
+non-alphanumeric characters with hyphens, and stripping leading/trailing
+hyphens. If the title is empty or only special characters, it defaults
+to `session.org`. If a file with the generated name already exists,
+a timestamp suffix `YYYYMMDDHHMMSS` is appended to ensure uniqueness.
+
+If resuming, it prompts to select an existing file."
+    (interactive)
+    (let ((action (completing-read "Session action: " '("Create new session" "Resume existing session") nil t)))
+      (if (string= action "Create new session")
+          (let* ((title (read-string "Session title: "))
+                 (dir (read-directory-name "Select folder: " (or (bound-and-true-p org-directory) "~/")))
+                 (slug (replace-regexp-in-string "[^a-z0-9]+" "-" (downcase title)))
+                 (slug (replace-regexp-in-string "^-\\|-$" "" slug))
+                 (filename (if (string-empty-p slug) "session.org" (format "%s.org" slug)))
+                 (filepath (expand-file-name filename dir)))
+            (when (file-exists-p filepath)
+              (setq filepath (expand-file-name (format "%s-%s.org" slug (format-time-string "%Y%m%d%H%M%S")) dir)))
+            (with-temp-file filepath
+              (insert (format "#+TITLE: %s\n#+DATE: %s\n\n" title (format-time-string "[%Y-%m-%d %a %H:%M]"))))
+            (setq fate-code-capture-session-file filepath))
+        (setq fate-code-capture-session-file
+              (expand-file-name (read-file-name "Select session .org file: "
+                                                (and fate-code-capture-session-file
+                                                     (file-name-directory fate-code-capture-session-file))
+                                                nil t nil
+                                                (lambda (f) (or (file-directory-p f)
+                                                                (string-match-p "\\.org\\'" f))))))))
+    (message "Active code capturing session is now: %s" fate-code-capture-session-file))
+
+  (defun fate/goto-code-capture-session ()
+    "Navigate to the correct location in the active code capturing session."
+    (unless fate-code-capture-session-file
+      (user-error "No active code capturing session.  Run `fate/start-code-capturing-session' first."))
+    (set-buffer (org-capture-target-buffer fate-code-capture-session-file))
+    (goto-char (point-max)))
+
   :config
+  ;; Define the "c" prefix group so standard org-capture menus render it properly
   (add-to-list 'org-capture-templates
-               `("cf" "Code Reference with Comments to Current Task"
-                 plain (clock)
+               '("c" "Code Capturing Session Options"))
+
+  (add-to-list 'org-capture-templates
+               `("cf" "Code Reference with Comments to Current Session"
+                 plain (function fate/goto-code-capture-session)
                  "%(fate/format-org-capture-code-block \"%F\")\n\n   %?"
                  :empty-lines 1))
 
   (add-to-list 'org-capture-templates
-               `("cl" "Link to Code Reference to Current Task"
-                 plain (clock)
+               `("cl" "Link to Code Reference to Current Session"
+                 plain (function fate/goto-code-capture-session)
                  "%(fate/format-org-capture-code-block \"%F\")"
                  :empty-lines 1 :immediate-finish t))
+
+  (add-to-list 'org-capture-templates
+             `("b" "Backlog Task (Unassigned)" entry
+               (file+headline ,(concat org-directory "/work/project/roadmap.org") "Backlog")
+               "** %?\n"
+               :empty-lines 1))
 
   ;; https://github.com/howardabrams/hamacs/blob/5182b352cd2d4e03d18b5a37505db64e1fdf1f62/ha-org-clipboard.org
   (defun fate/format-org-capture-code-block (filename)
@@ -152,12 +205,12 @@
 
 
   (defun fate/org-capture-code (&optional start end)
-    "Send the selected code to the current clocked-in org-mode task."
+    "Send the selected code to the active code capturing session."
     (interactive)
     (org-capture nil "cl"))
 
   (defun fate/org-capture-code-comment (&optional start end)
-    "Send the selected code (with comments) to the current clocked-in org-mode task."
+    "Send the selected code (with comments) to the active code capturing session."
     (interactive)
     (org-capture nil "cf")))
 
