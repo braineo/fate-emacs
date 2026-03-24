@@ -288,7 +288,23 @@ surrounded by word boundaries."
   :bind
   ("C-c w g" . copy-as-format-github)
   :config
-  (advice-add 'copy-as-format--extract-text :filter-return #'fate/copy-as-format--extract-text))
+  (advice-add 'copy-as-format--extract-text :filter-return #'fate/copy-as-format--extract-text)
+  (advice-add 'copy-as-format--language :filter-return #'fate/copy-as-format--language))
+
+(defun fate/copy-as-format--language (ext)
+  "Map major-mode to language names for copy-as-format, with fallback to extension."
+  (let ((mode-name (symbol-name major-mode)))
+    (pcase mode-name
+      ((or "c++-mode" "c++-ts-mode" "c-mode" "c-ts-mode") "cpp")
+      ((or "js-mode" "js2-mode" "js-ts-mode" "javascript-mode") "javascript")
+      ((or "jtsx-typescript-mode" "typescript-ts-mode" "typescript-mode") "typescript")
+      ((or "jtsx-tsx-mode" "tsx-ts-mode") "tsx")
+      ("jtsx-jsx-mode" (if (and (stringp ext) (string= ext "jsx")) "jsx" "javascript"))
+      ("less-css-mode" "less")
+      ("emacs-lisp-mode" "elisp")
+      ("sh-mode" (if (boundp 'sh-shell) (symbol-name sh-shell) "sh"))
+      ("fundamental-mode" ext)
+      (_ (replace-regexp-in-string "-ts-mode$\\|-mode$" "" mode-name)))))
 
 (defun fate/copy-as-format--extract-text (extracted-text)
   "Extend copy-as-format--extract-text to insert line number to extracted text.
@@ -308,6 +324,7 @@ EXTRACTED-TEXT is output from copy-as-format--extract-text."
             (newline))
           (insert extracted-text)
           (buffer-string))))))
+
 
 
 (defun fate/easy-kill-on-buffer-file-name (n)
