@@ -300,8 +300,7 @@
 (use-package hl-todo
   :config
   (add-to-list 'hl-todo-keyword-faces '("CR"  . "#e57b8b"))
-  :hook
-  ((prog-mode text-mode) . hl-todo-mode))
+  (global-hl-todo-mode))
 
 ;; Highlight operations
 (use-package volatile-highlights
