@@ -199,6 +199,9 @@
         `(forge-pullreq-merged ((,c :inherit default)))
         `(forge-pullreq-open ((,c :inherit bold)))
         `(forge-pullreq-rejected ((,c :inherit default)))
+        ;; multiple-cursors.el
+        `(mc/cursor-bar-face ((,c :background ,cursor)))
+        `(mc/cursor-face ((,c :background ,cursor :foreground ,bg-main)))
         ;; color-rg
         `(color-rg-font-lock-header-line-text ((,c :foreground ,fg-main)))
         `(color-rg-font-lock-header-line-keyword ((,c :foreground ,red)))
