@@ -115,10 +115,6 @@
          ("M-s" . consult-history)                 ;; orig. next-matching-history-element
          ("M-r" . consult-history))                ;; orig. previous-matching-history-element
 
-  ;; Enable automatic preview at point in the *Completions* buffer. This is
-  ;; relevant when you use the default completion UI.
-  :hook (completion-list-mode . consult-preview-at-point-mode)
-
   ;; The :init configuration is always executed (Not lazy)
   :init
   ;; Optionally configure the register formatting. This improves the register
@@ -257,11 +253,8 @@ targets."
                 :around #'embark-hide-which-key-indicator)))
 
 
-(use-package embark-consult
-  :after embark
-  :bind (:map minibuffer-mode-map
-         ("C-c C-o" . embark-export))
-  :hook (embark-collect-mode . consult-preview-at-point-mode))
+(use-package embark-consult)
+
 
 (provide 'fate-vertico)
 ;;; fate-vertico.el ends here
