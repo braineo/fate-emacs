@@ -484,9 +484,10 @@ more information."
     (transient-define-prefix string-inflection-transient ()
       "String Inflection"
       [[""
-        ("c" "camelCase" string-inflection-lower-camelcase)
-        ("C" "CamelCase" string-inflection-camelcase)
-        ("_" "Underscore" string-inflection-underscore)]
+        ("c" "camelCase" string-inflection-lower-camel-case)
+        ("C" "CamelCase" string-inflection-camel-case)
+        ("s" "snake_case" string-inflection-snake-case)
+        ("S" "Snake_Case" string-inflection-capital-snake-case)]
 
        [""
         ("-" "Kebab" string-inflection-kebab-case)
