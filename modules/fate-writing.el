@@ -257,6 +257,30 @@ If resuming, it prompts to select an existing file."
 
 (use-package org-node
   :init
+  (with-eval-after-load 'transient
+    (transient-define-prefix org-node-transient ()
+      "Org Node Transient\n\nFrequently used commands from org-node."
+      [["Node Basic"
+        ("f" "Find or Create" org-node-find)
+        ("i" "Insert link" org-node-insert-link)
+        ("r" "Random node" org-node-visit-random)
+        ("c" "Context dwim" org-node-context-dwim)
+        ("g" "Grep nodes" org-node-grep)
+        ("v" "Card view" org-node-card-view)]
+       ["Modify / Insert"
+        ("t" "Set tags" org-node-set-tags)
+        ("a" "Add alias" org-node-add-alias)
+        ("R" "Add ref" org-node-add-ref)
+        ("m" "Refile" org-node-refile)
+        ("n" "Nodeify entry" org-node-nodeify-entry)
+        ("I" "Insert related" org-node-insert-into-related)
+        ("T" "Transclusion" org-node-insert-transclusion)]
+       ["Maintenance"
+        ("s" "Seq dispatch" org-node-seq-dispatch)
+        ("b" "Backlink mode" org-node-backlink-mode)
+        ("U" "Rewrite links" org-node-rewrite-links-ask)
+        ("F" "Rename file" org-node-rename-file-by-title)
+        ("D" "List dead links" org-mem-list-dead-id-links)]]))
   :config
   (org-node-cache-mode)
   :custom
