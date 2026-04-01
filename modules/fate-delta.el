@@ -4,7 +4,6 @@
 ;; Provides `fate-delta-mode` to view ANSI colorized `delta --side-by-side`
 ;; outputs, and jump to the corresponding line in the original file.
 ;;
-;; Provides integrations with Magit as well.
 
 ;;; Code:
 
