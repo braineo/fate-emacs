@@ -3,17 +3,26 @@
 ;;; Commentary:
 ;; Provides `fate-delta-mode` to view ANSI colorized `delta --side-by-side`
 ;; outputs, and jump to the corresponding line in the original file.
-;;
 
 ;;; Code:
 
-(require 'ansi-color)
 (require 'magit)
 (require 'transient)
+
+(use-package xterm-color)
 
 (defgroup fate-delta nil
   "Delta side-by-side viewer mode."
   :group 'tools)
+
+(defcustom fate-delta-exclude-patterns
+  '(":(exclude)*.gql.ts"
+    ":(exclude)*.po"
+    ":(exclude,glob)**/mocks/*"
+    ":(exclude)*.spec.*")
+  "List of pathspec patterns to exclude from the diff."
+  :type '(repeat string)
+  :group 'fate-delta)
 
 (defun fate/delta--current-file ()
   "Return the file path from the delta header at or before point."
@@ -71,6 +80,12 @@ If a line number is not present, it is nil."
 (defvar-local fate-delta--saved-window-config nil
   "Window configuration saved before opening side-by-side files.")
 
+(defvar-local fate-delta--crd-buffer nil
+  "Reference to the *delta-crd* buffer that spawned this review buffer.")
+
+(defvar-local fate-delta--review-buffers nil
+  "List of buffers spawned by this delta-crd session.")
+
 (defvar fate-delta-review-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c '") 'fate/delta-review-quit)
@@ -84,21 +99,19 @@ If a line number is not present, it is nil."
 
 (defun fate/delta--open-base-file (filename revision)
   "Open the base version of FILENAME at REVISION via git show.
-Stores the file in /tmp and applies the correct major mode."
+Stores the file in `temporary-file-directory' and applies the correct major mode."
   (let* ((magit-root (magit-toplevel))
-         (hash (string-trim (shell-command-to-string (format "git -C %s rev-parse %s"
-                                                             (shell-quote-argument magit-root)
-                                                             (shell-quote-argument revision)))))
+         (hash (string-trim
+                (with-output-to-string
+                  (with-current-buffer standard-output
+                    (call-process "git" nil t nil "-C" magit-root "rev-parse" revision)))))
          (repo-hash (md5 magit-root))
          (encoded-path (replace-regexp-in-string "/" "-" filename))
-         (output-file (format "/tmp/fate-delta-%s-%s-%s" repo-hash hash encoded-path))
-         (git-cmd (format "git -C %s show %s:%s > %s 2>/dev/null"
-                          (shell-quote-argument magit-root)
-                          (shell-quote-argument hash)
-                          (shell-quote-argument filename)
-                          (shell-quote-argument output-file))))
+         (output-file (expand-file-name (format "fate-delta-%s-%s-%s" repo-hash hash encoded-path) temporary-file-directory))
+         (obj (concat hash ":" filename)))
     (unless (file-exists-p output-file)
-      (shell-command git-cmd))
+      (with-temp-file output-file
+        (call-process "git" nil t nil "-C" magit-root "show" obj)))
     (let ((buf (find-file-noselect output-file)))
       (with-current-buffer buf
         (normal-mode)
@@ -127,8 +140,7 @@ Stores the file in /tmp and applies the correct major mode."
     (setq fate-delta--saved-window-config (current-window-configuration))
     (let ((base-buf (fate/delta--open-base-file filename revision))
           (work-buf (fate/delta--open-working-file filename)))
-      (delete-other-windows)
-      (switch-to-buffer base-buf)
+      (pop-to-buffer base-buf '(display-buffer-use-some-window))
       (when (car lines)
         (goto-char (point-min))
         (forward-line (1- (car lines)))
@@ -140,10 +152,11 @@ Stores the file in /tmp and applies the correct major mode."
         (goto-char (point-min))
         (forward-line (1- (cdr lines)))
         (recenter))
-      (with-current-buffer base-buf
-        (setq-local fate-delta--crd-buffer crd-buf))
-      (with-current-buffer work-buf
-        (setq-local fate-delta--crd-buffer crd-buf)))))
+      (dolist (b (list base-buf work-buf))
+        (with-current-buffer b
+          (setq-local fate-delta--crd-buffer crd-buf))
+        (with-current-buffer crd-buf
+          (push b fate-delta--review-buffers))))))
 
 (defun fate/delta-review-quit ()
   "Quit the side-by-side review and restore the layout."
@@ -152,7 +165,8 @@ Stores the file in /tmp and applies the correct major mode."
                      (get-buffer "*delta-crd*"))))
     (when (bound-and-true-p fate-delta-review-mode)
       (fate-delta-review-mode -1))
-    (when (and buffer-file-name (string-match-p "/tmp/fate-delta-" buffer-file-name))
+    (when (and buffer-file-name (string-prefix-p temporary-file-directory buffer-file-name)
+               (string-match-p "fate-delta-" buffer-file-name))
       (let ((kill-buffer-query-functions nil))
         (kill-buffer (current-buffer))))
     (if (buffer-live-p crd-buf)
@@ -162,50 +176,65 @@ Stores the file in /tmp and applies the correct major mode."
           (pop-to-buffer crd-buf))
       (message "Original *delta-crd* buffer is dead."))))
 
+(defun fate/delta-open-base-file ()
+  "Open the base version of the file at point."
+  (interactive)
+  (let* ((filename (fate/delta--current-file))
+         (revision fate-delta--target-revision)
+         (lines (fate/delta--current-line-numbers))
+         (crd-buf (current-buffer))
+         (buf (fate/delta--open-base-file filename revision)))
+    (setq fate-delta--saved-window-config (current-window-configuration))
+    (with-current-buffer buf
+      (setq-local fate-delta--crd-buffer crd-buf))
+    (with-current-buffer crd-buf
+      (push buf fate-delta--review-buffers))
+    (pop-to-buffer buf)
+    (when (car lines)
+      (goto-char (point-min))
+      (forward-line (1- (car lines)))
+      (recenter))))
+
+(defun fate/delta-open-working-file ()
+  "Open the working tree version of the file at point."
+  (interactive)
+  (let* ((filename (fate/delta--current-file))
+         (lines (fate/delta--current-line-numbers))
+         (crd-buf (current-buffer))
+         (buf (fate/delta--open-working-file filename)))
+    (setq fate-delta--saved-window-config (current-window-configuration))
+    (with-current-buffer buf
+      (setq-local fate-delta--crd-buffer crd-buf))
+    (with-current-buffer crd-buf
+      (push buf fate-delta--review-buffers))
+    (pop-to-buffer buf)
+    (when (cdr lines)
+      (goto-char (point-min))
+      (forward-line (1- (cdr lines)))
+      (recenter))))
+
 (transient-define-prefix fate/delta-transient ()
   "Transient menu for fate-delta-mode."
   ["Actions"
    ("o" "Open Side-By-Side" fate/delta-open-side-by-side)
-   ("b" "Open Base File" (lambda () (interactive)
-                           (let* ((filename (fate/delta--current-file))
-                                  (revision fate-delta--target-revision)
-                                  (crd-buf (current-buffer))
-                                  (buf (fate/delta--open-base-file filename revision)))
-                             (let ((lines (fate/delta--current-line-numbers)))
-                               (setq fate-delta--saved-window-config (current-window-configuration))
-                               (with-current-buffer buf
-                                 (setq-local fate-delta--crd-buffer crd-buf))
-                               (pop-to-buffer buf)
-                               (when (car lines)
-                                 (goto-char (point-min))
-                                 (forward-line (1- (car lines)))
-                                 (recenter))))))
-   ("w" "Open Working File" (lambda () (interactive)
-                              (let* ((filename (fate/delta--current-file))
-                                     (crd-buf (current-buffer))
-                                     (buf (fate/delta--open-working-file filename)))
-                                (let ((lines (fate/delta--current-line-numbers)))
-                                  (setq fate-delta--saved-window-config (current-window-configuration))
-                                  (with-current-buffer buf
-                                    (setq-local fate-delta--crd-buffer crd-buf))
-                                  (pop-to-buffer buf)
-                                  (when (cdr lines)
-                                    (goto-char (point-min))
-                                    (forward-line (1- (cdr lines)))
-                                    (recenter))))))
+   ("b" "Open Base File" fate/delta-open-base-file)
+   ("w" "Open Working File" fate/delta-open-working-file)
    ("RET" "Goto location at point" fate/delta-goto-file-at-point)])
 
 (defun fate/delta--cleanup-crd ()
   "Kill all temporary base files spawned by this diff view and clear minor modes."
-  (dolist (buf (buffer-list))
-    (with-current-buffer buf
-      (when (bound-and-true-p fate-delta-review-mode)
-        (fate-delta-review-mode -1)
-        (when (and buffer-file-name (string-match-p "/tmp/fate-delta-" buffer-file-name))
+  (dolist (buf fate-delta--review-buffers)
+    (when (buffer-live-p buf)
+      (with-current-buffer buf
+        (when (bound-and-true-p fate-delta-review-mode)
+          (fate-delta-review-mode -1))
+        (when (and buffer-file-name
+                   (string-prefix-p temporary-file-directory buffer-file-name))
           (when (file-exists-p buffer-file-name)
             (delete-file buffer-file-name))
           (let ((kill-buffer-query-functions nil))
-            (kill-buffer buf)))))))
+            (kill-buffer buf))))))
+  (setq fate-delta--review-buffers nil))
 
 (defun fate/delta-quit-crd ()
   "Quit the delta review buffer safely."
@@ -225,41 +254,69 @@ Stores the file in /tmp and applies the correct major mode."
 \\{fate-delta-mode-map}"
   (setq buffer-read-only t))
 
+(defun fate/delta--read-diff-paths (revision)
+  "Prompt the user to select diff paths from changed files against REVISION."
+  (let* ((magit-root (magit-toplevel))
+         (changed-dirs
+          (delete-dups
+           (mapcar (lambda (f) (car (split-string f "/")))
+                   (split-string
+                    (string-trim
+                     (shell-command-to-string
+                      (format "git -C %s diff --name-only %s"
+                              (shell-quote-argument magit-root)
+                              (shell-quote-argument revision))))
+                    "\n" t)))))
+    (if changed-dirs
+        (completing-read-multiple "Diff paths (comma separated): " changed-dirs nil nil
+                                  (car changed-dirs))
+      (list "."))))
+
 ;;;###autoload
 (defun fate/delta-code-review-diff (&optional target-revision)
   "Run the Code Review Diff (CRD) workflow in a Delta side-by-side view.
 TARGET-REVISION defaults to origin/master if not provided."
   (interactive
    (list (read-string "Target revision (default origin/master): " nil nil "origin/master")))
-  (let* ((buf (get-buffer-create "*delta-crd*"))
+  (let* ((revision (if (or (null target-revision) (string= target-revision "")) "origin/master" target-revision))
+         (diff-paths (fate/delta--read-diff-paths revision))
+         (buf (get-buffer-create "*delta-crd*"))
          (inhibit-read-only t)
          (width (window-width))
-         (revision (if (or (null target-revision) (string= target-revision "")) "origin/master" target-revision))
-         (filter-args '( ":(exclude)*.gql.ts"
-                         ":(exclude)*.po"
-                         ":(exclude,glob)**/mocks/*"
-                         ":(exclude)*.spec.*"))
-         (git-args (delq nil (flatten-tree (list "git" "diff" "--ignore-all-space" revision "--" "src" filter-args))))
+         (git-args (delq nil (flatten-tree (list "git" "diff" "--ignore-all-space" revision "--" diff-paths fate-delta-exclude-patterns))))
          (delta-args (list "delta" "--side-by-side" (format "--width=%d" width) "--paging=never" "--file-style=plain"))
          (cmd (concat (mapconcat #'shell-quote-argument git-args " ") " 2>&1 | "
                       (mapconcat #'shell-quote-argument delta-args " ")))
          (default-dir default-directory))
     (with-current-buffer buf
+      (fundamental-mode)
+      (let ((inhibit-read-only t))
+        (erase-buffer))
       (add-hook 'kill-buffer-hook #'fate/delta--cleanup-crd nil t)
       (setq default-directory default-dir)
-      (erase-buffer)
-      (message "Running delta code review diff...")
-      (let ((output (shell-command-to-string cmd)))
-        (if (string-empty-p output)
-            (message "No diff output generated (Working tree might be clean, or target branch is identical).")
-          (insert output)
-          (ansi-color-apply-on-region (point-min) (point-max))
-          (fate-delta-mode)
-          (setq-local fate-delta--target-revision revision)
-          (goto-char (point-min))
-          (message "Done")))
-     (pop-to-buffer buf)
-     (delete-other-windows))))
+      (message "Running delta code review diff..."))
+    (let ((proc (start-process-shell-command "delta-crd" buf cmd)))
+      (set-process-filter
+       proc
+       (lambda (proc output)
+         (when (buffer-live-p (process-buffer proc))
+           (with-current-buffer (process-buffer proc)
+             (let ((inhibit-read-only t))
+               (goto-char (point-max))
+               (insert (xterm-color-filter output)))))))
+      (set-process-sentinel
+       proc
+       (lambda (proc _event)
+         (when (eq (process-status proc) 'exit)
+           (if (zerop (buffer-size (process-buffer proc)))
+               (message "No diff output generated (Working tree might be clean, or target branch is identical).")
+             (with-current-buffer (process-buffer proc)
+               (fate-delta-mode)
+               (setq-local fate-delta--target-revision revision)
+               (goto-char (point-min))
+               (pop-to-buffer (current-buffer)
+                              '(display-buffer-full-frame))
+               (message "Done")))))))))
 
 (provide 'fate-delta)
 ;;; fate-delta.el ends here
