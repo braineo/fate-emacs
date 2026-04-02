@@ -256,17 +256,10 @@ Stores the file in `temporary-file-directory' and applies the correct major mode
 
 (defun fate/delta--read-diff-paths (revision)
   "Prompt the user to select diff paths from changed files against REVISION."
-  (let* ((magit-root (magit-toplevel))
-         (changed-dirs
-          (delete-dups
-           (mapcar (lambda (f) (car (split-string f "/")))
-                   (split-string
-                    (string-trim
-                     (shell-command-to-string
-                      (format "git -C %s diff --name-only %s"
-                              (shell-quote-argument magit-root)
-                              (shell-quote-argument revision))))
-                    "\n" t)))))
+  (let ((changed-dirs
+         (delete-dups
+          (mapcar (lambda (f) (car (split-string f "/")))
+                  (magit-changed-files revision)))))
     (if changed-dirs
         (completing-read-multiple "Diff paths (comma separated): " changed-dirs nil nil
                                   (car changed-dirs))
@@ -277,8 +270,8 @@ Stores the file in `temporary-file-directory' and applies the correct major mode
   "Run the Code Review Diff (CRD) workflow in a Delta side-by-side view.
 TARGET-REVISION defaults to origin/master if not provided."
   (interactive
-   (list (read-string "Target revision (default origin/master): " nil nil "origin/master")))
-  (let* ((revision (if (or (null target-revision) (string= target-revision "")) "origin/master" target-revision))
+   (list (magit-read-other-branch-or-commit "Diff against")))
+  (let* ((revision (or target-revision "origin/master"))
          (diff-paths (fate/delta--read-diff-paths revision))
          (buf (get-buffer-create "*delta-crd*"))
          (inhibit-read-only t)
@@ -295,6 +288,7 @@ TARGET-REVISION defaults to origin/master if not provided."
       (add-hook 'kill-buffer-hook #'fate/delta--cleanup-crd nil t)
       (setq default-directory default-dir)
       (message "Running delta code review diff..."))
+    (pop-to-buffer buf '(display-buffer-full-frame))
     (let ((proc (start-process-shell-command "delta-crd" buf cmd)))
       (set-process-filter
        proc
@@ -314,8 +308,6 @@ TARGET-REVISION defaults to origin/master if not provided."
                (fate-delta-mode)
                (setq-local fate-delta--target-revision revision)
                (goto-char (point-min))
-               (pop-to-buffer (current-buffer)
-                              '(display-buffer-full-frame))
                (message "Done")))))))))
 
 (provide 'fate-delta)
