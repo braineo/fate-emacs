@@ -232,7 +232,7 @@ surrounded by word boundaries."
       recentf-auto-cleanup 'never)
   (add-to-list 'recentf-exclude (recentf-expand-file-name fate-cache-directory))
   (add-to-list 'recentf-exclude (recentf-expand-file-name package-user-dir))
-  (add-to-list 'recentf-exclude "\\`/tmp/"))
+  (add-to-list 'recentf-exclude (concat "\\`" (regexp-quote temporary-file-directory))))
 
 
 ;; Power package visualizing undo redo history

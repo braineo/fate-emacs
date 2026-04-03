@@ -8,6 +8,7 @@
 
 (require 'magit)
 (require 'transient)
+(require 'subr-x)
 
 (use-package xterm-color)
 
@@ -101,10 +102,10 @@ If a line number is not present, it is nil."
   "Open the base version of FILENAME at REVISION via git show.
 Stores the file in `temporary-file-directory' and applies the correct major mode."
   (let* ((magit-root (magit-toplevel))
-         (hash (string-trim
-                (with-output-to-string
-                  (with-current-buffer standard-output
-                    (call-process "git" nil t nil "-C" magit-root "rev-parse" revision)))))
+         (hash (with-temp-buffer
+                 (if (zerop (call-process "git" nil t nil "-C" magit-root "rev-parse" revision))
+                     (string-trim (buffer-string))
+                   (user-error "Invalid revision: %s" revision))))
          (repo-hash (md5 magit-root))
          (encoded-path (replace-regexp-in-string "/" "-" filename))
          (output-file (expand-file-name (format "fate-delta-%s-%s-%s" repo-hash hash encoded-path) temporary-file-directory))
@@ -274,7 +275,6 @@ TARGET-REVISION defaults to origin/master if not provided."
   (let* ((revision (or target-revision "origin/master"))
          (diff-paths (fate/delta--read-diff-paths revision))
          (buf (get-buffer-create "*delta-crd*"))
-         (inhibit-read-only t)
          (width (window-width))
          (git-args (delq nil (flatten-tree (list "git" "diff" "--ignore-all-space" revision "--" diff-paths fate-delta-exclude-patterns))))
          (delta-args (list "delta" "--side-by-side" (format "--width=%d" width) "--paging=never" "--file-style=plain"))
