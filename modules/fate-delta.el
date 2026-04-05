@@ -19,6 +19,7 @@
 (defcustom fate-delta-exclude-patterns
   '(":(exclude)*.gql.ts"
     ":(exclude)*.po"
+    ":(exclude)package-lock.json"
     ":(exclude,glob)**/mocks/*"
     ":(exclude)*.spec.*")
   "List of pathspec patterns to exclude from the diff."
