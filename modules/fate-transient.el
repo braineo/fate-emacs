@@ -36,6 +36,9 @@
     ("h" "Highlight" symbol-overlay-transient)
     ("l" "Language Server" lsp-transient)]
 
+   ["Notes"
+    ("n" "Org Node" org-node-transient)]
+
    ["Assistant"
      ("s" "Search Engine" engine-transient)
      ("a" "GPT" gptel-menu)]])
