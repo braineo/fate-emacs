@@ -60,10 +60,13 @@
 (setq auto-save-default nil) ; stop creating #autosave# files
 (setq create-lockfiles nil)  ; stop creating .#interlock files
 
+;; Emacs fontifies as you type, which can cause lags when tree sitter mode in large buffer
+(setq redisplay-skip-fontification-on-input t)
 
 ;; disable bidi to improve longline rendering performance
 ;; reference https://emacs-china.org/t/topic/25811/9
-(setq-default bidi-display-reordering nil)
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
 (setq bidi-inhibit-bpa t
       long-line-threshold 1000
       large-hscroll-threshold 1000
@@ -340,6 +343,11 @@ if `N' is 9, return root dir + repo path."
     (pcase n
       (`8 (concat (fate/repo-dir-file-name) ":" (format-mode-line "%l")))
       (`9 (fate/repo-dir-file-name)))))
+
+;; Save current clipboard content into kill ring before overwriting
+(setq save-interprogram-paste-before-kill t)
+;; Do not save same content in the kill ring
+(setq kill-do-not-save-duplicates t)
 
 ;; Core package easy kill. easy to copy the buffer name/path
 (use-package easy-kill

@@ -65,6 +65,8 @@
   window-divider-default-right-width 1)
 (window-divider-mode)
 
+(setq window-combination-resize t)
+
 ;; When it is macOS and version number is higher than 26.0
 (when (and IS-MAC (>= emacs-major-version 26))
   (setq default-frame-alist '((ns-transparent-titlebar . t) (ns-appearance . dark))))
