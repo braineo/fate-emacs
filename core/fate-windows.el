@@ -27,6 +27,17 @@
 (use-package winner-mode
   :ensure nil
   :hook (after-init . winner-mode)
+  :commands (winner-mode winner-undo)
+  :init
+  (defun toggle-delete-other-windows ()
+   "Delete other windows in frame if any, or restore previous window config."
+   (interactive)
+   (if (and winner-mode
+            (equal (selected-window) (next-window)))
+       (winner-undo)
+     (delete-other-windows)))
+  :bind
+  ([remap delete-other-windows] . toggle-delete-other-windows)
   :custom
   (winner-boring-buffers '("*Completions*"
                             "*Compile-Log*"
