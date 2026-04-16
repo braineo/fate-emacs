@@ -51,13 +51,8 @@
 ;; highlight the current line
 (global-hl-line-mode t)
 
-;; Initial size to be full screen height, half screen width and in the middle
-(when (display-graphic-p)
-  (let ((frame (selected-frame)))
-    (set-frame-width frame (/ (display-pixel-width) 2) nil 'pixelwise)
-    (set-frame-height frame (display-pixel-height) nil 'pixelwise)
-    (set-frame-position frame (/ (display-pixel-width) 4) 0)))
-
+;; maximize to full screen on start
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 ;; right border takes 1 pixel on right split buffer, make fringe visible
 (setq-default window-divider-default-places t
