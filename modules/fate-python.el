@@ -79,7 +79,7 @@ Argument ARG is ignored."
 
   (with-eval-after-load 'core-packages
     (fate/create-install-tools!
-      "uv" ("tool" "install") fate/python-tools))
+      "python" ("uv" "tool" "install") fate/python-tools))
 
   :bind
   (:map python-mode-map
