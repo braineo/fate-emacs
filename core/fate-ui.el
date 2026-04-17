@@ -46,13 +46,10 @@
 (setq inhibit-startup-screen t)
 
 ;; When emacs asks for "yes" or "no", let "y" or "n" suffice
-(fset 'yes-or-no-p 'y-or-n-p)
+(setopt use-short-answers t)
 
 ;; highlight the current line
 (global-hl-line-mode t)
-
-;; maximize to full screen on start
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 ;; right border takes 1 pixel on right split buffer, make fringe visible
 (setq-default window-divider-default-places t

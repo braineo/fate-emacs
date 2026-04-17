@@ -50,6 +50,9 @@
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
 
+;; maximize to full screen on start
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
 (setopt frame-inhibit-implied-resize t)
 (setopt frame-resize-pixelwise t)
 ;; Always load newest byte code
