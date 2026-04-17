@@ -127,6 +127,9 @@ Otherwise, it is shown at point without disturbing your current window layout."
                          (define-key minibuffer-local-map (kbd "C-c C-h") #'fate/toggle-regex-cheatsheet-posframe)))
    (minibuffer-exit . fate/close-regex-cheatsheet-posframe)))
 
+;; Minor mode for editing regular expressions in the minibuffer.
+(minibuffer-regexp-mode 1)
+
 (use-package casual
   :defer t)
 
