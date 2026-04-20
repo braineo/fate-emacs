@@ -48,6 +48,9 @@
 ;; When emacs asks for "yes" or "no", let "y" or "n" suffice
 (setopt use-short-answers t)
 
+;; Do not prompt using dialog for mouse to operate
+(setopt use-dialog-box nil)
+
 ;; highlight the current line
 (global-hl-line-mode t)
 
