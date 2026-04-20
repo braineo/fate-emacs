@@ -41,6 +41,7 @@
 ;; meaning) of any files you load.
 (setq-default indent-tabs-mode nil)   ;; don't use tabs to indent
 (setq-default tab-width 8)            ;; but maintain correct appearance
+(setopt tab-always-indent 'complete)
 
 ;; Newline at end of file
 (setq require-final-newline t)
@@ -71,6 +72,11 @@
       long-line-threshold 1000
       large-hscroll-threshold 1000
       syntax-wholeline-max 1000)
+
+;; When page up and down, preserve current line position to avoid jumping
+(setopt scroll-preserve-screen-position t)
+
+(setopt scroll-margin 0)
 
 (use-package tramp
   :defer t
@@ -184,9 +190,6 @@ surrounded by word boundaries."
   (dired-recursive-deletes 'always)
   (dired-recursive-copies 'always)
   (dired-movement-style 'cycle)
-
-  (setq dired-dwim-target t)
-  :custom
   (dired-listing-switches "-alh" "show human readable size")
   ;; if there is a dired buffer displayed in the next window, use its
   ;; current subdir, instead of the current subdir of this dired buffer
