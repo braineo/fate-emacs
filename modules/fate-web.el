@@ -119,10 +119,6 @@
   :custom
   (jtsx-enable-jsx-element-tags-auto-sync nil "disabled because sometimes it is buggy due to node parsing"))
 
-(use-package tide
-  :after typescript-ts-mode
-  :init (tide-start-server-if-nonexistent)
-  :commands (tide-current-server tide-start-server-if-nonexistent tide-jsdoc-template))
 
 (use-package web-mode
   :mode ("\\.ejs\\'"
