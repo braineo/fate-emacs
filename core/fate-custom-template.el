@@ -37,6 +37,7 @@
 
 ;; Open from mac
 (setenv "LANG" "en_US.UTF-8")
+;; (set-locale-environment "en_US.UTF-8")
 
 ;; Use venv for lsp bridge
 ;; (setq lsp-bridge-python-command "/home/user/.emacs.d/.venv/bin/python3")
