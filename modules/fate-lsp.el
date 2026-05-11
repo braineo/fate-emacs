@@ -30,10 +30,23 @@
   (require 'transient))
 
 
+(defun fate-lsp-bridge-ref-popup-window-handler ()
+  "Show `lsp-bridge-ref-buffer' via `display-buffer' so
+`display-buffer-alist' applies."
+  (select-window (display-buffer lsp-bridge-ref-buffer))
+  (goto-char (point-min)))
+
 (use-package lsp-bridge
   :vc (:url "https://github.com/manateelazycat/lsp-bridge")
   :hook (after-init . global-lsp-bridge-mode)
   :config
+  (add-to-list 'display-buffer-alist
+             `(,(regexp-quote "*lsp-bridge-ref*")
+               (display-buffer-in-side-window)
+               (side . right)
+               (window-width . 0.35)
+               (window-parameters . ((no-other-window . t)
+                                     (no-delete-other-windows . t)))))
   (add-to-list
     'lsp-bridge-single-lang-server-extension-list
     '(("less") . "vscode-css-language-server"))
@@ -52,6 +65,8 @@
   (lsp-bridge-markdown-lsp-server "harper-ls")
   (lsp-bridge-python-lsp-server "ty")
   (lsp-bridge-python-multi-lsp-server "ty_ruff")
+  (lsp-bridge-ref-delete-other-windows nil)
+  (lsp-bridge-ref-popup-window-handler #'fate-lsp-bridge-ref-popup-window-handler)
   :bind
   (:map lsp-bridge-mode-map
     ([remap xref-find-definitions] . lsp-bridge-find-def)

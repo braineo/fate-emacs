@@ -74,6 +74,7 @@
                               "Output\\*$"
                               "\\*Async Shell Command\\*"
                               "\\*color-rg\\*"
+                              lsp-bridge-ref-mode
                               help-mode  helpful-mode
                               compilation-mode)))
 
