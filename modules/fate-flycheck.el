@@ -28,8 +28,6 @@
   :hook (after-init . global-flycheck-mode)
   :commands (flycheck-add-mode)
   :config
-  (flycheck-add-mode 'json-jq)
-
   (flycheck-def-executable-var qt-qmllint "qmllint")
   (flycheck-define-checker qt-qmllint
       "A QML syntactic validity checker provided by QT
