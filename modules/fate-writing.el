@@ -34,8 +34,6 @@
 
 ;; Markdown
 (use-package markdown-mode
-  :mode (("\\.md\\'" . gfm-mode)
-         ("\\.markdown\\'" . gfm-mode))
   :config
   (add-to-list 'markdown-code-lang-modes '("mermaid" . mermaid-mode))
   :custom
@@ -73,7 +71,7 @@
     (jinx-mode)))
 
 (use-package jinx
-  :hook ((markdown-mode text-mode) . fate/enable-jinx)
+  :hook ((markdown-ts-mode markdown-mode text-mode) . fate/enable-jinx)
   :bind ([remap ispell-word] . jinx-correct)
   :config
   ;; disable checking spell of Chinses
@@ -292,8 +290,8 @@ If resuming, it prompts to select an existing file."
   :commands (atomic-chrome-start-server)
   :config (atomic-chrome-start-server)
   :custom
-  (atomic-chrome-url-major-mode-alist '(("git" . gfm-mode)
-                                        ("\\(mattermost\\|slack\\)" . gfm-mode))))
+  (atomic-chrome-url-major-mode-alist '(("git" . markdown-ts-mode)
+                                        ("\\(mattermost\\|slack\\)" . markdown-ts-mode))))
 
 
 (defun fate/format-gitlab-json (format-type)
