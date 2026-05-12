@@ -28,7 +28,7 @@
   :hook (after-init . global-flycheck-mode)
   :commands (flycheck-add-mode)
   :config
-  (flycheck-add-mode 'json-jq 'fate-json-mode)
+  (flycheck-add-mode 'json-jq)
 
   (flycheck-def-executable-var qt-qmllint "qmllint")
   (flycheck-define-checker qt-qmllint
