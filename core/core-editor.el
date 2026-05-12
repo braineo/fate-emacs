@@ -372,9 +372,7 @@ if `N' is 9, return root dir + repo path."
 ;; Core package hideshow. Code folding tool
 (use-package hideshow
   :hook
-  (prog-mode . hs-minor-mode)
-  :init
-  (add-to-list 'hs-special-modes-alist '(fate-json-mode "{" "}" "/[*/]" nil)))
+  (prog-mode . hs-minor-mode))
   ;; :bind
   ;; ("C-<tab>" . hs-toggle-hiding))
 
