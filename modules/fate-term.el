@@ -23,37 +23,29 @@
 ;; 
 ;;; Code:
 
-(use-package ghostel)
-
-(defun fate/vterm-split-right ()
+(defun fate/term-split-right ()
   "Split windwow and create a new term horizontally."
   (interactive)
   (let* ((ignore-window-parameters t))
     (select-window (split-window-horizontally))
-    (ghostel)))
+    (ghostel t)))
 
-(defun fate/vterm-split-below ()
+(defun fate/term-split-below ()
   "Split windwow and create a new term horizontally."
   (interactive)
   (let* ((ignore-window-parameters t))
     (select-window (split-window-vertically))
-    (ghostel)))
+    (ghostel t)))
 
-(use-package vterm
-  :hook (vterm-mode . (lambda()
-                        (setq-local global-hl-line-mode nil)))
-  :bind (:map vterm-mode-map
-          ("C-x 3" . fate/vterm-split-right)
-          ("C-x 2" . fate/vterm-split-below))
-  :custom (vterm-buffer-name-string "vterm %s"))
-
-(use-package vterm-toggle
+(use-package ghostel
+  :hook (ghostel-mode . (lambda()
+                          (setq-local global-hl-line-mode nil)))
   :bind
-  (("<f3>" . vterm-toggle-cd)
-   (:map vterm-mode-map
-         ("<f3>" . vterm-toggle-cd))))
-
-
+  (("<f5>" . ghostel-other)
+   (:map ghostel-mode-map
+          ("C-x 3" . fate/term-split-right)
+          ("C-x 2" . fate/term-split-below)))
+  :custom (vterm-buffer-name-string "vterm %s"))
 
 (provide 'fate-term)
 ;;; fate-term.el ends here

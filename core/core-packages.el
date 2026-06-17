@@ -44,7 +44,7 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 (setq use-package-vc-prefer-newest t)
-
+(setq package-install-upgrade-built-in t)
 (when (file-readable-p custom-file) (load custom-file))
 
 ;; Only enable for benchmarking
