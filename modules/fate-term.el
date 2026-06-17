@@ -1,4 +1,4 @@
-;;; fate-vterm.el --- configuration for vterm        -*- lexical-binding: t; -*-
+;;; fate-term.el --- configuration for term        -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2022  Binbin Ye
 
@@ -23,23 +23,21 @@
 ;; 
 ;;; Code:
 
-(use-package multi-vterm
-  :after vterm
-  :commands (multi-vterm))
+(use-package ghostel)
 
 (defun fate/vterm-split-right ()
   "Split windwow and create a new term horizontally."
   (interactive)
   (let* ((ignore-window-parameters t))
     (select-window (split-window-horizontally))
-    (multi-vterm)))
+    (ghostel)))
 
 (defun fate/vterm-split-below ()
   "Split windwow and create a new term horizontally."
   (interactive)
   (let* ((ignore-window-parameters t))
     (select-window (split-window-vertically))
-    (multi-vterm)))
+    (ghostel)))
 
 (use-package vterm
   :hook (vterm-mode . (lambda()
@@ -57,5 +55,5 @@
 
 
 
-(provide 'fate-vterm)
-;;; fate-vterm.el ends here
+(provide 'fate-term)
+;;; fate-term.el ends here
