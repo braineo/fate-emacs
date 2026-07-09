@@ -50,6 +50,10 @@
                            (setq-local prettier-js-args
                             '("--parser" "markdown")))))
 
+(use-package markdown-ts-mode
+  :ensure nil
+  :defer t)
+
 (use-package markdown-toc
   :defer)
 

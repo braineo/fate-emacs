@@ -197,6 +197,13 @@ beginning-of-defun and end-of-defun."
   :vc (:url "https://code.tecosaur.net/tec/inline-diff")
   :after gptel-rewrite)
 
+(use-package claude-code-ide
+  :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
+  :bind ("C-c C-'" . claude-code-ide-menu)
+  :config
+  (claude-code-ide-emacs-tools-setup)
+  :custom
+  (claude-code-ide-terminal-backend 'ghostel))
 
 (use-package helpful
   :bind
