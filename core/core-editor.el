@@ -590,6 +590,11 @@ minibuffer, even without explicitly focusing it."
 
 (global-set-key [remap keyboard-quit] #'er-keyboard-quit)
 
+(use-package ghostel
+  :hook (ghostel-mode . (lambda()
+                          (setq-local global-hl-line-mode nil)))
+  :bind
+  (("<f5>" . ghostel)))
 
 (require 'fate-auto-complete)
 (require 'fate-align-text)

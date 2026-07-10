@@ -26,7 +26,6 @@
   - [Language servers implemented in NodeJS](#language-servers-implemented-in-nodejs)
   - [Python](#python)
   - [Clangd](#clangd)
-- [Vterm](#vterm)
 - [LLM](#llm)
   - [Install CUDA](#install-cuda)
   - [llama.cpp](#llamacpp)
@@ -286,18 +285,6 @@ To manually verify if clangd works. You can run
 
 ```shell
 clangd --compile-commands-dir="."  --query-driver="clang-tidy" --check="path/to/some.cpp"
-```
-
-## Vterm
-
-To make vterm handy, you need some shell-side configuration, add following to `.zshrc` or `.bashrc`
-
-```shell
-if [[ "$INSIDE_EMACS" = 'vterm' ]] \
-    && [[ -n ${EMACS_VTERM_PATH} ]] \
-    && [[ -f ${EMACS_VTERM_PATH}/etc/emacs-vterm-zsh.sh ]]; then
-	source ${EMACS_VTERM_PATH}/etc/emacs-vterm-zsh.sh
-fi
 ```
 
 ## LLM
