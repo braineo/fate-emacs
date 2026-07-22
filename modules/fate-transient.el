@@ -41,7 +41,10 @@
 
    ["Assistant"
      ("s" "Search Engine" engine-transient)
-     ("a" "GPT" gptel-menu)]])
+     ("a" "GPT" gptel-menu)]
+
+   ["Tools"
+    ("w" "World Time" fate/worldtime)]])
 
 (global-set-key (kbd "M-m") 'gate-of-babylon)
 

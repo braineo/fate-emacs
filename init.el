@@ -58,6 +58,7 @@
 (require 'fate-transient)
 (require 'fate-docker)
 (require 'fate-term)
+(require 'fate-worldtime)
 
 (when IS-MAC
   (require 'fate-macos))
