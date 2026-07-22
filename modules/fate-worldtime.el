@@ -159,6 +159,17 @@ otherwise a synthesized local row (ZONE nil) is prepended."
   (let ((home (seq-find (lambda (e) (fate/worldtime--home-p (car e))) entries)))
     (or (and home (seq-position entries home #'eq)) 0)))
 
+(defun fate/worldtime--home-zone (entries)
+  "Return the zone (car) of the home row within ENTRIES."
+  (car (nth (fate/worldtime--home-index entries) entries)))
+
+(defun fate/worldtime--base-index (entries)
+  "Return the current base row index in ENTRIES.
+Defaults to the home row and is clamped to the last row, so it stays valid
+even if `world-clock-list' shrinks between renders."
+  (min (or fate-worldtime--base (fate/worldtime--home-index entries))
+       (1- (length entries))))
+
 (defun fate/worldtime--window-start (zone)
   "Return midnight, in ZONE, of the day containing `fate-worldtime--ref'."
   (let ((d (decode-time fate-worldtime--ref zone)))
@@ -201,14 +212,18 @@ a graphical SVG frame, so callers fall back to the plain hour text."
            (w (* 2 cw))
            (svg (svg-create w ch))
            (ink (or (face-foreground 'default nil t) "black"))
-           (fs (* ch 0.52)))
-      ;; Month on top, day below, sharing one character cell.  No border.
-      (svg-text svg (format-time-string "%m" instant zone)
-                :x (/ w 2.0) :y (* ch 0.47) :fill ink :font-size fs
-                :font-family "monospace" :font-weight "bold" :text-anchor "middle")
-      (svg-text svg (format-time-string "%d" instant zone)
-                :x (/ w 2.0) :y (* ch 0.97) :fill ink :font-size fs
-                :font-family "monospace" :font-weight "bold" :text-anchor "middle")
+           ;; Stack the format rows evenly over the cell: each gets a slot
+           ;; ROW-H tall, digits nearly fill it, baseline near the slot's
+           ;; bottom.  No border.
+           (rows '("%m" "%d"))
+           (row-h (/ ch (float (length rows))))
+           (fs (* row-h 1.04)))
+      (seq-do-indexed
+       (lambda (fmt i)
+         (svg-text svg (format-time-string fmt instant zone)
+                   :x (/ w 2.0) :y (* row-h (+ i 0.94)) :fill ink :font-size fs
+                   :font-family "monospace" :font-weight "bold" :text-anchor "middle"))
+       rows)
       (svg-image svg :ascent 'center :scale 1))))
 
 ;;; Rendering
@@ -275,15 +290,13 @@ selected column, WIDTH the label column width."
   (let* ((inhibit-read-only t)
          (line (line-number-at-pos))
          (entries (fate/worldtime--entries))
-         (count (length entries))
-         (base (min (or fate-worldtime--base (fate/worldtime--home-index entries))
-                    (1- count)))
+         (base (fate/worldtime--base-index entries))
          (base-entry (nth base entries))
          (base-zone (car base-entry))
          (base-label (or (cdr base-entry) ""))
          ;; Anchor the 00-23 strip to the home zone so the grid stays stable
          ;; regardless of which base is selected.
-         (home-zone (car (nth (fate/worldtime--home-index entries) entries)))
+         (home-zone (fate/worldtime--home-zone entries))
          (ws (fate/worldtime--window-start home-zone))
          (sel (fate/worldtime--selected-index ws))
          (width (apply #'max 6 (mapcar (lambda (e) (length (or (cdr e) "")))
@@ -357,10 +370,8 @@ The reference instant is unchanged; because the strip is anchored to the
 home zone, the highlighted column stays put and only the offsets and the
 title time (which are relative to the base) change."
   (let* ((entries (fate/worldtime--entries))
-         (count (length entries))
-         (old (min (or fate-worldtime--base (fate/worldtime--home-index entries))
-                   (1- count))))
-    (setq fate-worldtime--base (mod (+ old delta) count)))
+         (old (fate/worldtime--base-index entries)))
+    (setq fate-worldtime--base (mod (+ old delta) (length entries))))
   (fate/worldtime--render))
 
 (defun fate/worldtime-next-zone ()
@@ -392,11 +403,8 @@ Produces one ready-to-send line per zone at the current reference, e.g.:
   Wed 2026-07-22 20:00 CST"
   (interactive)
   (let* ((entries (fate/worldtime--entries))
-         (base-zone (car (nth (min (or fate-worldtime--base
-                                       (fate/worldtime--home-index entries))
-                                   (1- (length entries)))
-                              entries)))
-         (home-zone (car (nth (fate/worldtime--home-index entries) entries)))
+         (base-zone (car (nth (fate/worldtime--base-index entries) entries)))
+         (home-zone (fate/worldtime--home-zone entries))
          (text (mapconcat
                 (lambda (zone)
                   (format-time-string "%a %F %H:%M %Z" fate-worldtime--ref zone))
