@@ -207,7 +207,7 @@ selected column, WIDTH the label column width."
                                                'face 'fate-worldtime-behind))
                        (t (propertize (fate/worldtime--format-offset mins)
                                       'face 'fate-worldtime-neutral))))
-         (timestr (propertize (format-time-string "%a %b %e %H:%M" fate-worldtime--ref zone)
+         (timestr (propertize (format-time-string "%a %F %H:%M" fate-worldtime--ref zone)
                               'face 'fate-worldtime-time))
          ;; A face list merges earlier-wins per attribute.  Put `home' first
          ;; so its foreground shows through, while `selected' (which only adds
@@ -352,6 +352,27 @@ shifts), so the highlighted column does not jump."
   (interactive)
   (fate/worldtime--render))
 
+(defun fate/worldtime-kill ()
+  "Copy the base (selected) and home zone times to the kill ring.
+Produces one ready-to-send line per zone at the current reference, e.g.:
+
+  Wed 2026-07-22 05:00 PDT
+  Wed 2026-07-22 20:00 CST"
+  (interactive)
+  (let* ((entries (fate/worldtime--entries))
+         (base-zone (car (nth (min (or fate-worldtime--base
+                                       (fate/worldtime--home-index entries))
+                                   (1- (length entries)))
+                              entries)))
+         (home-zone (car (nth (fate/worldtime--home-index entries) entries)))
+         (text (mapconcat
+                (lambda (zone)
+                  (format-time-string "%a %F %H:%M %Z" fate-worldtime--ref zone))
+                (delete-dups (list base-zone home-zone))
+                "\n")))
+    (kill-new text)
+    (message "Copied to kill ring:\n%s" text)))
+
 (defvar fate-worldtime-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "f") #'fate/worldtime-forward-hour)
@@ -369,6 +390,7 @@ shifts), so the highlighted column does not jump."
     (define-key map (kbd ".") #'fate/worldtime-set-time)
     (define-key map (kbd "t") #'fate/worldtime-now)
     (define-key map (kbd "g") #'fate/worldtime-refresh)
+    (define-key map (kbd "w") #'fate/worldtime-kill)
     (define-key map (kbd "q") #'quit-window)
     map)
   "Keymap for `fate-worldtime-mode'.")
