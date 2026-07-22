@@ -25,6 +25,19 @@
 
 (declare-function org-read-date "org")
 
+;; All faces inherit from standard, theme-defined faces so the display
+;; picks up the active theme's palette automatically.
+
+(defface fate-worldtime-title
+  '((t :inherit (bold font-lock-function-name-face)))
+  "Face for the title line."
+  :group 'fate-worldtime)
+
+(defface fate-worldtime-hint
+  '((t :inherit shadow))
+  "Face for the key-hint line and title separators."
+  :group 'fate-worldtime)
+
 (defface fate-worldtime-selected
   '((t :inherit highlight :weight bold))
   "Face for the currently selected time column."
@@ -35,9 +48,44 @@
   "Face for the home (local) timezone label."
   :group 'fate-worldtime)
 
-(defface fate-worldtime-day
-  '((t :inherit default))
-  "Face for daytime hour cells."
+(defface fate-worldtime-label
+  '((t :inherit font-lock-function-name-face))
+  "Face for ordinary timezone labels."
+  :group 'fate-worldtime)
+
+(defface fate-worldtime-abbrev
+  '((t :inherit font-lock-type-face))
+  "Face for the timezone abbreviation (e.g. JST)."
+  :group 'fate-worldtime)
+
+(defface fate-worldtime-time
+  '((t :inherit font-lock-string-face))
+  "Face for the per-zone date and time."
+  :group 'fate-worldtime)
+
+(defface fate-worldtime-ahead
+  '((t :inherit success))
+  "Face for a positive (ahead-of-base) offset."
+  :group 'fate-worldtime)
+
+(defface fate-worldtime-behind
+  '((t :inherit error))
+  "Face for a negative (behind-base) offset."
+  :group 'fate-worldtime)
+
+(defface fate-worldtime-neutral
+  '((t :inherit font-lock-comment-face))
+  "Face for the base row's zero offset."
+  :group 'fate-worldtime)
+
+(defface fate-worldtime-business
+  '((t :inherit font-lock-constant-face))
+  "Face for business-hour cells (09-17)."
+  :group 'fate-worldtime)
+
+(defface fate-worldtime-fringe
+  '((t :inherit font-lock-comment-face))
+  "Face for early-morning and evening hour cells."
   :group 'fate-worldtime)
 
 (defface fate-worldtime-night
@@ -46,7 +94,7 @@
   :group 'fate-worldtime)
 
 (defface fate-worldtime-day-boundary
-  '((t :inherit font-lock-comment-face :weight bold))
+  '((t :inherit font-lock-keyword-face :weight bold))
   "Face for the midnight (day-boundary) hour cell."
   :group 'fate-worldtime)
 
@@ -147,22 +195,30 @@ home row, BASE-P the base row.  WS is the window-start instant, SEL the
 selected column, WIDTH the label column width."
   (let* ((zone (car entry))
          (label (or (cdr entry) ""))
-         (marker (concat (if base-p "▸" " ") (if home-p "⌂" " ")))
-         (abbrev (format-time-string "%Z" fate-worldtime--ref zone))
-         (offstr (if base-p "±0"
-                   (fate/worldtime--format-offset
-                    (fate/worldtime--offset-minutes zone base-zone))))
-         (timestr (format-time-string "%a %b %e %H:%M" fate-worldtime--ref zone))
+         (marker (concat (if base-p (propertize "▸" 'face 'fate-worldtime-selected) " ")
+                         (if home-p (propertize "⌂" 'face 'fate-worldtime-home) " ")))
+         (abbrev (propertize (format-time-string "%Z" fate-worldtime--ref zone)
+                             'face 'fate-worldtime-abbrev))
+         (mins (unless base-p (fate/worldtime--offset-minutes zone base-zone)))
+         (offstr (cond (base-p (propertize "±0" 'face 'fate-worldtime-neutral))
+                       ((> mins 0) (propertize (fate/worldtime--format-offset mins)
+                                               'face 'fate-worldtime-ahead))
+                       ((< mins 0) (propertize (fate/worldtime--format-offset mins)
+                                               'face 'fate-worldtime-behind))
+                       (t (propertize (fate/worldtime--format-offset mins)
+                                      'face 'fate-worldtime-neutral))))
+         (timestr (propertize (format-time-string "%a %b %e %H:%M" fate-worldtime--ref zone)
+                              'face 'fate-worldtime-time))
          ;; A face list merges earlier-wins per attribute.  Put `home' first
          ;; so its foreground shows through, while `selected' (which only adds
          ;; a background via `highlight') still supplies the highlight.
          (labelface (append (and home-p '(fate-worldtime-home))
-                            (and base-p '(fate-worldtime-selected)))))
+                            (and base-p '(fate-worldtime-selected))
+                            (and (not home-p) (not base-p) '(fate-worldtime-label)))))
     ;; Header line.
     (insert (format "%s %s %-5s %-6s %s\n"
                     marker
-                    (string-pad (if labelface (propertize label 'face labelface) label)
-                                width)
+                    (string-pad (propertize label 'face labelface) width)
                     abbrev offstr timestr))
     ;; Hour strip.
     (insert "     ")
@@ -171,8 +227,9 @@ selected column, WIDTH the label column width."
              (hour (string-to-number (format-time-string "%H" instant zone)))
              (face (cond ((= j sel) 'fate-worldtime-selected)
                          ((= hour 0) 'fate-worldtime-day-boundary)
-                         ((or (< hour 7) (>= hour 19)) 'fate-worldtime-night)
-                         (t 'fate-worldtime-day))))
+                         ((<= 9 hour 17) 'fate-worldtime-business)
+                         ((or (<= 7 hour 8) (<= 18 hour 21)) 'fate-worldtime-fringe)
+                         (t 'fate-worldtime-night))))
         ;; Separator stays unfaced so the highlight covers only the digits.
         (insert " ")
         (insert (propertize (format "%02d" hour) 'face face))))
@@ -196,16 +253,18 @@ selected column, WIDTH the label column width."
          (index 0))
     (setq fate-worldtime--base base)
     (erase-buffer)
-    (insert (propertize
-             (format "World Time  —  %s  —  %s\n"
-               (format-time-string "%A %d %B %Y  %H:%M %Z"
-                 fate-worldtime--ref base-zone)
-               base-label)
-             'face 'bold))
+    (let ((sep (propertize "  —  " 'face 'fate-worldtime-hint)))
+      (insert (propertize "World Time" 'face 'fate-worldtime-title) sep
+              (propertize (format-time-string "%A %d %B %Y  %H:%M %Z"
+                                              fate-worldtime--ref base-zone)
+                          'face 'fate-worldtime-time)
+              sep
+              (propertize base-label 'face 'fate-worldtime-label)
+              "\n"))
     (insert (propertize
              (concat "  f/b or ←/→: ±hour   ↑/↓: base zone   n/p: ±day   "
                      ".: pick   t: now   g: refresh   q: quit\n\n")
-             'face 'shadow))
+             'face 'fate-worldtime-hint))
     (dolist (entry entries)
       (fate/worldtime--insert-row entry base-zone
                                   (fate/worldtime--home-p (car entry))
