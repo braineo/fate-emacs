@@ -329,25 +329,29 @@ selected column, WIDTH the label column width."
 (defun fate/worldtime-forward-hour ()
   "Move the reference time forward by one hour."
   (interactive)
-  (setq fate-worldtime--ref (time-add fate-worldtime--ref 3600))
+  (setq fate-worldtime--ref (time-add
+                              (fate/worldtime--truncate-hour fate-worldtime--ref) 3600))
   (fate/worldtime--render))
 
 (defun fate/worldtime-backward-hour ()
   "Move the reference time back by one hour."
   (interactive)
-  (setq fate-worldtime--ref (time-subtract fate-worldtime--ref 3600))
+  (setq fate-worldtime--ref (time-subtract
+                              (fate/worldtime--truncate-hour fate-worldtime--ref) 3600))
   (fate/worldtime--render))
 
 (defun fate/worldtime-next-day ()
   "Move the reference time forward by one day."
   (interactive)
-  (setq fate-worldtime--ref (time-add fate-worldtime--ref 86400))
+  (setq fate-worldtime--ref (time-add
+                              (fate/worldtime--truncate-hour fate-worldtime--ref) 86400))
   (fate/worldtime--render))
 
 (defun fate/worldtime-prev-day ()
   "Move the reference time back by one day."
   (interactive)
-  (setq fate-worldtime--ref (time-subtract fate-worldtime--ref 86400))
+  (setq fate-worldtime--ref (time-subtract
+                              (fate/worldtime--truncate-hour fate-worldtime--ref) 86400))
   (fate/worldtime--render))
 
 (defun fate/worldtime-set-time ()
@@ -387,7 +391,7 @@ title time (which are relative to the base) change."
 (defun fate/worldtime-now ()
   "Reset the reference time to the current hour."
   (interactive)
-  (setq fate-worldtime--ref (fate/worldtime--truncate-hour (current-time)))
+  (setq fate-worldtime--ref (current-time))
   (fate/worldtime--render))
 
 (defun fate/worldtime-refresh ()
@@ -440,7 +444,7 @@ Produces one ready-to-send line per zone at the current reference, e.g.:
 
 \\{fate-worldtime-mode-map}"
   (setq truncate-lines t)
-  (setq fate-worldtime--ref (fate/worldtime--truncate-hour (current-time))))
+  (setq fate-worldtime--ref (current-time)))
 
 ;;;###autoload
 (defun fate/worldtime ()
