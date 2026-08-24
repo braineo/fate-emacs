@@ -26,7 +26,6 @@
   - [Language servers implemented in NodeJS](#language-servers-implemented-in-nodejs)
   - [Python](#python)
   - [Clangd](#clangd)
-- [Vterm](#vterm)
 - [LLM](#llm)
   - [Install CUDA](#install-cuda)
   - [llama.cpp](#llamacpp)
@@ -43,7 +42,7 @@
 
 ## Get Started
 
-Only tested with \>= Emacs 30.1 in Debian
+Only tested with \>= Emacs 31 in Debian
 
 ### Backup
 
@@ -53,17 +52,6 @@ backup your `.emacs` and `.emacs.d`, rename them to something else because emacs
 
 ```shell
 git clone https://github.com/braineo/fate-emacs.git ~/.emacs.d
-```
-
-### Try it in docker
-
-```shell
-docker pull braineo/fate-emacs
-# run in terminal
-docker run -it --rm braineo/fate-emacs
-# run with GUI
-xhost +local:root # WARN: this comes with security issues
-docker run -it --rm -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v /your/workspace/:/mnt/workspace braineo/fate-emacs
 ```
 
 ## External tools
@@ -286,18 +274,6 @@ To manually verify if clangd works. You can run
 
 ```shell
 clangd --compile-commands-dir="."  --query-driver="clang-tidy" --check="path/to/some.cpp"
-```
-
-## Vterm
-
-To make vterm handy, you need some shell-side configuration, add following to `.zshrc` or `.bashrc`
-
-```shell
-if [[ "$INSIDE_EMACS" = 'vterm' ]] \
-    && [[ -n ${EMACS_VTERM_PATH} ]] \
-    && [[ -f ${EMACS_VTERM_PATH}/etc/emacs-vterm-zsh.sh ]]; then
-	source ${EMACS_VTERM_PATH}/etc/emacs-vterm-zsh.sh
-fi
 ```
 
 ## LLM

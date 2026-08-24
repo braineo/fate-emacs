@@ -120,7 +120,8 @@
       (yaml-mode      . yaml-ts-mode)))
 
   :custom
-  (treesit-font-lock-level 4))
+  (treesit-font-lock-level 4)
+  (treesit-auto-install-grammar 'always))
 
 (add-to-list 'default-frame-alist '(alpha-background . 97))
 (set-frame-parameter nil 'alpha-background 97)

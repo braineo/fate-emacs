@@ -25,8 +25,7 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'fate-misc)
-  (require 'fate-json))
+  (require 'fate-misc))
 
 (defconst fate/js-tools
    '("prettier"
@@ -91,8 +90,7 @@
   :ensure nil
   :mode ("\\.json\\'")
   :bind (:map json-ts-mode-map
-          ("C-c P" . fate/json-print-path-js)
-          ("C-c C-p" . fate/json-kill-path-js)
+          ("C-c C-p" . json-ts-jq-path-at-point)
           ("C-c C-l" . fate/json-pretty-print)))
 
 (use-package css-ts-mode

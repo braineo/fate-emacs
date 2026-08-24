@@ -1,4 +1,4 @@
-;;; fate-custom.el --- initialize custom values before starting up  -*- no-byte-compile: t -*-
+;;; fate-custom.el --- initialize custom values before starting up  -*- no-byte-compile: t; lexical-binding: t; -*-
 
 
 ;;; Commentary:

@@ -25,6 +25,22 @@
 
 (declare-function org-read-date "org")
 
+;; Built-in SVG, used to draw a compact month/day glyph in graphical frames.
+(require 'svg)
+
+;; All faces inherit from standard, theme-defined faces so the display
+;; picks up the active theme's palette automatically.
+
+(defface fate-worldtime-title
+  '((t :inherit (bold font-lock-function-name-face)))
+  "Face for the title line."
+  :group 'fate-worldtime)
+
+(defface fate-worldtime-hint
+  '((t :inherit shadow))
+  "Face for the key-hint line and title separators."
+  :group 'fate-worldtime)
+
 (defface fate-worldtime-selected
   '((t :inherit highlight :weight bold))
   "Face for the currently selected time column."
@@ -35,9 +51,44 @@
   "Face for the home (local) timezone label."
   :group 'fate-worldtime)
 
-(defface fate-worldtime-day
-  '((t :inherit default))
-  "Face for daytime hour cells."
+(defface fate-worldtime-label
+  '((t :inherit font-lock-function-name-face))
+  "Face for ordinary timezone labels."
+  :group 'fate-worldtime)
+
+(defface fate-worldtime-abbrev
+  '((t :inherit font-lock-type-face))
+  "Face for the timezone abbreviation (e.g. JST)."
+  :group 'fate-worldtime)
+
+(defface fate-worldtime-time
+  '((t :inherit font-lock-string-face))
+  "Face for the per-zone date and time."
+  :group 'fate-worldtime)
+
+(defface fate-worldtime-ahead
+  '((t :inherit success))
+  "Face for a positive (ahead-of-base) offset."
+  :group 'fate-worldtime)
+
+(defface fate-worldtime-behind
+  '((t :inherit error))
+  "Face for a negative (behind-base) offset."
+  :group 'fate-worldtime)
+
+(defface fate-worldtime-neutral
+  '((t :inherit font-lock-comment-face))
+  "Face for the base row's zero offset."
+  :group 'fate-worldtime)
+
+(defface fate-worldtime-business
+  '((t :inherit font-lock-constant-face))
+  "Face for business-hour cells (09-17)."
+  :group 'fate-worldtime)
+
+(defface fate-worldtime-fringe
+  '((t :inherit font-lock-comment-face))
+  "Face for early-morning and evening hour cells."
   :group 'fate-worldtime)
 
 (defface fate-worldtime-night
@@ -46,8 +97,8 @@
   :group 'fate-worldtime)
 
 (defface fate-worldtime-day-boundary
-  '((t :inherit font-lock-comment-face :weight bold))
-  "Face for the midnight (day-boundary) hour cell."
+  '((t :inherit font-lock-keyword-face :weight bold))
+  "Face for the midnight (day-boundary) hour cell and its divider."
   :group 'fate-worldtime)
 
 (defvar-local fate-worldtime--ref nil
@@ -108,6 +159,17 @@ otherwise a synthesized local row (ZONE nil) is prepended."
   (let ((home (seq-find (lambda (e) (fate/worldtime--home-p (car e))) entries)))
     (or (and home (seq-position entries home #'eq)) 0)))
 
+(defun fate/worldtime--home-zone (entries)
+  "Return the zone (car) of the home row within ENTRIES."
+  (car (nth (fate/worldtime--home-index entries) entries)))
+
+(defun fate/worldtime--base-index (entries)
+  "Return the current base row index in ENTRIES.
+Defaults to the home row and is clamped to the last row, so it stays valid
+even if `world-clock-list' shrinks between renders."
+  (min (or fate-worldtime--base (fate/worldtime--home-index entries))
+       (1- (length entries))))
+
 (defun fate/worldtime--window-start (zone)
   "Return midnight, in ZONE, of the day containing `fate-worldtime--ref'."
   (let ((d (decode-time fate-worldtime--ref zone)))
@@ -138,6 +200,32 @@ otherwise a synthesized local row (ZONE nil) is prepended."
           (format "%s%d" sign h)
         (format "%s%d:%02d" sign h mm)))))
 
+(defun fate/worldtime--date-glyph (instant zone)
+  "Return a compact SVG glyph showing the month over the day for INSTANT in ZONE.
+Two stacked rows — month (MM) above day (DD) — drawn as borderless digits
+composed into one image that is two character columns wide and one line
+tall.  The digits use the `default' face foreground.  Returns nil outside
+a graphical SVG frame, so callers fall back to the plain hour text."
+  (when (and (display-graphic-p) (image-type-available-p 'svg))
+    (let* ((cw (frame-char-width))
+           (ch (frame-char-height))
+           (w (* 2 cw))
+           (svg (svg-create w ch))
+           (ink (or (face-foreground 'default nil t) "black"))
+           ;; Stack the format rows evenly over the cell: each gets a slot
+           ;; ROW-H tall, digits nearly fill it, baseline near the slot's
+           ;; bottom.  No border.
+           (rows '("%m" "%d"))
+           (row-h (/ ch (float (length rows))))
+           (fs (* row-h 1.04)))
+      (seq-do-indexed
+       (lambda (fmt i)
+         (svg-text svg (format-time-string fmt instant zone)
+                   :x (/ w 2.0) :y (* row-h (+ i 0.94)) :fill ink :font-size fs
+                   :font-family "monospace" :font-weight "bold" :text-anchor "middle"))
+       rows)
+      (svg-image svg :ascent 'center :scale 1))))
+
 ;;; Rendering
 
 (defun fate/worldtime--insert-row (entry base-zone home-p base-p ws sel width)
@@ -147,35 +235,54 @@ home row, BASE-P the base row.  WS is the window-start instant, SEL the
 selected column, WIDTH the label column width."
   (let* ((zone (car entry))
          (label (or (cdr entry) ""))
-         (marker (concat (if base-p "▸" " ") (if home-p "⌂" " ")))
-         (abbrev (format-time-string "%Z" fate-worldtime--ref zone))
-         (offstr (if base-p "±0"
-                   (fate/worldtime--format-offset
-                    (fate/worldtime--offset-minutes zone base-zone))))
-         (timestr (format-time-string "%a %b %e %H:%M" fate-worldtime--ref zone))
+         (marker (concat (if base-p (propertize "▸" 'face 'fate-worldtime-selected) " ")
+                         (if home-p (propertize "⌂" 'face 'fate-worldtime-home) " ")))
+         (abbrev (propertize (format-time-string "%Z" fate-worldtime--ref zone)
+                             'face 'fate-worldtime-abbrev))
+         (mins (unless base-p (fate/worldtime--offset-minutes zone base-zone)))
+         (offstr (cond (base-p (propertize "±0" 'face 'fate-worldtime-neutral))
+                       ((> mins 0) (propertize (fate/worldtime--format-offset mins)
+                                               'face 'fate-worldtime-ahead))
+                       ((< mins 0) (propertize (fate/worldtime--format-offset mins)
+                                               'face 'fate-worldtime-behind))
+                       (t (propertize (fate/worldtime--format-offset mins)
+                                      'face 'fate-worldtime-neutral))))
+         (timestr (propertize (format-time-string "%a %F %H:%M" fate-worldtime--ref zone)
+                              'face 'fate-worldtime-time))
          ;; A face list merges earlier-wins per attribute.  Put `home' first
          ;; so its foreground shows through, while `selected' (which only adds
          ;; a background via `highlight') still supplies the highlight.
          (labelface (append (and home-p '(fate-worldtime-home))
-                            (and base-p '(fate-worldtime-selected)))))
+                            (and base-p '(fate-worldtime-selected))
+                            (and (not home-p) (not base-p) '(fate-worldtime-label)))))
     ;; Header line.
     (insert (format "%s %s %-5s %-6s %s\n"
                     marker
-                    (string-pad (if labelface (propertize label 'face labelface) label)
-                                width)
+                    (string-pad (propertize label 'face labelface) width)
                     abbrev offstr timestr))
-    ;; Hour strip.
+    ;; Hour strip, with a bar divider at each midnight.  In a graphical
+    ;; frame the midnight cell carries a compact SVG date glyph (via the
+    ;; `display' property); in a terminal it falls back to the plain "00".
     (insert "     ")
     (dotimes (j 24)
       (let* ((instant (time-add ws (* j 3600)))
              (hour (string-to-number (format-time-string "%H" instant zone)))
+             (boundary (= hour 0))
              (face (cond ((= j sel) 'fate-worldtime-selected)
-                         ((= hour 0) 'fate-worldtime-day-boundary)
-                         ((or (< hour 7) (>= hour 19)) 'fate-worldtime-night)
-                         (t 'fate-worldtime-day))))
-        ;; Separator stays unfaced so the highlight covers only the digits.
-        (insert " ")
-        (insert (propertize (format "%02d" hour) 'face face))))
+                         (boundary 'fate-worldtime-day-boundary)
+                         ((<= 9 hour 17) 'fate-worldtime-business)
+                         ((or (<= 7 hour 8) (<= 18 hour 21)) 'fate-worldtime-fringe)
+                         (t 'fate-worldtime-night)))
+             (sep (if boundary
+                      (propertize "│" 'face 'fate-worldtime-day-boundary)
+                    " "))
+             (glyph (and boundary (/= j sel)
+                         (fate/worldtime--date-glyph instant zone)))
+             (cell (format "%02d" hour)))
+        (insert sep)
+        (insert (if glyph
+                    (propertize cell 'face face 'display glyph)
+                  (propertize cell 'face face)))))
     (insert "\n\n")))
 
 (defun fate/worldtime--render ()
@@ -183,29 +290,32 @@ selected column, WIDTH the label column width."
   (let* ((inhibit-read-only t)
          (line (line-number-at-pos))
          (entries (fate/worldtime--entries))
-         (count (length entries))
-         (base (min (or fate-worldtime--base (fate/worldtime--home-index entries))
-                    (1- count)))
+         (base (fate/worldtime--base-index entries))
          (base-entry (nth base entries))
          (base-zone (car base-entry))
          (base-label (or (cdr base-entry) ""))
-         (ws (fate/worldtime--window-start base-zone))
+         ;; Anchor the 00-23 strip to the home zone so the grid stays stable
+         ;; regardless of which base is selected.
+         (home-zone (fate/worldtime--home-zone entries))
+         (ws (fate/worldtime--window-start home-zone))
          (sel (fate/worldtime--selected-index ws))
          (width (apply #'max 6 (mapcar (lambda (e) (length (or (cdr e) "")))
                                        entries)))
          (index 0))
     (setq fate-worldtime--base base)
     (erase-buffer)
-    (insert (propertize
-             (format "World Time  —  %s  —  %s\n"
-               (format-time-string "%A %d %B %Y  %H:%M %Z"
-                 fate-worldtime--ref base-zone)
-               base-label)
-             'face 'bold))
+    (let ((sep (propertize "  —  " 'face 'fate-worldtime-hint)))
+      (insert (propertize "World Time" 'face 'fate-worldtime-title) sep
+              (propertize (format-time-string "%A %d %B %Y  %H:%M %Z"
+                                              fate-worldtime--ref base-zone)
+                          'face 'fate-worldtime-time)
+              sep
+              (propertize base-label 'face 'fate-worldtime-label)
+              "\n"))
     (insert (propertize
              (concat "  f/b or ←/→: ±hour   ↑/↓: base zone   n/p: ±day   "
                      ".: pick   t: now   g: refresh   q: quit\n\n")
-             'face 'shadow))
+             'face 'fate-worldtime-hint))
     (dolist (entry entries)
       (fate/worldtime--insert-row entry base-zone
                                   (fate/worldtime--home-p (car entry))
@@ -219,25 +329,29 @@ selected column, WIDTH the label column width."
 (defun fate/worldtime-forward-hour ()
   "Move the reference time forward by one hour."
   (interactive)
-  (setq fate-worldtime--ref (time-add fate-worldtime--ref 3600))
+  (setq fate-worldtime--ref (time-add
+                              (fate/worldtime--truncate-hour fate-worldtime--ref) 3600))
   (fate/worldtime--render))
 
 (defun fate/worldtime-backward-hour ()
   "Move the reference time back by one hour."
   (interactive)
-  (setq fate-worldtime--ref (time-subtract fate-worldtime--ref 3600))
+  (setq fate-worldtime--ref (time-subtract
+                              (fate/worldtime--truncate-hour fate-worldtime--ref) 3600))
   (fate/worldtime--render))
 
 (defun fate/worldtime-next-day ()
   "Move the reference time forward by one day."
   (interactive)
-  (setq fate-worldtime--ref (time-add fate-worldtime--ref 86400))
+  (setq fate-worldtime--ref (time-add
+                              (fate/worldtime--truncate-hour fate-worldtime--ref) 86400))
   (fate/worldtime--render))
 
 (defun fate/worldtime-prev-day ()
   "Move the reference time back by one day."
   (interactive)
-  (setq fate-worldtime--ref (time-subtract fate-worldtime--ref 86400))
+  (setq fate-worldtime--ref (time-subtract
+                              (fate/worldtime--truncate-hour fate-worldtime--ref) 86400))
   (fate/worldtime--render))
 
 (defun fate/worldtime-set-time ()
@@ -255,21 +369,13 @@ time such as \"2026-12-25 14:00\", \"+3d\", or \"fri\"."
   (fate/worldtime--render))
 
 (defun fate/worldtime--rebase (delta)
-  "Move the base zone by DELTA rows.
-The base zone's wall-clock reading is kept constant (the absolute moment
-shifts), so the highlighted column does not jump."
+  "Move the base zone selection by DELTA rows.
+The reference instant is unchanged; because the strip is anchored to the
+home zone, the highlighted column stays put and only the offsets and the
+title time (which are relative to the base) change."
   (let* ((entries (fate/worldtime--entries))
-         (count (length entries))
-         (old (min (or fate-worldtime--base (fate/worldtime--home-index entries))
-                   (1- count)))
-         (new (mod (+ old delta) count))
-         ;; The wall clock currently shown in the old base zone.
-         (dec (decode-time fate-worldtime--ref (car (nth old entries)))))
-    ;; Reinterpret that same wall clock in the new base zone.
-    (setf (decoded-time-dst dec) -1
-          (decoded-time-zone dec) (car (nth new entries)))
-    (setq fate-worldtime--ref (encode-time dec)
-          fate-worldtime--base new))
+         (old (fate/worldtime--base-index entries)))
+    (setq fate-worldtime--base (mod (+ old delta) (length entries))))
   (fate/worldtime--render))
 
 (defun fate/worldtime-next-zone ()
@@ -285,13 +391,31 @@ shifts), so the highlighted column does not jump."
 (defun fate/worldtime-now ()
   "Reset the reference time to the current hour."
   (interactive)
-  (setq fate-worldtime--ref (fate/worldtime--truncate-hour (current-time)))
+  (setq fate-worldtime--ref (current-time))
   (fate/worldtime--render))
 
 (defun fate/worldtime-refresh ()
   "Redraw the grid, re-reading `world-clock-list'."
   (interactive)
   (fate/worldtime--render))
+
+(defun fate/worldtime-kill ()
+  "Copy the base (selected) and home zone times to the kill ring.
+Produces one ready-to-send line per zone at the current reference, e.g.:
+
+  Wed 2026-07-22 05:00 PDT
+  Wed 2026-07-22 20:00 CST"
+  (interactive)
+  (let* ((entries (fate/worldtime--entries))
+         (base-zone (car (nth (fate/worldtime--base-index entries) entries)))
+         (home-zone (fate/worldtime--home-zone entries))
+         (text (mapconcat
+                (lambda (zone)
+                  (format-time-string "%a %F %H:%M %Z" fate-worldtime--ref zone))
+                (delete-dups (list base-zone home-zone))
+                "\n")))
+    (kill-new text)
+    (message "Copied to kill ring:\n%s" text)))
 
 (defvar fate-worldtime-mode-map
   (let ((map (make-sparse-keymap)))
@@ -310,6 +434,7 @@ shifts), so the highlighted column does not jump."
     (define-key map (kbd ".") #'fate/worldtime-set-time)
     (define-key map (kbd "t") #'fate/worldtime-now)
     (define-key map (kbd "g") #'fate/worldtime-refresh)
+    (define-key map (kbd "w") #'fate/worldtime-kill)
     (define-key map (kbd "q") #'quit-window)
     map)
   "Keymap for `fate-worldtime-mode'.")
@@ -319,7 +444,7 @@ shifts), so the highlighted column does not jump."
 
 \\{fate-worldtime-mode-map}"
   (setq truncate-lines t)
-  (setq fate-worldtime--ref (fate/worldtime--truncate-hour (current-time))))
+  (setq fate-worldtime--ref (current-time)))
 
 ;;;###autoload
 (defun fate/worldtime ()

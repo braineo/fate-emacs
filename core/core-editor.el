@@ -374,7 +374,7 @@ if `N' is 9, return root dir + repo path."
   :hook
   (prog-mode . hs-minor-mode)
   :init
-  (add-to-list 'hs-special-modes-alist '(fate-json-mode "{" "}" "/[*/]" nil)))
+  (add-to-list 'hs-special-modes-alist '(json-ts-mode "{" "}" "/[*/]" nil)))
   ;; :bind
   ;; ("C-<tab>" . hs-toggle-hiding))
 
@@ -590,6 +590,11 @@ minibuffer, even without explicitly focusing it."
 
 (global-set-key [remap keyboard-quit] #'er-keyboard-quit)
 
+(use-package ghostel
+  :hook (ghostel-mode . (lambda()
+                          (setq-local global-hl-line-mode nil)))
+  :bind
+  (("<f5>" . ghostel)))
 
 (require 'fate-auto-complete)
 (require 'fate-align-text)
