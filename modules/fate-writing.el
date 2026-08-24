@@ -52,7 +52,7 @@
 
 (use-package markdown-ts-mode
   :ensure nil
-  :defer t)
+  :mode ("\\.md\\'"))
 
 (use-package markdown-toc
   :defer)
