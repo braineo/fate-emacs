@@ -28,6 +28,7 @@
    ("s-m" . magit-file-dispatch)))
 
 (use-package magit-todos
+  :disabled
   :hook (magit-mode . magit-todos-mode))
 
 (use-package forge
