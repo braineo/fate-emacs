@@ -206,11 +206,8 @@ surrounded by word boundaries."
   :config
   (nconc projectile-other-file-alist
     '(
-       ("graphql" . ("gql.ts"))
        ("gql.ts" . ("graphql"))
        ("ts" . ("spec.ts"))
-       ("spec.ts" . ("ts"))
-       ("tsx" . ("spec.tsx" "less" "module.less" "scss" "module.scss" "css" "module.css" "sass" "module.sass"))
        ("spec.tsx" . ("tsx"))
        ("less" . ("tsx"))
        ("module.less" . ("tsx"))

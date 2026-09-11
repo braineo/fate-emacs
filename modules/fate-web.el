@@ -136,8 +136,6 @@
   :config
   (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.gql.ts\\'" "\\1.graphql")))
 
-(use-package jest
-  :defer t)
 
 (provide 'fate-web)
 ;;; fate-web.el ends here
