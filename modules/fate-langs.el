@@ -40,6 +40,11 @@
     (electric-pair-local-mode -1)
     (parinfer-rust-mode)))
 
+(use-package elisp-mode
+  :ensure nil
+  :custom
+  (elisp-fontify-semantically t))
+
 (use-package parinfer-rust-mode
   :if (string-match-p "MODULES" system-configuration-features)
   :hook
