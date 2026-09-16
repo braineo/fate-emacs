@@ -24,17 +24,16 @@
                            :where (not (isnull issues_until))
                            :order-by [(asc owner) (asc name)]]))
   (progn
-    (setq forge-pull-total (1+ forge-pull-total))
     (when-let ((repo (forge-get-repository :id id))
                (name (oref repo name))
                ((forge-get-repository repo :tracked?)))
-      (progn
-       (add-to-list 'forge-pull-repos name
-        (forge--pull repo (lambda ()
-                            (setq forge-pull-completed (1+ forge-pull-completed))
-                            (delete name forge-pull-repos)
-                            (when (length> forge-pull-repos 0)
-                              (print (format "Remaining repos %s" forge-pull-repos))))))))))
+      (setq forge-pull-total (1+ forge-pull-total))
+      (push name forge-pull-repos)
+      (forge--pull repo (lambda (_)
+                          (setq forge-pull-completed (1+ forge-pull-completed))
+                          (setq forge-pull-repos (delete name forge-pull-repos))
+                          (when (length> forge-pull-repos 0)
+                            (print (format "Remaining repos %s" forge-pull-repos))))))))
 
 (while (< forge-pull-completed forge-pull-total)
   (sleep-for 1))
