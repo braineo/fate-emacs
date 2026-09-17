@@ -21,12 +21,11 @@
 
 (pcase-dolist (`(,name ,id)
                (forge-sql [:select [name id] :from repository
-                           :where (not (isnull issues_until))
+                           :where (= condition ':tracked)
                            :order-by [(asc owner) (asc name)]]))
   (progn
     (when-let ((repo (forge-get-repository :id id))
-               (name (oref repo name))
-               ((forge-get-repository repo :tracked?)))
+               (name (oref repo name)))
       (setq forge-pull-total (1+ forge-pull-total))
       (push name forge-pull-repos)
       (forge--pull repo (lambda (_)
