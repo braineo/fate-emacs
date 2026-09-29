@@ -38,14 +38,19 @@
     (setq forge-alist (append forge-alist fate/forge-alist)))
 
   (defun fate/forge-topic-user-completion-at-point()
-    (let ((bol (line-beginning-position))
+    ;; Grab the bounds before calling into forge: `forge-get-repository'
+    ;; runs git and regexps of its own, clobbering the match data.
+    (let ((beg (save-match-data
+                 (and (looking-back "@\\([[:alnum:]._-]*\\)"
+                        (line-beginning-position))
+                      (match-beginning 1))))
           repo)
       (and
-        (looking-back "@\\(?2:[[:alnum:]._-]*\\)" bol)
-        (setq repo (forge-get-repository :tracked))
+        beg
+        (setq repo (forge-get-repository :tracked?))
         (list
-          (match-beginning 2)
-          (match-end 0)
+          beg
+          (point)
           (mapcar
             (lambda (row)
               ;; user id and user name

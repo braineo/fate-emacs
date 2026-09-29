@@ -586,6 +586,14 @@ minibuffer, even without explicitly focusing it."
   :bind
   (("<f5>" . ghostel)))
 
+(defun fate/open-term-here ()
+  "Open a terminal in current location."
+  (interactive)
+  (let ((dir (expand-file-name (or default-directory "~"))))
+    (call-process "wezterm" nil 0 nil "start" "--new-tab" "--cwd" dir)))
+
+(global-set-key (kbd "C-<f5>") 'fate/open-term-here)
+
 (require 'fate-auto-complete)
 (require 'fate-align-text)
 (require 'fate-windows)
