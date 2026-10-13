@@ -24,7 +24,7 @@
 
 ;;; Code:
 
-(use-package winner-mode
+(use-package winner
   :ensure nil
   :hook (after-init . winner-mode)
   :commands (winner-mode winner-undo)

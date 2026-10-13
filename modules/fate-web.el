@@ -42,16 +42,12 @@
 
 (defun fate/prettier-minor-mode ()
   "Enable minor mdoe for certain extensions."
-  (when (buffer-file-name)
-    (cl-dolist (extension '("\\.[m]?js[x]?\\'" "\\.ts[x]?\\'" "\\.[s]?css\\'" "\\.less\\'"
-                             "\\.vue\\'" "\\.json\\'" "\\.gql\\'" "\\.graphql\\'" "\\.md\\'"))
-      (when (and (string-match-p extension buffer-file-name)
-              ;; Do not auto format anything inside node_modules
-              (or (not (string-match-p "node_modules" buffer-file-name))
-                  (not (string-match-p "^/run/" buffer-file-name))
-                  (not (string-match-p "^/te?mp/" buffer-file-name))))
-        (prettier-js-mode)
-        (cl-return)))))
+  (when (and buffer-file-name
+             (string-match-p "\\.\\(m?jsx?\\|tsx?\\|s?css\\|less\\|vue\\|json\\|gql\\|graphql\\|md\\)\\'"
+                             buffer-file-name)
+             ;; Do not auto format anything inside node_modules or temp dirs
+             (not (string-match-p "node_modules\\|\\`/run/\\|\\`/te?mp/" buffer-file-name)))
+    (prettier-js-mode)))
 
 (defvar-local jq-format-args '())
 
@@ -62,29 +58,19 @@
   (interactive "P")
   (when minimize
     (setq-local jq-format-args '("-c")))
-  (when (use-region-p)
-    (cond ((executable-find "jq") (json-jq-region (region-beginning) (region-end) nil))
-          (t (json-pretty-print (region-beginning) (region-end) minimize))))
-  (cond ((executable-find "jq") (json-jq-buffer nil))
-        (t (json-pretty-print (point-min) (point-max) minimize)))
+  (let ((beg (if (use-region-p) (region-beginning) (point-min)))
+        (end (if (use-region-p) (region-end) (point-max))))
+    (if (executable-find "jq")
+        (json-jq-region beg end nil)
+      (json-pretty-print beg end minimize)))
 
   (setq-local jq-format-args '()))
 
 
-(defgroup jqfmt nil
-  "Reformat JSON using jq."
-  :group 'languages)
-
-(defcustom jqfmt-command "jq"
-  "Command used for reformatting."
-  :group 'jqfmt
-  :type 'string)
-
 (reformatter-define json-jq
-  :program jqfmt-command
+  :program "jq"
   :args jq-format-args
-  :lighter "JQ"
-  :group 'jqfmt)
+  :lighter "JQ")
 
 (use-package json-ts-mode
   :ensure nil
@@ -93,9 +79,10 @@
           ("C-c C-p" . json-ts-jq-path-at-point)
           ("C-c C-l" . fate/json-pretty-print)))
 
-(use-package css-ts-mode
+;; The feature is `css-mode'; `:config' of `use-package css-ts-mode' never ran.
+(use-package css-mode
   :ensure nil
-  :mode ("\\.less\\'")
+  :mode ("\\.less\\'" . css-ts-mode)
   :hook (css-ts-mode . fate/prettier-minor-mode)
   :config
   (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.module.less\\'" "\\1.tsx")))
@@ -129,10 +116,6 @@
 (use-package graphql-ts-mode
   :mode ("\\.graphql\\'" "\\.gql\\'")
   :hook (graphql-ts-mode . fate/prettier-minor-mode)
-  :init
-  (with-eval-after-load 'treesit
-    (add-to-list 'treesit-language-source-alist
-                 '(graphql "https://github.com/bkegley/tree-sitter-graphql")))
   :config
   (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.gql.ts\\'" "\\1.graphql")))
 

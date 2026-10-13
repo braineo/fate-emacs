@@ -16,8 +16,6 @@
   (require 'core-load-paths)
   (require 'fate-custom))
 
-(use-package sqlite3)
-
 (use-package magit
   :custom
   (magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
@@ -34,8 +32,7 @@
 (use-package forge
   :after magit
   :config
-  (if 'fate/forge-alist
-    (setq forge-alist (append forge-alist fate/forge-alist)))
+  (setq forge-alist (append forge-alist fate/forge-alist))
 
   (defun fate/forge-topic-user-completion-at-point()
     ;; Grab the bounds before calling into forge: `forge-get-repository'
@@ -60,7 +57,7 @@
           :annotation-function (##get-text-property 0 :title %)))))
 
   (defun fate/forge-user-reference-setup()
-    (when-let ((repo (forge-get-repository :tracked?)))
+    (when (forge-get-repository :tracked?)
       (add-hook 'completion-at-point-functions
         #'fate/forge-topic-user-completion-at-point nil t)))
   ;; Add user name highlight
@@ -81,11 +78,10 @@
    (magit-post-refresh . diff-hl-magit-post-refresh)
    (dired-mode . diff-hl-dired-mode))
   :config
-  (progn
-    (setq vc-git-diff-switches '("--histogram"))
-    (unless (display-graphic-p)
-      ;; There's no fringe when Emacs is running in the console
-      (diff-hl-margin-mode 1))))
+  (setopt vc-git-diff-switches '("--histogram"))
+  (unless (display-graphic-p)
+    ;; There's no fringe when Emacs is running in the console
+    (diff-hl-margin-mode 1)))
 
 (use-package blamer
   :bind (("C-c i" . blamer-show-posframe-commit-info))
@@ -98,12 +94,12 @@
   (ediff-split-window-function 'split-window-horizontally)
   :hook (ediff-quit . winner-undo)
   :custom-face
-  (ediff-current-diff-A   ((t (:inherit 'diff-removed))))
-  (ediff-fine-diff-A   ((t (:inherit 'diff-refine-removed))))
-  (ediff-current-diff-B   ((t (:inherit 'diff-added))))
-  (ediff-fine-diff-B   ((t (:inherit 'diff-refine-added))))
-  (ediff-current-diff-C   ((t (:inherit 'diff-changed))))
-  (ediff-fine-diff-C   ((t (:inherit 'diff-refine-changed)))))
+  (ediff-current-diff-A ((t (:inherit diff-removed))))
+  (ediff-fine-diff-A    ((t (:inherit diff-refine-removed))))
+  (ediff-current-diff-B ((t (:inherit diff-added))))
+  (ediff-fine-diff-B    ((t (:inherit diff-refine-added))))
+  (ediff-current-diff-C ((t (:inherit diff-changed))))
+  (ediff-fine-diff-C    ((t (:inherit diff-refine-changed)))))
 
 (defun fate/diff-temp-buffers (&optional major-mode-name)
     "Open two temporary buffers, launch ediff to compare them, and clean up on exit."
@@ -134,7 +130,7 @@
                    (propertize "C-c C-c" 'face 'help-key-binding)
                    " to proceed to the next buffer."))
         (let ((buf1-map (make-sparse-keymap)))
-          (define-key buf1-map (kbd "C-c C-c")
+          (keymap-set buf1-map "C-c C-c"
             (lambda  ()
               (interactive)
               (delete-other-windows)
@@ -143,7 +139,7 @@
                          (propertize "C-c C-c" 'face 'help-key-binding)
                          " to start ediff."))
               (let ((buf2-map (make-sparse-keymap)))
-                (define-key buf2-map (kbd "C-c C-c")
+                (keymap-set buf2-map "C-c C-c"
                   (lambda ()
                     (interactive)
                     (when mode-sym

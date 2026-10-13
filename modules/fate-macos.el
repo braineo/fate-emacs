@@ -33,8 +33,8 @@
 ;;     (exec-path-from-shell-copy-env "PYTHONPATH")))
 
 ;; Swap command and option
-(setq mac-command-modifier 'meta)
-(setq mac-option-modifier 'super)
+(setopt mac-command-modifier 'meta
+        mac-option-modifier 'super)
 
 ;; There's no point in hiding the menu bar on macOS, so let's not do it
 (menu-bar-mode +1)

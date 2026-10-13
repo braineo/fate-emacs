@@ -417,27 +417,25 @@ Produces one ready-to-send line per zone at the current reference, e.g.:
     (kill-new text)
     (message "Copied to kill ring:\n%s" text)))
 
-(defvar fate-worldtime-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "f") #'fate/worldtime-forward-hour)
-    (define-key map (kbd "l") #'fate/worldtime-forward-hour)
-    (define-key map (kbd "<right>") #'fate/worldtime-forward-hour)
-    (define-key map (kbd "b") #'fate/worldtime-backward-hour)
-    (define-key map (kbd "h") #'fate/worldtime-backward-hour)
-    (define-key map (kbd "<left>") #'fate/worldtime-backward-hour)
-    (define-key map (kbd "<down>") #'fate/worldtime-next-zone)
-    (define-key map (kbd "j") #'fate/worldtime-next-zone)
-    (define-key map (kbd "<up>") #'fate/worldtime-prev-zone)
-    (define-key map (kbd "k") #'fate/worldtime-prev-zone)
-    (define-key map (kbd "n") #'fate/worldtime-next-day)
-    (define-key map (kbd "p") #'fate/worldtime-prev-day)
-    (define-key map (kbd ".") #'fate/worldtime-set-time)
-    (define-key map (kbd "t") #'fate/worldtime-now)
-    (define-key map (kbd "g") #'fate/worldtime-refresh)
-    (define-key map (kbd "w") #'fate/worldtime-kill)
-    (define-key map (kbd "q") #'quit-window)
-    map)
-  "Keymap for `fate-worldtime-mode'.")
+(defvar-keymap fate-worldtime-mode-map
+  :doc "Keymap for `fate-worldtime-mode'."
+  "f"       #'fate/worldtime-forward-hour
+  "l"       #'fate/worldtime-forward-hour
+  "<right>" #'fate/worldtime-forward-hour
+  "b"       #'fate/worldtime-backward-hour
+  "h"       #'fate/worldtime-backward-hour
+  "<left>"  #'fate/worldtime-backward-hour
+  "<down>"  #'fate/worldtime-next-zone
+  "j"       #'fate/worldtime-next-zone
+  "<up>"    #'fate/worldtime-prev-zone
+  "k"       #'fate/worldtime-prev-zone
+  "n"       #'fate/worldtime-next-day
+  "p"       #'fate/worldtime-prev-day
+  "."       #'fate/worldtime-set-time
+  "t"       #'fate/worldtime-now
+  "g"       #'fate/worldtime-refresh
+  "w"       #'fate/worldtime-kill
+  "q"       #'quit-window)
 
 (define-derived-mode fate-worldtime-mode special-mode "WorldTime"
   "Major mode for comparing the time across timezones.

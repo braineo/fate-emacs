@@ -24,20 +24,7 @@
 
 ;;; Code:
 
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-;; (package-initialize)
-
-;; Always load newest byte code
-(setq load-prefer-newer t)
-
-;; reduce the frequency of garbage collection by making it happen on
-;; each 50MB of allocated data (the default is on every 0.76MB)
-(setq gc-cons-threshold 90000000)
-
+;; `load-prefer-newer' and GC tuning live in early-init.el.
 (load (concat (file-name-directory load-file-name)
               "core/core-load-paths.el")
       nil (not init-file-debug))

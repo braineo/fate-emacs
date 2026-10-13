@@ -32,9 +32,9 @@
 (use-package yasnippet-snippets
   :after yasnippet)
 
-(global-set-key (kbd "M-/") 'hippie-expand)
+(keymap-global-set "M-/" #'hippie-expand)
 
-(setq hippie-expand-try-functions-list
+(setopt hippie-expand-try-functions-list
       '(
         ;; Try to expand word "dynamically", searching the current buffer.
         try-expand-dabbrev

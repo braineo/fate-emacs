@@ -36,9 +36,8 @@
 
 (defun fate-init-parinfer-mode ()
   "Disable some minor modes having troubles with parinfer-rus-mode."
-  (progn
-    (electric-pair-local-mode -1)
-    (parinfer-rust-mode)))
+  (electric-pair-local-mode -1)
+  (parinfer-rust-mode))
 
 (use-package elisp-mode
   :ensure nil
@@ -63,29 +62,15 @@ When FORCE is set, clone and reinstall grammar."
       (message (format "installing %s grammar" lang))
       (treesit-install-language-grammar lang))))
 
-(defgroup taplo nil
-  "Reformat TOML using taplo."
-  :group 'languages)
-
-(defcustom taplo-command "taplo"
-  "Command used for reformatting."
-  :group 'taplo
-  :type 'string)
-
 (reformatter-define taplo
-  :program taplo-command
+  :program "taplo"
   :args '("format" "-")
-  :lighter "TAPLO"
-  :group 'taplo)
+  :lighter "TAPLO")
 
 (use-package toml-ts-mode
   :ensure nil
   :bind (:map toml-ts-mode-map
           ("C-c C-l" . taplo-buffer)))
-
-(use-package yaml-mode
-  :mode (("\\.yaml\\'" . yaml-mode)
-         ("\\.yml\\'" . yaml-mode)))
 
 (use-package swift-mode
   :mode (("\\.swift\\'" . swift-mode)))
@@ -137,27 +122,13 @@ When FORCE is set, clone and reinstall grammar."
   :after rust-mode
   :hook (rust-mode . cargo-minor-mode))
 
-(use-package cmake-mode
-  :mode (("CMakeLists\\.txt\\'" . cmake-mode)
-         ("\\.cmake\\'" . cmake-mode)))
-
 ;; QML
 
-(defgroup qmlformat nil
-  "Reformat QML using qmlformat."
-  :group 'languages)
-
-(defcustom qmlformat-command "qmlformat"
-  "Command used for reformatting."
-  :group 'qmlformat
-  :type 'string)
-
 (reformatter-define qmlformat
-  :program qmlformat-command
+  :program "qmlformat"
   :stdin nil
   :args (list input-file "--no-sort")
-  :lighter "QF"
-  :group 'qmlformat)
+  :lighter "QF")
 
 (use-package qml-mode
   :mode (("\\.qml\\'" . qml-mode))
@@ -178,45 +149,26 @@ When FORCE is set, clone and reinstall grammar."
 
 ;; lua
 
-(defgroup stylua nil
-  "Reformat lua using StyLua."
-  :group 'languages)
-
-(defcustom stylua-command "stylua"
-  "Command used for reformatting."
-  :group 'stylua
-  :type 'string)
-
 (reformatter-define stylua
-  :program stylua-command
+  :program "stylua"
   :args '("-" "--indent-type=Spaces" "--indent-width=2")
-  :lighter "QF"
-  :group 'stylua)
+  :lighter "QF")
 
 (use-package lua-mode
   :mode (("/\\.lua" . lua-mode))
   :bind (:map lua-mode-map
          ("C-c C-l" . stylua-buffer)))
 
-(defgroup shfmt nil
-  "Reformat shell script using shfmt."
-  :group 'languages)
-
-(defcustom shfmt-command "shfmt"
-  "Command used for reformatting."
-  :group 'shfmt
-  :type 'string)
-
 (reformatter-define shfmt
-  :program shfmt-command
+  :program "shfmt"
   :args '("--indent=4" "--case-indent" "--simplify")
-  :lighter "SHF"
-  :group 'shfmt)
+  :lighter "SHF")
 
-
-(use-package sh-mode
+(use-package sh-script
   :ensure nil
   :bind (:map sh-mode-map
+          ("C-c C-l" . shfmt-buffer)
+          :map bash-ts-mode-map
           ("C-c C-l" . shfmt-buffer)))
 
 (provide 'fate-langs)

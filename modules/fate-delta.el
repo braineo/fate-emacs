@@ -88,10 +88,8 @@ If a line number is not present, it is nil."
 (defvar-local fate-delta--review-buffers nil
   "List of buffers spawned by this delta-crd session.")
 
-(defvar fate-delta-review-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c '") 'fate/delta-review-quit)
-    map))
+(defvar-keymap fate-delta-review-mode-map
+  "C-c '" #'fate/delta-review-quit)
 
 (define-minor-mode fate-delta-review-mode
   "Minor mode enabled when reviewing files side-by-side from delta."
@@ -244,12 +242,10 @@ Stores the file in `temporary-file-directory' and applies the correct major mode
   (fate/delta--cleanup-crd)
   (quit-window t))
 
-(defvar fate-delta-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "RET") 'fate/delta-goto-file-at-point)
-    (define-key map (kbd "o") 'fate/delta-transient)
-    (define-key map (kbd "q") 'fate/delta-quit-crd)
-    map))
+(defvar-keymap fate-delta-mode-map
+  "RET" #'fate/delta-goto-file-at-point
+  "o"   #'fate/delta-transient
+  "q"   #'fate/delta-quit-crd)
 
 (define-derived-mode fate-delta-mode special-mode "Delta"
   "Major mode for viewing git delta side-by-side diffs.

@@ -66,12 +66,11 @@ Argument ARG is ignored."
   (apply #'call-process "ruff" nil (get-buffer-create "*ruff-output*") nil (fate/ruff-make-args)))
 
 (use-package python
-  :defines gud-pdb-command-name pdb-path
   :functions python-nav-end-of-block
-  :config
+  :custom
   ;; Disable readline based native completion
-  (setq python-shell-completion-native-enable nil)
-
+  (python-shell-completion-native-enable nil)
+  :config
   (defconst fate/python-tools
     '("ruff"
       "ty")
@@ -87,6 +86,7 @@ Argument ARG is ignored."
    :map python-ts-mode-map
    ("C-c C-l" . fate/ruff-fmt))
   :hook
+  ;; Fallback folding when tree-sitter is unavailable and `python-mode' is used
   (python-mode . fate/python-setup-hs-mode))
 
 

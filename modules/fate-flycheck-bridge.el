@@ -71,7 +71,7 @@ CALLBACK is the status callback passed by flycheck."
   :modes '(lsp-placeholder-mode)  ;; must be major mode. add a place holder here
   :predicate (lambda() lsp-bridge-mode))
 
-(defvar flycheck-lsp-bridge-enabled-p nil "Is integration enabled in current buffer.")
+(defvar-local flycheck-lsp-bridge-enabled-p nil "Is integration enabled in current buffer.")
 
 (defun flycheck-lsp-bridge-enable ()
   "Enable flycheck lsp-bridge checker for current major mode."

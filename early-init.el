@@ -33,18 +33,13 @@
 
 (add-hook 'emacs-startup-hook
   (lambda ()
-    (progn
-      (setq gc-cons-threshold 16777216 ;; 16mb
-        gc-cons-percentage 0.1)
-      (setq file-name-handler-alist custom--file-name-handler-alist))))
+    (setq gc-cons-threshold 16777216 ;; 16mb
+          gc-cons-percentage 0.1
+          file-name-handler-alist custom--file-name-handler-alist)))
 
-(setq package-enable-at-startup nil) ;; don't auto-initialize!
-
-(when (boundp 'native-comp-eln-load-path)
-  (let ((eln-path (convert-standard-filename (expand-file-name "var/eln-cache/" user-emacs-directory))))
-   (if (version< emacs-version "29")
-     (add-to-list 'native-comp-eln-load-path eln-path)
-     (startup-redirect-eln-cache eln-path))))
+(when (featurep 'native-compile)
+  (startup-redirect-eln-cache
+   (convert-standard-filename (expand-file-name "var/eln-cache/" user-emacs-directory))))
 
 (push '(menu-bar-lines . 0) default-frame-alist)
 (push '(tool-bar-lines . 0) default-frame-alist)

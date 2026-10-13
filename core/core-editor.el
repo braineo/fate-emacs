@@ -39,11 +39,10 @@
 ;; indentation width -- eg. c-basic-offset: use that to adjust your
 ;; personal indentation width, while maintaining the style (and
 ;; meaning) of any files you load.
-(setq-default indent-tabs-mode nil)   ;; don't use tabs to indent
-(setq-default tab-width 8)            ;; but maintain correct appearance
-
-;; Newline at end of file
-(setq require-final-newline t)
+(setopt indent-tabs-mode nil   ;; don't use tabs to indent
+        tab-width 8            ;; but maintain correct appearance
+        ;; Newline at end of file
+        require-final-newline t)
 
 ;; delete the selection with a keypress
 (delete-selection-mode t)
@@ -52,13 +51,12 @@
 (global-auto-revert-mode t)
 
 ;; handle sooooooooo long line like one liner json file
-(when (>= emacs-major-version 27)
-  (global-so-long-mode t))
+(global-so-long-mode t)
 
 ;; Do not create backup and auto save files
-(setq make-backup-files nil) ; stop creating backup~ files
-(setq auto-save-default nil) ; stop creating #autosave# files
-(setq create-lockfiles nil)  ; stop creating .#interlock files
+(setopt make-backup-files nil ; stop creating backup~ files
+        auto-save-default nil ; stop creating #autosave# files
+        create-lockfiles nil) ; stop creating .#interlock files
 
 ;; Emacs fontifies as you type, which can cause lags when tree sitter mode in large buffer
 (setq redisplay-skip-fontification-on-input t)
@@ -122,10 +120,9 @@ Otherwise, it is shown at point without disturbing your current window layout."
 
 (use-package replace
   :ensure nil
-  :hook
-  ((minibuffer-setup . (lambda ()
-                         (define-key minibuffer-local-map (kbd "C-c C-h") #'fate/toggle-regex-cheatsheet-posframe)))
-   (minibuffer-exit . fate/close-regex-cheatsheet-posframe)))
+  :bind (:map minibuffer-local-map
+              ("C-c C-h" . fate/toggle-regex-cheatsheet-posframe))
+  :hook (minibuffer-exit . fate/close-regex-cheatsheet-posframe))
 
 ;; Minor mode for editing regular expressions in the minibuffer.
 (minibuffer-regexp-mode 1)
@@ -179,14 +176,11 @@ surrounded by word boundaries."
   :config
   ;; dired - reuse current buffer
   (put 'dired-find-alternate-file 'disabled nil)
-  ;; always delete and copy recursively
   :custom
+  ;; always delete and copy recursively
   (dired-recursive-deletes 'always)
   (dired-recursive-copies 'always)
   (dired-movement-style 'cycle)
-
-  (setq dired-dwim-target t)
-  :custom
   (dired-listing-switches "-alh" "show human readable size")
   ;; if there is a dired buffer displayed in the next window, use its
   ;; current subdir, instead of the current subdir of this dired buffer
@@ -201,8 +195,6 @@ surrounded by word boundaries."
   (:map projectile-mode-map
         ("C-c p" . projectile-command-map))
   :hook (after-init . projectile-mode)
-  :init
-  (setq projectile-sort-order 'recentf)
   :config
   (nconc projectile-other-file-alist
     '(
@@ -211,6 +203,7 @@ surrounded by word boundaries."
        ("tsx" . ("spec.tsx" "less" "module.less" "scss" "module.scss" "css" "module.css" "sass" "module.sass"))))
 
   :custom
+  (projectile-sort-order 'recentf)
   (projectile-switch-project-action 'projectile-vc)
   (projectile-auto-cleanup-known-projects t))
 
@@ -219,24 +212,27 @@ surrounded by word boundaries."
   :hook
   (after-init . recentf-mode)
   :commands (recentf-expand-file-name)
+  :custom
+  (recentf-max-saved-items 500)
+  (recentf-max-menu-items 15)
+  ;; disable recentf-cleanup on Emacs start, because it can cause
+  ;; problems with remote files
+  (recentf-auto-cleanup 'never)
   :config
-  (setq
-      recentf-max-saved-items 500
-      recentf-max-menu-items 15
-      ;; disable recentf-cleanup on Emacs start, because it can cause
-      ;; problems with remote files
-      recentf-auto-cleanup 'never)
   (add-to-list 'recentf-exclude (recentf-expand-file-name fate-cache-directory))
   (add-to-list 'recentf-exclude (recentf-expand-file-name package-user-dir))
   (add-to-list 'recentf-exclude (concat "\\`" (regexp-quote temporary-file-directory))))
 
 
-;; Power package visualizing undo redo history
-(use-package undo-redo
+;; Built-in undo/redo and case DWIM commands
+(use-package simple
   :ensure nil
   :bind
   (("C-/" . undo-only)
-   ("M-_" . undo-redo)))
+   ("M-_" . undo-redo)
+   ("M-u" . upcase-dwim)
+   ("M-l" . downcase-dwim)
+   ("M-c" . capitalize-dwim)))
 
 ;; Pair parentheses, brace, quotes
 (use-package elec-pair
@@ -328,19 +324,17 @@ EXTRACTED-TEXT is output from copy-as-format--extract-text."
   "Extend buffer file name kill function.
 if `N' is 8, return the path in repo.
 if `N' is 9, return root dir + repo path."
-  (unless (or buffer-file-name (projectile-project-root))
+  (if (not (or buffer-file-name (projectile-project-root)))
     (easy-kill-echo "No `buffer-file-name'")
-    (cl-return))
-
-  (easy-kill-adjust-candidate 'buffer-file-name
-    (pcase n
-      (`8 (concat (fate/repo-dir-file-name) ":" (format-mode-line "%l")))
-      (`9 (fate/repo-dir-file-name)))))
+    (easy-kill-adjust-candidate 'buffer-file-name
+      (pcase n
+        (8 (concat (fate/repo-dir-file-name) ":" (format-mode-line "%l")))
+        (9 (fate/repo-dir-file-name))))))
 
 ;; Save current clipboard content into kill ring before overwriting
-(setq save-interprogram-paste-before-kill t)
 ;; Do not save same content in the kill ring
-(setq kill-do-not-save-duplicates t)
+(setopt save-interprogram-paste-before-kill t
+        kill-do-not-save-duplicates t)
 
 ;; Core package easy kill. easy to copy the buffer name/path
 (use-package easy-kill
@@ -496,6 +490,7 @@ more information."
         ("u" "Upper" string-inflection-upcase)
         ("t" "Cycle" string-inflection-all-cycle :transient nil)]])))
 
+
 (use-package multiple-cursors
   :diminish
   :init
@@ -578,7 +573,7 @@ minibuffer, even without explicitly focusing it."
         (abort-recursive-edit))
     (keyboard-quit)))
 
-(global-set-key [remap keyboard-quit] #'er-keyboard-quit)
+(keymap-global-set "<remap> <keyboard-quit>" #'er-keyboard-quit)
 
 (use-package ghostel
   :hook (ghostel-mode . (lambda()
@@ -592,7 +587,7 @@ minibuffer, even without explicitly focusing it."
   (let ((dir (expand-file-name (or default-directory "~"))))
     (call-process "wezterm" nil 0 nil "start" "--new-tab" "--cwd" dir)))
 
-(global-set-key (kbd "C-<f5>") 'fate/open-term-here)
+(keymap-global-set "C-<f5>" #'fate/open-term-here)
 
 (require 'fate-auto-complete)
 (require 'fate-align-text)

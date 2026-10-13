@@ -75,23 +75,23 @@ IS-LAST indicates if this is the last child at current level."
        (interactive)
 
        (unless (listp ,tools)
-         (error (format "Last argument must be a list of tools")))
+         (error "Last argument must be a list of tools"))
 
        (unless (executable-find ,executable)
-         (error (format "Cannot find `%s' executable" ,executable)))
+         (error "Cannot find `%s' executable" ,executable))
 
-       (message (format "Installing %d tools" (length ,tools)))
+       (message "Installing %d tools" (length ,tools))
        (dolist (tool ,tools)
          (set-process-sentinel
           (funcall #'start-process (format "%s-tools" ,name) (format "*%s Tools*" (capitalize ,name))
             ,@command (if ,tool-name-fun
                         (funcall ,tool-name-fun tool)
                         tool))
-          `(lambda (proc _)
-             (let ((status (process-exit-status proc)))
-               (if (= 0 status)
-                   (message (format "Installed %s" ,tool))
-                 (message (format "Failed to install %s" ,tool))))))))))
+          (lambda (proc _)
+            (message (if (zerop (process-exit-status proc))
+                         "Installed %s"
+                       "Failed to install %s")
+                     tool)))))))
 
 
 (provide 'fate-misc)

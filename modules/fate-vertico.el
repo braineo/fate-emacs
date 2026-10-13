@@ -120,8 +120,8 @@
   ;; Optionally configure the register formatting. This improves the register
   ;; preview for `consult-register', `consult-register-load',
   ;; `consult-register-store' and the Emacs built-ins.
-  (setq register-preview-delay 0.5
-        register-preview-function #'consult-register-format)
+  (setopt register-preview-delay 0.5)
+  (setq register-preview-function #'consult-register-format)
 
   ;; Optionally tweak the register preview window.
   ;; This adds thin lines, sorting and hides the mode line of the window.
@@ -136,7 +136,7 @@
   ;; Optionally configure preview. The default value
   ;; is 'any, such that any key triggers the preview.
   ;; (setq consult-preview-key 'any)
-  (setq consult-preview-key "M-.")
+  (setopt consult-preview-key "M-.")
   ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
   ;; For some commands and buffer sources it is useful to configure the
   ;; :preview-key on a per-command basis using the `consult-customize' macro.
@@ -160,10 +160,8 @@
           #'color-rg-search-input (if re (consult--join-regexps re 'pcre)
                                     "")))))
 
-  (defvar fate/consult-rg-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "M-i") #'fate/consult-to-color-rg)
-      map))
+  (defvar-keymap fate/consult-rg-map
+    "M-i" #'fate/consult-to-color-rg)
 
   (consult-customize
     fate/consult-rg consult-ripgrep consult-grep
@@ -171,13 +169,13 @@
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
-  (setq consult-narrow-key "<") ;; "C-+"
+  (setopt consult-narrow-key "<") ;; "C-+"
 
   ;; Optionally make narrowing help available in the minibuffer.
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
   (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
 
-  (setq consult-ripgrep-args (concat consult-ripgrep-args " --hidden --glob \"!**/.git/**\""))
+  (setopt consult-ripgrep-args (concat consult-ripgrep-args " --hidden --glob \"!**/.git/**\""))
 
   (defun fate/consult-rg (&optional dir given-initial)
     (interactive "P")
@@ -237,7 +235,7 @@ targets."
            nil nil t (lambda (binding)
                        (not (string-suffix-p "-argument" (cdr binding))))))))
 
-    (setq embark-indicators
+    (setopt embark-indicators
           '(embark-which-key-indicator
             embark-highlight-indicator
             embark-isearch-highlight-indicator))

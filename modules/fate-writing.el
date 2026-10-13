@@ -83,7 +83,7 @@
 
 (use-package org
   :ensure nil
-  :hook (org-mode . (lambda() (set-fill-column 120)))
+  :hook (org-mode . (lambda () (setq-local fill-column 120)))
   :config
   (add-to-list 'org-export-backends '(pandoc))
   (dolist (lang-mode '(("bash" . bash-ts)
@@ -360,22 +360,12 @@ and replaces template strings in the current buffer."
          (endgame-start-date (org-read-date nil nil "--mon" nil end-date-time)))
 
     ;; Replace template strings in buffer
-    (save-excursion
-      (goto-char (point-min))
-      (while (search-forward "<start_date>" nil t)
-        (replace-match start-date))
-
-      (goto-char (point-min))
-      (while (search-forward "<end_date>" nil t)
-        (replace-match end-date))
-
-      (goto-char (point-min))
-      (while (search-forward "<endgame_start_date>" nil t)
-        (replace-match endgame-start-date))
-
-      (goto-char (point-min))
-      (while (search-forward "<endgame_end_date>" nil t)
-        (replace-match endgame-end-date)))
+    (pcase-dolist (`(,placeholder . ,date)
+                   `(("<start_date>" . ,start-date)
+                     ("<end_date>" . ,end-date)
+                     ("<endgame_start_date>" . ,endgame-start-date)
+                     ("<endgame_end_date>" . ,endgame-end-date)))
+      (replace-string-in-region placeholder date (point-min)))
 
     (message "Iteration dates filled: %s to %s (endgame: %s to %s)"
              start-date end-date endgame-start-date endgame-end-date)))

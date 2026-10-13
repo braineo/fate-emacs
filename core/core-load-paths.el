@@ -24,10 +24,6 @@
 
 ;;; Code:
 
-(defun add-to-load-path (dirs)
-  "Add a list of directories `DIRS' to `load-path'."
-  (add-to-list 'load-path dirs))
-
 (defvar fate-directory
   (file-truename user-emacs-directory)
   "Root directory of Fate Emacs.")
@@ -48,19 +44,16 @@
   (expand-file-name "~/")
   "User home directory (~/).")
 
-(unless (file-exists-p fate-cache-directory)
-    (make-directory fate-cache-directory))
+(make-directory fate-cache-directory t)
 
 ;; Custom file
-(setq custom-file (expand-file-name "custom.el" fate-directory))
+(setopt custom-file (expand-file-name "custom.el" fate-directory))
 (unless (file-exists-p custom-file)
   (copy-file (expand-file-name "fate-custom-template.el" fate-core-directory) custom-file))
 
 ;; load paths
-(mapc 'add-to-load-path
-      `(
-        ,fate-core-directory
-        ,fate-modules-directory))
+(add-to-list 'load-path fate-core-directory)
+(add-to-list 'load-path fate-modules-directory)
 
 (provide 'core-load-paths)
 ;;; core-load-paths.el ends here

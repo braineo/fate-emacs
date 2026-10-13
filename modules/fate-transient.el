@@ -46,7 +46,7 @@
    ["Tools"
     ("w" "World Time" fate/worldtime)]])
 
-(global-set-key (kbd "M-m") 'gate-of-babylon)
+(keymap-global-set "M-m" #'gate-of-babylon)
 
 (provide 'fate-transient)
 ;;; fate-transient.el ends here

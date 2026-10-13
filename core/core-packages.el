@@ -25,25 +25,15 @@
 ;;; Code:
 
 ;; Package configs
-(require 'package)
+;; package.el is activated before init.el (`package-enable-at-startup'),
+;; and use-package is built in, so no bootstrapping is needed.
 (require 'core-load-paths)
-(require 'comp)
 
-(setq package-enable-at-startup nil)
-(setq package-archives '(("gnu"   . "https://elpa.gnu.org/packages/")
-                         ("melpa" . "https://melpa.org/packages/")))
-(unless package--initialized
-  (package-initialize))
-
-;; Bootstrap `use-package`
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(require 'use-package)
-(setq use-package-always-ensure t)
-(setq use-package-vc-prefer-newest t)
-(setq package-install-upgrade-built-in t)
+(setopt package-archives '(("gnu"   . "https://elpa.gnu.org/packages/")
+                           ("melpa" . "https://melpa.org/packages/"))
+        use-package-always-ensure t
+        use-package-vc-prefer-newest t
+        package-install-upgrade-built-in t)
 (when (file-readable-p custom-file) (load custom-file))
 
 ;; Only enable for benchmarking
@@ -55,11 +45,11 @@
 
 (defun fate/update-configuration ()
   "Update packages and configure repository."
-  (if (executable-find "git")
-    (progn
-      (print "Pulling configuration update from git")
-      (call-process-shell-command "cd ~/.emacs.d && git pull" nil nil t)))
-  (print "Pulling configuration update from git")
+  (when (executable-find "git")
+    (message "Pulling configuration update from git")
+    (let ((default-directory fate-directory))
+      (call-process "git" nil nil t "pull")))
+  (message "Upgrading packages")
   (package-upgrade-all))
 
 
@@ -69,8 +59,7 @@
     (add-to-list 'recentf-exclude (recentf-expand-file-name no-littering-var-directory))
     (add-to-list 'recentf-exclude (recentf-expand-file-name no-littering-etc-directory))))
 
-(when (native-comp-available-p)
-  (setq native-comp-async-report-warnings-errors 'silent))
+(setopt native-comp-async-report-warnings-errors 'silent)
 
 (provide 'core-packages)
 ;;; core-packages.el ends here

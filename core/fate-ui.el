@@ -17,111 +17,67 @@
 (eval-when-compile
  (require 'core-load-paths))
 
-;; Minimal UI
-;; the toolbar is just a waste of valuable screen estate
-;; in a tty tool-bar-mode does not properly auto-load, and is
-;; already disabled anyway
-(unless (>= emacs-major-version 27)
-  (when (fboundp 'tool-bar-mode)
-    (tool-bar-mode -1))
-  ;; relegate tooltips to echo area only
-  (when (boundp 'tooltip-mode)
-    (tooltip-mode -1))
-  (when (fboundp 'scroll-bar-mode)
-    (scroll-bar-mode -1))
-  (when (fboundp 'horizontal-scroll-bar-mode)
-    (horizontal-scroll-bar-mode -1)))
+;; Minimal UI: menu/tool/scroll bars are disabled in early-init.el
 
 ;; the blinking cursor is nothing, but an annoyance
 (blink-cursor-mode -1)
-(set-frame-parameter (window-frame) 'cursor-type 'bar)
+(setq-default cursor-type 'bar)
 
 ;; Turn on line numbers
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
 ;; disable the annoying bell ring
-(setq ring-bell-function 'ignore)
-
 ;; disable startup screen
-(setq inhibit-startup-screen t)
-
 ;; When emacs asks for "yes" or "no", let "y" or "n" suffice
-(setopt use-short-answers t)
+(setopt ring-bell-function 'ignore
+        inhibit-startup-screen t
+        use-short-answers t)
 
 ;; highlight the current line
 (global-hl-line-mode t)
 
 ;; right border takes 1 pixel on right split buffer, make fringe visible
-(setq-default window-divider-default-places t
-  window-divider-default-bottom-width 1
-  window-divider-default-right-width 1)
+(setopt window-divider-default-places t
+        window-divider-default-bottom-width 1
+        window-divider-default-right-width 1
+        window-combination-resize t)
 (window-divider-mode)
 
-(setq window-combination-resize t)
-
-;; When it is macOS and version number is higher than 26.0
-(when (and IS-MAC (>= emacs-major-version 26))
-  (setq default-frame-alist '((ns-transparent-titlebar . t) (ns-appearance . dark))))
+(when IS-MAC
+  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+  (add-to-list 'default-frame-alist '(ns-appearance . dark)))
 
 ;; Tree sitter for better syntax highlight
 (use-package treesit
   :if (treesit-available-p)
   :ensure nil
-  :init
-  (setq treesit-language-source-alist
-    '((bash       . ("https://github.com/tree-sitter/tree-sitter-bash"))
-      (c          . ("https://github.com/tree-sitter/tree-sitter-c"))
-      (cpp        . ("https://github.com/tree-sitter/tree-sitter-cpp"))
-      (css        . ("https://github.com/tree-sitter/tree-sitter-css"))
-      (cmake      . ("https://github.com/uyha/tree-sitter-cmake"))
-      (c-sharp     . ("https://github.com/tree-sitter/tree-sitter-c-sharp" nil "src"))
-      (dockerfile . ("https://github.com/camdencheek/tree-sitter-dockerfile"))
-      (elisp      . ("https://github.com/Wilfred/tree-sitter-elisp"))
-      (elixir     . ("https://github.com/elixir-lang/tree-sitter-elixir" "main" "src" nil nil))
-      (go         . ("https://github.com/tree-sitter/tree-sitter-go"))
-      (gomod      . ("https://github.com/camdencheek/tree-sitter-go-mod"))
-      (graphql    . ("https://github.com/bkegley/tree-sitter-graphql"))
-      (haskell    . ("https://github.com/tree-sitter/tree-sitter-haskell" "master" "src" nil nil))
-      (html       . ("https://github.com/tree-sitter/tree-sitter-html"))
-      (java       . ("https://github.com/tree-sitter/tree-sitter-java"))
-      (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript"))
-      (json       . ("https://github.com/tree-sitter/tree-sitter-json"))
-      (lua        . ("https://github.com/Azganoth/tree-sitter-lua"))
-      (make       . ("https://github.com/alemuller/tree-sitter-make"))
-      (markdown   . ("https://github.com/MDeiml/tree-sitter-markdown" nil "tree-sitter-markdown/src"))
-      (markdown-inline   . ("https://github.com/MDeiml/tree-sitter-markdown" nil "tree-sitter-markdown-inline/src"))
-      (org        . ("https://github.com/milisims/tree-sitter-org"))
-      (python     . ("https://github.com/tree-sitter/tree-sitter-python"))
-      (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript/src"))
-      (tsx        . ("https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx/src"))
-      (typst      . ("https://github.com/uben0/tree-sitter-typst" "master" "src" nil nil))
-      (ruby       . ("https://github.com/tree-sitter/tree-sitter-ruby"))
-      (rust       . ("https://github.com/tree-sitter/tree-sitter-rust"))
-      (sql        . ("https://github.com/m-novikov/tree-sitter-sql"))
-      (scala      . ("https://github.com/tree-sitter/tree-sitter-scala" "master" "src" nil nil))
-      (toml       . ("https://github.com/tree-sitter/tree-sitter-toml" "master" "src" nil nil))
-      (vue        . ("https://github.com/merico-dev/tree-sitter-vue"))
-      (kotlin     . ("https://github.com/fwcd/tree-sitter-kotlin"))
-      (yaml       . ("https://github.com/tree-sitter-grammars/tree-sitter-yaml"))
-      (zig        . ("https://github.com/GrayJack/tree-sitter-zig"))
-      (mojo       . ("https://github.com/HerringtonDarkholme/tree-sitter-mojo"))))
-
-  (setq major-mode-remap-alist
-    '((c-mode         . c-ts-mode)
-      (c++-mode       . c++-ts-mode)
-      (cmake-mode     . cmake-ts-mode)
-      (conf-toml-mode . toml-ts-mode)
-      (css-mode       . css-ts-mode)
-      (graphql-mode   . graphql-ts-mode)
-      (js-mode        . js-ts-mode)
-      (js-json-mode   . json-ts-mode)
-      (python-mode    . python-ts-mode)
-      (sh-mode        . bash-ts-mode)
-      (yaml-mode      . yaml-ts-mode)))
-
+  :config
+  ;; Built-in ts modes (c, cpp, cmake, css, bash, go, html, java, js, json,
+  ;; lua, markdown, python, ruby, rust, toml, tsx, typescript, yaml, ...)
+  ;; register their own pinned grammar recipes since Emacs 31.
+  ;; Only list grammars for modes that are not built in.
+  (dolist (source
+           '((elisp      "https://github.com/Wilfred/tree-sitter-elisp")
+             (graphql    "https://github.com/bkegley/tree-sitter-graphql")
+             (haskell    "https://github.com/tree-sitter/tree-sitter-haskell" "master" "src")
+             (kotlin     "https://github.com/fwcd/tree-sitter-kotlin")
+             (make       "https://github.com/alemuller/tree-sitter-make")
+             (mojo       "https://github.com/HerringtonDarkholme/tree-sitter-mojo")
+             (org        "https://github.com/milisims/tree-sitter-org")
+             (scala      "https://github.com/tree-sitter/tree-sitter-scala" "master" "src")
+             (sql        "https://github.com/m-novikov/tree-sitter-sql")
+             (typst      "https://github.com/uben0/tree-sitter-typst" "master" "src")
+             (vue        "https://github.com/merico-dev/tree-sitter-vue")
+             (zig        "https://github.com/GrayJack/tree-sitter-zig")))
+    (add-to-list 'treesit-language-source-alist source))
   :custom
   (treesit-font-lock-level 4)
-  (treesit-auto-install-grammar 'always))
+  (treesit-auto-install-grammar 'always)
+  ;; Replaces hand-written `major-mode-remap-alist'.  Not t: go-mode,
+  ;; rust-mode, lua-mode etc. are intentionally kept.
+  (treesit-enabled-modes '(c-ts-mode c++-ts-mode c-or-c++-ts-mode cmake-ts-mode
+                           toml-ts-mode css-ts-mode js-ts-mode json-ts-mode
+                           python-ts-mode bash-ts-mode yaml-ts-mode)))
 
 (add-to-list 'default-frame-alist '(alpha-background . 97))
 (set-frame-parameter nil 'alpha-background 97)
@@ -217,8 +173,7 @@
   (solaire-global-mode +1))
 
 (use-package doom-modeline
-  :config
-  :hook ((after-init . doom-modeline-mode))
+  :hook (after-init . doom-modeline-mode)
   :custom
   (doom-modeline-buffer-file-name-style 'truncate-upto-project))
 
@@ -233,33 +188,31 @@
   (dashboard-icon-type 'nerd-icons)
   (dashboard-projects-backend 'projectile)
   (dashboard-footer-messages fate/emacs-hints)
+  (dashboard-items '((recents  . 10)
+                     (projects . 10)))
   :config
-  (progn
-    (setq dashboard-items '((recents  . 10)
-                            (projects . 10))
+  (setq dashboard-startupify-list '(dashboard-insert-banner
+                                    dashboard-insert-newline
+                                    dashboard-insert-banner-title
+                                    dashboard-insert-newline
+                                    dashboard-insert-navigator
+                                    dashboard-insert-newline
+                                    dashboard-insert-init-info
+                                    dashboard-insert-items
+                                    dashboard-insert-newline
+                                    dashboard-insert-footer)
 
-          dashboard-startupify-list '(dashboard-insert-banner
-                                      dashboard-insert-newline
-                                      dashboard-insert-banner-title
-                                      dashboard-insert-newline
-                                      dashboard-insert-navigator
-                                      dashboard-insert-newline
-                                      dashboard-insert-init-info
-                                      dashboard-insert-items
-                                      dashboard-insert-newline
-                                      dashboard-insert-footer)
-
-          ;; Format: "(icon title help action face prefix suffix)"
-          dashboard-navigator-buttons
-          `(((,(when (display-graphic-p)
-                 (nerd-icons-codicon "nf-cod-github"))
-               "Homepage" "Browse homepage"
-               (lambda (&rest _) (browse-url FATE-HOME)))
-             (,(when (display-graphic-p)
-                 (nerd-icons-mdicon "nf-md-update"))
-               "Update" "Update Fate Emacs"
-               (lambda (&rest _) (fate/update-configuration))))))
-    (dashboard-setup-startup-hook)))
+        ;; Format: "(icon title help action face prefix suffix)"
+        dashboard-navigator-buttons
+        `(((,(when (display-graphic-p)
+               (nerd-icons-codicon "nf-cod-github"))
+             "Homepage" "Browse homepage"
+             (lambda (&rest _) (browse-url FATE-HOME)))
+           (,(when (display-graphic-p)
+               (nerd-icons-mdicon "nf-md-update"))
+             "Update" "Update Fate Emacs"
+             (lambda (&rest _) (fate/update-configuration))))))
+  (dashboard-setup-startup-hook))
 
 (use-package nerd-icons)
 
@@ -355,12 +308,11 @@
 (use-package gdb-mi
   :ensure nil
   :defer t
-  :init
-  (setq
-    ;; use gdb-many-windows by default when `M-x gdb'
-    gdb-many-windows t
-    ;; Non-nil means display source file containing the main routine at startup
-    gdb-show-main t))
+  :custom
+  ;; use gdb-many-windows by default when `M-x gdb'
+  (gdb-many-windows t)
+  ;; Non-nil means display source file containing the main routine at startup
+  (gdb-show-main t))
 
 (provide 'fate-ui)
 ;;; fate-ui.el ends here
