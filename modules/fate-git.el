@@ -70,6 +70,13 @@
 (use-package git-modes
   :defer t)
 
+(use-package vc
+  :ensure nil
+  :custom
+  (vc-follow-symlinks t)
+  (vc-git-diff-switches '("--histogram"))
+  (vc-git-print-log-follow t))
+
 (use-package diff-hl
   :diminish
   :hook
@@ -77,8 +84,9 @@
    (after-init . diff-hl-flydiff-mode)
    (magit-post-refresh . diff-hl-magit-post-refresh)
    (dired-mode . diff-hl-dired-mode))
+  :custom
+  (diff-hl-update-async t)
   :config
-  (setopt vc-git-diff-switches '("--histogram"))
   (unless (display-graphic-p)
     ;; There's no fringe when Emacs is running in the console
     (diff-hl-margin-mode 1)))

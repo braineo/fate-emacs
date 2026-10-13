@@ -24,6 +24,25 @@
 
 ;;; Code:
 
+;; Persist minibuffer history; vertico sorts candidates by it
+(use-package savehist
+  :ensure nil
+  :hook (after-init . savehist-mode)
+  :custom
+  (history-length 1000)
+  (history-delete-duplicates t))
+
+(use-package minibuffer
+  :ensure nil
+  :custom
+  ;; allow M-: or consult-yank inside a prompt
+  (enable-recursive-minibuffers t)
+  ;; keep the cursor out of the prompt text
+  (minibuffer-prompt-properties '(read-only t cursor-intangible t face minibuffer-prompt))
+  :hook (minibuffer-setup . cursor-intangible-mode)
+  :config
+  (minibuffer-depth-indicate-mode))
+
 (use-package vertico
   :bind (:map vertico-map
           ("RET" . vertico-directory-enter)

@@ -50,6 +50,20 @@
                             "*Ibuffer*"
                             "*esh command on file*")))
 
+;; Core package winum. Easy navigation to different buffers
+(use-package winum
+  :hook (after-init . winum-mode)
+  :bind
+  ("M-1" . winum-select-window-1)
+  ("M-2" . winum-select-window-2)
+  ("M-3" . winum-select-window-3)
+  ("M-4" . winum-select-window-4)
+  ("M-5" . winum-select-window-5))
+
+;; Select help windows and keep them selected when following links
+(setopt help-window-select t
+        help-window-keep-selected t)
+
 (use-package shackle
   :commands shackle-mode
   :hook (after-init . shackle-mode)

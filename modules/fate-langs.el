@@ -24,15 +24,62 @@
 
 ;;; Code:
 
-
-;; Lisp
-
 (eval-when-compile
   (require 'fate-misc)
   (require 'treesit))
 
+;; Tree sitter for better syntax highlight
+(use-package treesit
+  :if (treesit-available-p)
+  :ensure nil
+  :config
+  ;; Built-in ts modes (c, cpp, cmake, css, bash, go, html, java, js, json,
+  ;; lua, markdown, python, ruby, rust, toml, tsx, typescript, yaml, ...)
+  ;; register their own pinned grammar recipes since Emacs 31.
+  ;; Only list grammars for modes that are not built in.
+  (dolist (source
+           '((elisp      "https://github.com/Wilfred/tree-sitter-elisp")
+             (graphql    "https://github.com/bkegley/tree-sitter-graphql")
+             (haskell    "https://github.com/tree-sitter/tree-sitter-haskell" "master" "src")
+             (kotlin     "https://github.com/fwcd/tree-sitter-kotlin")
+             (make       "https://github.com/alemuller/tree-sitter-make")
+             (mojo       "https://github.com/HerringtonDarkholme/tree-sitter-mojo")
+             (org        "https://github.com/milisims/tree-sitter-org")
+             (scala      "https://github.com/tree-sitter/tree-sitter-scala" "master" "src")
+             (sql        "https://github.com/m-novikov/tree-sitter-sql")
+             (typst      "https://github.com/uben0/tree-sitter-typst" "master" "src")
+             (vue        "https://github.com/merico-dev/tree-sitter-vue")
+             (zig        "https://github.com/GrayJack/tree-sitter-zig")))
+    (add-to-list 'treesit-language-source-alist source))
+  :custom
+  (treesit-font-lock-level 4)
+  (treesit-auto-install-grammar 'always)
+  ;; Replaces hand-written `major-mode-remap-alist'.  Not t: go-mode,
+  ;; rust-mode, lua-mode etc. are intentionally kept.
+  (treesit-enabled-modes '(c-ts-mode c++-ts-mode c-or-c++-ts-mode cmake-ts-mode
+                           toml-ts-mode css-ts-mode js-ts-mode json-ts-mode
+                           python-ts-mode bash-ts-mode yaml-ts-mode)))
+
+(use-package compile
+  :ensure nil
+  :hook (compilation-filter . ansi-color-compilation-filter)
+  :custom
+  (compilation-ask-about-save nil)
+  (compilation-scroll-output 'first-error))
+
+(use-package gdb-mi
+  :ensure nil
+  :defer t
+  :custom
+  ;; use gdb-many-windows by default when `M-x gdb'
+  (gdb-many-windows t)
+  ;; Non-nil means display source file containing the main routine at startup
+  (gdb-show-main t))
+
 (use-package reformatter
   :defer t)
+
+;; Lisp
 
 (defun fate-init-parinfer-mode ()
   "Disable some minor modes having troubles with parinfer-rus-mode."

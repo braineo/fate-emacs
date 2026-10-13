@@ -26,8 +26,6 @@
 (eval-when-compile
   (require 'core-load-paths))
 
-(require 're-builder)
-
 (use-package posframe)
 ;; Death to the tabs!  However, tabs historically indent to the next
 ;; 8-character offset; specifying anything else will cause *mass*
@@ -47,16 +45,8 @@
 ;; delete the selection with a keypress
 (delete-selection-mode t)
 
-;; revert buffers automatically when underlying files are changed externally
-(global-auto-revert-mode t)
-
 ;; handle sooooooooo long line like one liner json file
 (global-so-long-mode t)
-
-;; Do not create backup and auto save files
-(setopt make-backup-files nil ; stop creating backup~ files
-        auto-save-default nil ; stop creating #autosave# files
-        create-lockfiles nil) ; stop creating .#interlock files
 
 ;; Emacs fontifies as you type, which can cause lags when tree sitter mode in large buffer
 (setq redisplay-skip-fontification-on-input t)
@@ -70,160 +60,6 @@
       large-hscroll-threshold 1000
       syntax-wholeline-max 1000)
 
-(use-package tramp
-  :defer t
-  :ensure nil
-  :custom
-  (tramp-default-method "ssh"))
-
-(defconst regex-cheatsheet-posframe-name "*Regex Cheat Sheet*")
-
-(defconst fate/regex-cheatsheet-string
-  "| Function                   | PCRE                  | Emacs                              |
-|----------------------------|-----------------------|------------------------------------|
-| Group, Count, Alternation  | (cat|dog){3}          | \\(cat\\|dog\\)\\{3\\}                  |
-| Classes                    | \\w \\d \\s              | [[:word:]] [[:digit:]] [[:space:]] |
-| Word Constituent           | \\w does not match ' \" | \\w match syntax table text         |
-| New line                   | \\n                    | C-q C-j                            |
-| Start/End Of Buffer/String |                       | \\` \\'                              |
-| Captured                   | $1 $2                 | \\1 \\2                              |")
-
-(defun fate/toggle-regex-cheatsheet-posframe ()
-  "Toggle display of a floating regex help posframe during search.
-When called, if the posframe is already visible, it is dismissed.
-Otherwise, it is shown at point without disturbing your current window layout."
-  (interactive)
-  (if (get-buffer regex-cheatsheet-posframe-name)
-    (posframe-delete regex-cheatsheet-posframe-name)
-    (posframe-show regex-cheatsheet-posframe-name
-                   :string fate/regex-cheatsheet-string
-                   :poshandler #'posframe-poshandler-window-bottom-right-corner
-                   :border-width 1
-                   :border-color "gray"
-                   :accept-focus nil
-                   :timeout 0)))
-
-(defun fate/close-regex-cheatsheet-posframe ()
-  (when (get-buffer regex-cheatsheet-posframe-name)
-    (posframe-delete regex-cheatsheet-posframe-name)))
-
-(use-package isearch
-  :ensure nil
-  :bind (:map isearch-mode-map
-              ([remap isearch-delete-char] . isearch-del-char)
-              ("C-c C-h" . fate/toggle-regex-cheatsheet-posframe))
-  :hook
-  (isearch-mode-end . fate/close-regex-cheatsheet-posframe)
-  :custom
-  (isearch-lazy-count t)
-  (lazy-count-prefix-format "%s/%s "))
-
-(use-package replace
-  :ensure nil
-  :bind (:map minibuffer-local-map
-              ("C-c C-h" . fate/toggle-regex-cheatsheet-posframe))
-  :hook (minibuffer-exit . fate/close-regex-cheatsheet-posframe))
-
-;; Minor mode for editing regular expressions in the minibuffer.
-(minibuffer-regexp-mode 1)
-
-(use-package casual
-  :defer t)
-
-(use-package casual-isearch
-  :ensure nil
-  :bind (:map isearch-mode-map
-         ("<f2>" . casual-isearch-tmenu)))
-
-(use-package re-builder
-  :ensure nil
-  :bind ((:map reb-mode-map
-           ("C-<return>" . fate/reb-query-replace-regexp))
-         (:map reb-subexp-mode-map
-           ("C-<return>" . fate/reb-query-replace-regexp)))
-  :custom
-  (reb-re-syntax 'string)
-  :config
-  ;; Stay in the original buffer position on re-builder
-  (define-advice reb-update-overlays
-      (:around (orig-fun &rest args) save-window-excursion)
-    "Advice for `reb-update-overlays' to inhibit window config changes."
-    (save-window-excursion (apply orig-fun args)))
-
-  (defun fate/reb-query-replace-regexp (&optional delimited)
-    "Run `query-replace-regexp' with the contents of re-builder. With
-non-nil optional argument `DELIMITED', only replace matches
-surrounded by word boundaries."
-    (interactive "P")
-    (reb-update-regexp)
-    (let* ((re (reb-target-value 'reb-regexp))
-           (start (use-region-beginning))
-           (end (use-region-end))
-           (replacement (query-replace-read-to re
-                          (concat "Query replace"
-                            (if current-prefix-arg
-                              (if (eq current-prefix-arg '-) " backward" " word")
-                              "")
-                            " regexp"
-                            (if (use-region-p) " in region"))
-                          t)))
-      (with-selected-window reb-target-window
-        (reb-quit)
-        (query-replace-regexp re replacement delimited start end)))))
-
-(use-package dired
-  :ensure nil
-  :config
-  ;; dired - reuse current buffer
-  (put 'dired-find-alternate-file 'disabled nil)
-  :custom
-  ;; always delete and copy recursively
-  (dired-recursive-deletes 'always)
-  (dired-recursive-copies 'always)
-  (dired-movement-style 'cycle)
-  (dired-listing-switches "-alh" "show human readable size")
-  ;; if there is a dired buffer displayed in the next window, use its
-  ;; current subdir, instead of the current subdir of this dired buffer
-  (dired-kill-when-opening-new-dired-buffer t)
-  (dired-dwim-target t "guess where to copy to"))
-
-;; Core package Projectile
-(use-package projectile
-  :diminish
-  :commands projectile-project-root
-  :bind
-  (:map projectile-mode-map
-        ("C-c p" . projectile-command-map))
-  :hook (after-init . projectile-mode)
-  :config
-  (nconc projectile-other-file-alist
-    '(
-       ("graphql" . ("gql.ts"))
-       ("ts" . ("spec.ts"))
-       ("tsx" . ("spec.tsx" "less" "module.less" "scss" "module.scss" "css" "module.css" "sass" "module.sass"))))
-
-  :custom
-  (projectile-sort-order 'recentf)
-  (projectile-switch-project-action 'projectile-vc)
-  (projectile-auto-cleanup-known-projects t))
-
-
-(use-package recentf
-  :hook
-  (after-init . recentf-mode)
-  :commands (recentf-expand-file-name)
-  :custom
-  (recentf-max-saved-items 500)
-  (recentf-max-menu-items 15)
-  ;; disable recentf-cleanup on Emacs start, because it can cause
-  ;; problems with remote files
-  (recentf-auto-cleanup 'never)
-  :config
-  (add-to-list 'recentf-exclude (recentf-expand-file-name fate-cache-directory))
-  (add-to-list 'recentf-exclude (recentf-expand-file-name package-user-dir))
-  (add-to-list 'recentf-exclude (concat "\\`" (regexp-quote temporary-file-directory))))
-
-
 ;; Built-in undo/redo and case DWIM commands
 (use-package simple
   :ensure nil
@@ -232,7 +68,23 @@ surrounded by word boundaries."
    ("M-_" . undo-redo)
    ("M-u" . upcase-dwim)
    ("M-l" . downcase-dwim)
-   ("M-c" . capitalize-dwim)))
+   ("M-c" . capitalize-dwim))
+  :custom
+  ;; after one C-u C-SPC, plain C-SPC keeps popping the mark
+  (set-mark-command-repeat-pop t))
+
+;; Repeat the last key of a command alone: C-x o o o, C-x u u, M-g n n
+(use-package repeat
+  :ensure nil
+  :hook (after-init . repeat-mode))
+
+;; C-v/M-v reach the buffer edge instead of signaling an error
+(setopt scroll-error-top-bottom t
+        scroll-preserve-screen-position t)
+
+(put 'narrow-to-region 'disabled nil)
+
+(keymap-global-set "C-h K" #'describe-keymap)
 
 ;; Pair parentheses, brace, quotes
 (use-package elec-pair
@@ -417,27 +269,6 @@ more information."
   ("C-<tab>" . treesit-fold-toggle))
 
 
-;; Core package winum. Easy navigation to different buffers
-(use-package winum
-  :hook (after-init . winum-mode)
-  :bind
-  ("M-1" . winum-select-window-1)
-  ("M-2" . winum-select-window-2)
-  ("M-3" . winum-select-window-3)
-  ("M-4" . winum-select-window-4)
-  ("M-5" . winum-select-window-5)
-  ("M-6" . winum-select-window-6)
-  ("M-7" . winum-select-window-7)
-  ("M-8" . winum-select-window-8))
-
-(use-package ibuffer
-  :ensure nil
-  :bind
-  ([remap list-buffers] . ibuffer))
-
-(use-package nerd-icons-ibuffer
-  :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
-
 ;; Avy. Jump to anywhere like a sniper
 (use-package avy
   :ensure t
@@ -529,35 +360,6 @@ more information."
   :custom
   (bm-buffer-persistence nil "Do not save bookmarks"))
 
-(use-package color-rg
-  :vc (:url "https://github.com/manateelazycat/color-rg")
-  :config
-  (add-to-list 'display-buffer-alist
-             '("\\*color-rg\\*"
-               (display-buffer-in-side-window)
-               (side . right)
-               (window-width . 0.35) ; Take up 35% of the screen width
-               (window-parameters . ((no-other-window . t)
-                                     (no-delete-other-windows . t)))))
-  :custom
-  (color-rg-search-no-ignore-file nil)
-  (color-rg-mac-load-path-from-shell nil))
-
-(defun fate/kill-buffer (prefix path-pattern)
-  "Kill buffer with patterns.  PATH-PATTERN is pattern to compare with buffer name.
-PREFIX determines whether to match file name or buffer name."
-  (interactive "P\nsbuffer name pattern: ")
-  (when path-pattern
-    (cl-dolist (buffer (buffer-list))
-      (let* ((file-name (cond
-                          ((not prefix) (buffer-file-name buffer))
-                          ((equal prefix 0) (buffer-name buffer)))))
-        (message file-name)
-        (when (and file-name
-                   (string-match path-pattern file-name))
-          (kill-buffer buffer))))))
-
-
 ;;; https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smarter/
 
 (defun er-keyboard-quit ()
@@ -592,5 +394,7 @@ minibuffer, even without explicitly focusing it."
 (require 'fate-auto-complete)
 (require 'fate-align-text)
 (require 'fate-windows)
+(require 'fate-search)
+(require 'fate-files)
 (provide 'core-editor)
 ;;; core-editor.el ends here

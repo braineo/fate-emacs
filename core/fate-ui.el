@@ -47,38 +47,6 @@
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . dark)))
 
-;; Tree sitter for better syntax highlight
-(use-package treesit
-  :if (treesit-available-p)
-  :ensure nil
-  :config
-  ;; Built-in ts modes (c, cpp, cmake, css, bash, go, html, java, js, json,
-  ;; lua, markdown, python, ruby, rust, toml, tsx, typescript, yaml, ...)
-  ;; register their own pinned grammar recipes since Emacs 31.
-  ;; Only list grammars for modes that are not built in.
-  (dolist (source
-           '((elisp      "https://github.com/Wilfred/tree-sitter-elisp")
-             (graphql    "https://github.com/bkegley/tree-sitter-graphql")
-             (haskell    "https://github.com/tree-sitter/tree-sitter-haskell" "master" "src")
-             (kotlin     "https://github.com/fwcd/tree-sitter-kotlin")
-             (make       "https://github.com/alemuller/tree-sitter-make")
-             (mojo       "https://github.com/HerringtonDarkholme/tree-sitter-mojo")
-             (org        "https://github.com/milisims/tree-sitter-org")
-             (scala      "https://github.com/tree-sitter/tree-sitter-scala" "master" "src")
-             (sql        "https://github.com/m-novikov/tree-sitter-sql")
-             (typst      "https://github.com/uben0/tree-sitter-typst" "master" "src")
-             (vue        "https://github.com/merico-dev/tree-sitter-vue")
-             (zig        "https://github.com/GrayJack/tree-sitter-zig")))
-    (add-to-list 'treesit-language-source-alist source))
-  :custom
-  (treesit-font-lock-level 4)
-  (treesit-auto-install-grammar 'always)
-  ;; Replaces hand-written `major-mode-remap-alist'.  Not t: go-mode,
-  ;; rust-mode, lua-mode etc. are intentionally kept.
-  (treesit-enabled-modes '(c-ts-mode c++-ts-mode c-or-c++-ts-mode cmake-ts-mode
-                           toml-ts-mode css-ts-mode js-ts-mode json-ts-mode
-                           python-ts-mode bash-ts-mode yaml-ts-mode)))
-
 (add-to-list 'default-frame-alist '(alpha-background . 97))
 (set-frame-parameter nil 'alpha-background 97)
 
@@ -285,6 +253,9 @@
   :hook
   (prog-mode text-mode))
 
+;; Show the line of an offscreen opening paren
+(setopt show-paren-context-when-offscreen 'overlay)
+
 (dolist (hook '(prog-mode-hook text-mode-hook))
   (add-hook hook (lambda () (setq-local show-trailing-whitespace t))))
 
@@ -304,15 +275,6 @@
   :custom
   (which-key-separator " ")
   (which-key-prefix-prefix "+"))
-
-(use-package gdb-mi
-  :ensure nil
-  :defer t
-  :custom
-  ;; use gdb-many-windows by default when `M-x gdb'
-  (gdb-many-windows t)
-  ;; Non-nil means display source file containing the main routine at startup
-  (gdb-show-main t))
 
 (provide 'fate-ui)
 ;;; fate-ui.el ends here
