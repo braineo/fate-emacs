@@ -175,6 +175,25 @@ Runs after `calendar-mark-holidays', i.e. on every redraw and on \\`x'."
   :ensure nil
   :custom
   (calendar-mark-holidays-flag t)
+  (calendar-week-start-day 1)
+  ;; nano-calendar look: month name on a full-width bar.
+  (calendar-month-header
+   '(let* ((s (format "%s %d" (calendar-month-name month) year))
+           (pad (- 20 (length s))))
+      (propertize (concat (make-string (/ pad 2) ?\s) s
+                          (make-string (- pad (/ pad 2)) ?\s))
+                  'font-lock-face 'calendar-month-header)))
+  :custom-face
+  (calendar-month-header ((t :inherit (bold highlight))))
+  (calendar-weekday-header ((t :inherit default :underline t)))
+  (calendar-weekend-header ((t :inherit shadow :underline t)))
+  (calendar-today ((t :inverse-video t :weight bold)))
+  :hook
+  (calendar-today-visible . calendar-mark-today)
+  ;; `calendar-mode' runs before the window is fitted, so the fit sees this.
+  (calendar-mode . (lambda ()
+                     (text-scale-set 1.1)
+                     (setq-local line-spacing 0.1)))
   :config
   (advice-add 'calendar-mark-holidays :after #'fate-calendar-mark-holidays)
   ;; Only US (general) holidays from Emacs; the feeds cover CN/JP.  Drops
