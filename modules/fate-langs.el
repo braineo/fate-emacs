@@ -76,8 +76,22 @@
   ;; Non-nil means display source file containing the main routine at startup
   (gdb-show-main t))
 
-(use-package reformatter
-  :defer t)
+(use-package apheleia
+  :defer t
+  :custom
+  (apheleia-formatters-respect-indent-level nil "Let project config decide indentation")
+  :config
+  (setf (alist-get 'oxfmt apheleia-formatters)
+        ;; Built-in formats a temp file, which bypasses ignorePatterns
+        '("apheleia-npx" "oxfmt" "--stdin-filepath" filepath)
+        (alist-get 'qmlformat apheleia-formatters)
+        '("qmlformat" input "--no-sort")
+        (alist-get 'stylua apheleia-formatters)
+        '("stylua" "--indent-type=Spaces" "--indent-width=2" "-")
+        (alist-get 'shfmt apheleia-formatters)
+        '("shfmt" "--indent=4" "--case-indent" "--simplify" "-"))
+  (setf (alist-get 'qml-mode apheleia-mode-alist) 'qmlformat
+        (alist-get 'sh-mode apheleia-mode-alist) 'shfmt))
 
 ;; Lisp
 
@@ -109,15 +123,10 @@ When FORCE is set, clone and reinstall grammar."
       (message (format "installing %s grammar" lang))
       (treesit-install-language-grammar lang))))
 
-(reformatter-define taplo
-  :program "taplo"
-  :args '("format" "-")
-  :lighter "TAPLO")
-
 (use-package toml-ts-mode
   :ensure nil
   :bind (:map toml-ts-mode-map
-          ("C-c C-l" . taplo-buffer)))
+          ("C-c C-l" . apheleia-format-buffer)))
 
 (use-package swift-mode
   :mode (("\\.swift\\'" . swift-mode)))
@@ -171,16 +180,10 @@ When FORCE is set, clone and reinstall grammar."
 
 ;; QML
 
-(reformatter-define qmlformat
-  :program "qmlformat"
-  :stdin nil
-  :args (list input-file "--no-sort")
-  :lighter "QF")
-
 (use-package qml-mode
   :mode (("\\.qml\\'" . qml-mode))
   :bind (:map qml-mode-map
-         ("C-c C-l" . qmlformat-buffer)))
+         ("C-c C-l" . apheleia-format-buffer)))
 
 ;; i18n
 (use-package po-mode
@@ -196,27 +199,17 @@ When FORCE is set, clone and reinstall grammar."
 
 ;; lua
 
-(reformatter-define stylua
-  :program "stylua"
-  :args '("-" "--indent-type=Spaces" "--indent-width=2")
-  :lighter "QF")
-
 (use-package lua-mode
   :mode (("/\\.lua" . lua-mode))
   :bind (:map lua-mode-map
-         ("C-c C-l" . stylua-buffer)))
-
-(reformatter-define shfmt
-  :program "shfmt"
-  :args '("--indent=4" "--case-indent" "--simplify")
-  :lighter "SHF")
+         ("C-c C-l" . apheleia-format-buffer)))
 
 (use-package sh-script
   :ensure nil
   :bind (:map sh-mode-map
-          ("C-c C-l" . shfmt-buffer)
+          ("C-c C-l" . apheleia-format-buffer)
           :map bash-ts-mode-map
-          ("C-c C-l" . shfmt-buffer)))
+          ("C-c C-l" . apheleia-format-buffer)))
 
 (provide 'fate-langs)
 ;;; fate-langs.el ends here

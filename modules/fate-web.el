@@ -36,41 +36,52 @@
 (fate/create-install-tools!
   "js" ("npm" "install" "-g") fate/js-tools)
 
-(use-package prettier-js
-  :defer t
-  :defines prettier-js-args prettier-js)
+(defvar apheleia-formatter)
+(declare-function apheleia-mode "apheleia")
+(declare-function apheleia-format-buffer "apheleia")
 
-(defun fate/prettier-minor-mode ()
-  "Enable minor mdoe for certain extensions."
+(defun fate/oxfmt-project-p ()
+  "Non-nil if the project root has an oxfmt config."
+  (when-let* ((project (project-current)))
+    (directory-files (project-root project) nil
+                     "\\`\\(\\.oxfmtrc\\.jsonc?\\|oxfmt\\.config\\.[cm]?[jt]s\\)\\'")))
+
+(defun fate/web-formatter ()
+  "Return the apheleia formatter for the current project."
+  (if (fate/oxfmt-project-p) 'oxfmt 'prettier))
+
+(defun fate/web-format-on-save ()
+  "Enable format on save for certain extensions.
+Use oxfmt when the project root configures it, otherwise prettier."
   (when (and buffer-file-name
              (string-match-p "\\.\\(m?jsx?\\|tsx?\\|s?css\\|less\\|vue\\|json\\|gql\\|graphql\\|md\\)\\'"
                              buffer-file-name)
              ;; Do not auto format anything inside node_modules or temp dirs
              (not (string-match-p "node_modules\\|\\`/run/\\|\\`/te?mp/" buffer-file-name)))
-    (prettier-js-mode)))
-
-(defvar-local jq-format-args '())
-
+    (setq-local apheleia-formatter (fate/web-formatter))
+    (apheleia-mode)))
 
 ;;;###autoload
 (defun fate/json-pretty-print (&optional minimize)
-  "Pretty-print current buffer.  when MINIMIZE is set, minimize JSON document."
+  "Format current buffer with oxfmt or prettier.
+When MINIMIZE is set, minimize with jq.  When a region is active or
+the buffer has no file, use `json-pretty-print'."
   (interactive "P")
-  (when minimize
-    (setq-local jq-format-args '("-c")))
   (let ((beg (if (use-region-p) (region-beginning) (point-min)))
         (end (if (use-region-p) (region-end) (point-max))))
-    (if (executable-find "jq")
-        (json-jq-region beg end nil)
-      (json-pretty-print beg end minimize)))
-
-  (setq-local jq-format-args '()))
-
-
-(reformatter-define json-jq
-  :program "jq"
-  :args jq-format-args
-  :lighter "JQ")
+    (cond
+     (minimize
+      (let ((out (generate-new-buffer " *jq*")))
+        (unwind-protect
+            (if (zerop (call-process-region beg end "jq" nil out nil "-c" "."))
+                (progn (delete-region beg end)
+                       (goto-char beg)
+                       (insert-buffer-substring out))
+              (user-error "jq: %s" (with-current-buffer out (string-trim (buffer-string)))))
+          (kill-buffer out))))
+     ((or (use-region-p) (not buffer-file-name))
+      (json-pretty-print beg end))
+     (t (apheleia-format-buffer (fate/web-formatter))))))
 
 (use-package json-ts-mode
   :ensure nil
@@ -83,7 +94,7 @@
 (use-package css-mode
   :ensure nil
   :mode ("\\.less\\'" . css-ts-mode)
-  :hook (css-ts-mode . fate/prettier-minor-mode)
+  :hook (css-ts-mode . fate/web-format-on-save)
   :config
   (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.module.less\\'" "\\1.tsx")))
 
@@ -92,7 +103,7 @@
   (("\\.[cm]?jsx?\\'" . jtsx-jsx-mode)
    ("\\.m?tsx\\'" . jtsx-tsx-mode)
    ("\\.m?ts\\'" . jtsx-typescript-mode))
-  :hook ((javascript-ts-mode typescript-ts-mode tsx-ts-mode) . fate/prettier-minor-mode)
+  :hook ((javascript-ts-mode typescript-ts-mode tsx-ts-mode) . fate/web-format-on-save)
   :config
   (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.ts\\'" "\\1.spec.ts"))
   (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.tsx\\'" "\\1.spec.tsx" "\\1.scss" "\\1.module.less" "\\1.sass" "\\1.css"))
@@ -111,11 +122,11 @@
   :custom
   (web-mode-enable-auto-indentation nil "Use prettier on save instead")
   (web-mode-enable-auto-quoting nil "annoying when writing arrow function in a tag")
-  :hook (web-mode . fate/prettier-minor-mode))
+  :hook (web-mode . fate/web-format-on-save))
 
 (use-package graphql-ts-mode
   :mode ("\\.graphql\\'" "\\.gql\\'")
-  :hook (graphql-ts-mode . fate/prettier-minor-mode)
+  :hook (graphql-ts-mode . fate/web-format-on-save)
   :config
   (add-to-list 'find-sibling-rules '("\\([^/]+\\)\\.gql.ts\\'" "\\1.graphql")))
 

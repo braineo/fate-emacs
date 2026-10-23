@@ -46,9 +46,7 @@
   :hook (markdown-mode . (lambda()
                            (setq-local electric-pair-pairs
                                        (append electric-pair-pairs '((?` . ?`))))
-                           (setq-local electric-pair-text-pairs '((?` . ?`)))
-                           (setq-local prettier-js-args
-                            '("--parser" "markdown")))))
+                           (setq-local electric-pair-text-pairs '((?` . ?`))))))
 
 (use-package markdown-ts-mode
   :ensure nil
