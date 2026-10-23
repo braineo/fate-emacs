@@ -175,9 +175,14 @@
                           input)))
       (pcase-let* ((`(,arg . ,opts) (consult--command-split async-input))
                    (`(,re . ,hl) (funcall consult--regexp-compiler arg 'pcre nil)))
-        (embark--become-command
-          #'color-rg-search-input (if re (consult--join-regexps re 'pcre)
-                                    "")))))
+        ;; read the keyword ourselves; `color-rg-read-input' calls
+        ;; `color-rg-pointer-string', which errors inside some strings
+        (embark--quit-and-run
+          (lambda ()
+            (color-rg-search-input
+              (read-string "COLOR-RG Search: "
+                           (and re (consult--join-regexps re 'pcre))
+                           'color-rg-read-input-history)))))))
 
   (defvar-keymap fate/consult-rg-map
     "M-i" #'fate/consult-to-color-rg)
