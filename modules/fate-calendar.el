@@ -175,7 +175,6 @@ Runs after `calendar-mark-holidays', i.e. on every redraw and on \\`x'."
   :ensure nil
   :custom
   (calendar-mark-holidays-flag t)
-  (calendar-week-start-day 1)
   ;; nano-calendar look: month name on a full-width bar.
   (calendar-month-header
    '(let* ((s (format "%s %d" (calendar-month-name month) year))
