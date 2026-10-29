@@ -60,6 +60,16 @@
     (when (forge-get-repository :tracked?)
       (add-hook 'completion-at-point-functions
         #'fate/forge-topic-user-completion-at-point nil t)))
+  (defun fate/forge-copy-topic-reference ()
+    "Copy full reference of topic at point, e.g. owner/repo#7."
+    (interactive)
+    (let* ((topic (forge-current-topic t))
+           (ref (concat (oref (forge-get-repository topic) slug)
+                        (oref topic slug))))
+      (kill-new ref)
+      (message "Copied \"%s\"" ref)))
+  (keymap-set magit-mode-map "C-c M-w" #'fate/forge-copy-topic-reference)
+
   ;; Add user name highlight
   (font-lock-add-keywords 'forge-post-mode
    '(("\\(?:^\\|[^[:alnum:]]\\)\\(@[[:alnum:]._-]+\\)" 1 'markdown-link-face)))
