@@ -8,6 +8,11 @@
 
 (require 'forge)
 
+;; owners without a `.github' repo make the whole query fail with NOT_FOUND
+(setq forge--github-repository-query
+      (seq-remove (lambda (field) (equal (car-safe field) '("configRepository" repository)))
+                  forge--github-repository-query))
+
 ;; messages are re-emitted by `forge-pull--log', so the bar stays last
 (setq inhibit-message t)
 
