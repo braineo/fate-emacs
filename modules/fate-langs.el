@@ -211,5 +211,13 @@ When FORCE is set, clone and reinstall grammar."
           :map bash-ts-mode-map
           ("C-c C-l" . apheleia-format-buffer)))
 
+(use-package csv-mode
+  :hook (csv-mode . csv-align-mode))
+
+(use-package rainbow-csv
+  :vc (:url "https://github.com/emacs-vs/rainbow-csv")
+  :hook ((csv-mode . rainbow-csv-mode)
+         (tsv-mode . rainbow-csv-mode)))
+
 (provide 'fate-langs)
 ;;; fate-langs.el ends here
