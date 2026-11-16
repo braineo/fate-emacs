@@ -44,7 +44,8 @@
      ("a" "GPT" gptel-menu)]
 
    ["Tools"
-    ("w" "World Time" fate/worldtime)]])
+    ("w" "World Time" fate/worldtime)
+    ("$" "Currency" fate/currency)]])
 
 (keymap-global-set "M-m" #'gate-of-babylon)
 
