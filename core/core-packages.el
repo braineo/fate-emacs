@@ -32,8 +32,7 @@
 (setopt package-archives '(("gnu"   . "https://elpa.gnu.org/packages/")
                            ("melpa" . "https://melpa.org/packages/"))
         use-package-always-ensure t
-        use-package-vc-prefer-newest t
-        package-install-upgrade-built-in t)
+        use-package-vc-prefer-newest t)
 (when (file-readable-p custom-file) (load custom-file))
 
 ;; Only enable for benchmarking
