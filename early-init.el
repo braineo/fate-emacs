@@ -55,5 +55,13 @@
 
 (setopt initial-scratch-message "")
 
+;; Emacs 31 warns about files without a `lexical-binding' cookie.  Skip the
+;; warning for third-party packages in elpa/ only; own files still warn.
+(define-advice display-warning (:before-until (type &rest _) fate-skip-elpa-lexbind)
+  (and (consp type)
+       (eq (cadr type) 'missing-lexbind-cookie)
+       (stringp (nth 2 type))
+       (file-in-directory-p (nth 2 type) (locate-user-emacs-file "elpa/"))))
+
 (provide 'early-init)
 ;;; early-init.el ends here

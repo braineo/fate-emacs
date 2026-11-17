@@ -32,7 +32,6 @@
 (require 'fate-const)
 (require 'fate-core)
 (require 'fate-git)
-(require 'fate-delta)
 (require 'fate-vertico)
 (require 'fate-langs)
 (require 'fate-python)

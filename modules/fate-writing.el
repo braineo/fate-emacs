@@ -26,6 +26,7 @@
 
 
 (use-package typst-ts-mode
+  :defer t
   :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git"))
 
 ;; Markdown
@@ -244,6 +245,7 @@ If resuming, it prompts to select an existing file."
   (org-mem-do-sync-with-org-id t))
 
 (use-package org-node
+  :defer t
   :init
   (with-eval-after-load 'transient
     (transient-define-prefix org-node-transient ()
@@ -275,7 +277,7 @@ If resuming, it prompts to select an existing file."
   (org-node-file-directory-ask t))
 
 (use-package atomic-chrome
-  :demand t
+  :defer 2
   :vc (:url "https://github.com/KarimAziev/atomic-chrome")
   :commands (atomic-chrome-start-server)
   :config (atomic-chrome-start-server)
