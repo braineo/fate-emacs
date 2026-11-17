@@ -24,10 +24,6 @@
 
 ;;; Code:
 
-(eval-when-compile
-  (require 'which-func)
-  (require 'copy-as-format)
-  (require 'org))
 
 (use-package typst-ts-mode
   :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git"))
@@ -81,9 +77,11 @@
 
 (use-package org
   :ensure nil
+  ;; A lambda in :hook doesn't imply deferral; without this org loads at startup.
+  :defer t
   :hook (org-mode . (lambda () (setq-local fill-column 120)))
   :config
-  (add-to-list 'org-export-backends '(pandoc))
+  (add-to-list 'org-export-backends 'pandoc)
   (dolist (lang-mode '(("bash" . bash-ts)
                        ("python" . python-ts)
                        ("tsx" . jtsx-tsx)
@@ -105,7 +103,7 @@
                               (python . t)))
   (org-replace-disputed-keys t))
 
-(use-package ox-pandoc)
+(use-package ox-pandoc :defer t)
 
 (use-package org-capture
   :ensure nil
@@ -185,6 +183,8 @@ If resuming, it prompts to select an existing file."
   within an Org SRC block with a language based on the current mode
   and a backlink to the function and the file."
 
+    (require 'which-func)
+    (require 'copy-as-format)
     (with-current-buffer (find-buffer-visiting filename)
       (let* ((mode-name-no-mode (intern (replace-regexp-in-string "-mode\\'" "" (symbol-name major-mode))))
              (org-src-mode (cond

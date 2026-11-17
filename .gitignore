@@ -69,3 +69,4 @@ straight/
 parinfer-rust/
 eln-cache/
 tree-sitter/
+.user-lisp-autoloads.el
