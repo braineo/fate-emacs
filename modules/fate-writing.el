@@ -47,7 +47,8 @@
 
 (use-package markdown-ts-mode
   :ensure nil
-  :mode ("\\.md\\'"))
+  :mode ("\\.md\\'")
+  :hook (markdown-ts-mode . fate-currency-hover-mode))
 
 (use-package markdown-toc
   :defer)
@@ -80,7 +81,8 @@
   :ensure nil
   ;; A lambda in :hook doesn't imply deferral; without this org loads at startup.
   :defer t
-  :hook (org-mode . (lambda () (setq-local fill-column 120)))
+  :hook ((org-mode . (lambda () (setq-local fill-column 120)))
+         (org-mode . fate-currency-hover-mode))
   :config
   (add-to-list 'org-export-backends 'pandoc)
   (dolist (lang-mode '(("bash" . bash-ts)

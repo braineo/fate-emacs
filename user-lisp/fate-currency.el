@@ -22,6 +22,7 @@
 (require 'seq)
 (require 'cl-lib)
 (require 'color)
+(require 'thingatpt)
 (use-package plz)
 (declare-function plz "plz")
 
@@ -635,6 +636,118 @@ Works from any row; the base currency stays the same."
       (fate-currency-mode))
     (fate/currency--render)
     (fate/currency--goto-row (fate/currency--base-code))))
+
+;;; Hover popup
+
+(declare-function posframe-show "posframe")
+(declare-function posframe-hide "posframe")
+(declare-function posframe-poshandler-point-bottom-left-corner "posframe")
+(defvar fate-currency-hover-mode)
+
+(defconst fate-currency--hover-re
+  (rx-let ((amt (seq digit (* (any digit ",")) (? "." (+ digit)) (? (any "kKmMbB")) word-end))
+           (cur (seq word-start (= 3 upper) word-end))
+           (tail (seq (? (* blank) (or "-" "–" "—" "~" "to") (* blank) (group-n 3 amt)) (? "~"))))
+    (rx (or (seq (group-n 1 cur) (* blank) (group-n 2 amt) tail)
+            (seq (group-n 2 amt) tail (* blank) (group-n 1 cur)))))
+  "Match amounts like \"USD 95K~\", \"CNY 32,000\", \"95-110K EUR\".
+Group 1 is the code, 2 the amount (or range start), 3 the range end.")
+
+(defconst fate-currency--hover-buffer " *currency-hover*")
+
+(defun fate/currency--parse-amount (s &optional suffix)
+  "Return the number S denotes, e.g. \"95K\" → 95000.
+SUFFIX (a K/M/B letter) applies when S has none, for \"95-110K\"."
+  (let* ((s (string-replace "," "" s))
+         (last (upcase (substring s -1)))
+         (unit (if (member last '("K" "M" "B")) last suffix)))
+    (* (string-to-number s)
+       (pcase unit ("K" 1e3) ("M" 1e6) ("B" 1e9) (_ 1)))))
+
+(defun fate/currency--short (n)
+  "Format N with three significant digits and a K/M/B suffix, e.g. 676.9K."
+  (if (< n 1000)
+      (fate/currency--format n 0)
+    (pcase-let* ((`(,div . ,unit) (seq-find (lambda (u) (>= n (car u)))
+                                            '((1e9 . "B") (1e6 . "M") (1e3 . "K"))))
+                 (v (/ n div))
+                 (s (format (cond ((>= v 100) "%.0f") ((>= v 10) "%.1f") (t "%.2f")) v)))
+      (concat (if (string-search "." s) (string-trim-right s "\\.?0+") s) unit))))
+
+(defun fate/currency--hover-match ()
+  "Return (BEG CODE LOW HIGH-OR-NIL) for the amount at point, or nil."
+  (let ((case-fold-search nil))
+    (when (thing-at-point-looking-at fate-currency--hover-re (line-end-position))
+      (let* ((code (match-string-no-properties 1))
+             (hi-s (match-string-no-properties 3))
+             (hi (and hi-s (fate/currency--parse-amount hi-s))))
+        ;; Only real currencies, so "API 500" stays quiet.
+        (when (or (member code fate-currency-list) (assoc code (fate/currency--names)))
+          (list (match-beginning 0) code
+                (fate/currency--parse-amount (match-string-no-properties 2)
+                                             (and hi-s (upcase (substring hi-s -1))))
+                hi))))))
+
+(defun fate/currency--hover-text (code lo hi)
+  "Return the popup text converting LO (to HI) from CODE, or nil while loading."
+  (let ((rows (mapcar (lambda (to)
+                        (let ((r (fate/currency--per-usd to))
+                              (from (fate/currency--per-usd code)))
+                          (list to (cond ((or (eq r 'error) (eq from 'error)) 'error)
+                                         ((and r from) (/ r from))))))
+                      (remove code fate-currency-list))))
+    (unless (seq-some (lambda (row) (null (cadr row))) rows)
+      (let* ((amt (lambda (rate n) (if (eq rate 'error) "n/a" (fate/currency--short (* rate n)))))
+             (cells (mapcar (lambda (row)
+                              (list (car row) (funcall amt (cadr row) lo)
+                                    (and hi (funcall amt (cadr row) hi))))
+                            rows))
+             (w1 (apply #'max 0 (mapcar (lambda (c) (length (nth 1 c))) cells)))
+             (w2 (apply #'max 0 (mapcar (lambda (c) (length (or (nth 2 c) ""))) cells))))
+        (concat
+         (propertize (format "%s %s%s\n" code (fate/currency--short lo)
+                             (if hi (concat "–" (fate/currency--short hi)) ""))
+                     'face 'fate-currency-hint)
+         (mapconcat
+          (pcase-lambda (`(,to ,a ,b))
+            (concat (propertize to 'face 'fate-currency-code) "  "
+                    (propertize (concat (string-pad a w1 nil t)
+                                        (if b (concat " – " (string-pad b w2 nil t)) ""))
+                                'face 'fate-currency-amount)))
+          cells "\n"))))))
+
+(defun fate/currency--hover ()
+  "Show conversions for the amount at point in a posframe."
+  (when (and fate-currency-hover-mode (display-graphic-p))
+    (when-let* ((m (fate/currency--hover-match)))
+      (if-let* ((text (apply #'fate/currency--hover-text (cdr m))))
+          (posframe-show fate-currency--hover-buffer
+                         :string (mapconcat (lambda (l) (concat " " l " ")) (split-string text "\n") "\n")
+                         :position (car m)
+                         :poshandler #'posframe-poshandler-point-bottom-left-corner
+                         :border-width 1
+                         :border-color (fate/currency--color 'shadow))
+        ;; ponytail: polls until the async rates land; plz's timeout ends it as `error'.
+        (run-with-timer 0.3 nil #'fate/currency--hover)))))
+
+(defun fate/currency--hover-hide ()
+  "Hide the hover popup."
+  (posframe-hide fate-currency--hover-buffer))
+
+(defvar fate-currency--hover-timer nil)
+
+;;;###autoload
+(define-minor-mode fate-currency-hover-mode
+  "Show amounts like \"USD 95K\" in other currencies when point rests on them."
+  :lighter nil
+  (if fate-currency-hover-mode
+      (progn
+        (require 'posframe)
+        (add-hook 'pre-command-hook #'fate/currency--hover-hide nil t)
+        (unless fate-currency--hover-timer
+          (setq fate-currency--hover-timer
+                (run-with-idle-timer 0.5 t #'fate/currency--hover))))
+    (remove-hook 'pre-command-hook #'fate/currency--hover-hide t)))
 
 (provide 'fate-currency)
 ;;; fate-currency.el ends here
