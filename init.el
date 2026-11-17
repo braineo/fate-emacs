@@ -44,8 +44,6 @@
 (require 'fate-assist)
 (require 'fate-transient)
 (require 'fate-docker)
-(require 'fate-worldtime)
-(require 'fate-currency)
 (require 'fate-calendar)
 
 (when IS-MAC
