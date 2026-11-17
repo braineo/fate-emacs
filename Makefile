@@ -11,3 +11,7 @@ test:
 		echo "Running tests in $$file"; \
 		emacs -nw --batch -L modules -l "$$file" -f ert-run-tests-batch-and-exit; \
 	done
+
+.PHONY: prune
+prune:
+	emacs -Q --batch -l bin/prune-packages.el
