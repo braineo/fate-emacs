@@ -38,8 +38,11 @@
 
 (use-package lsp-bridge
   :vc (:url "https://github.com/manateelazycat/lsp-bridge")
-  :hook (after-init . global-lsp-bridge-mode)
+  ;; Load after 1s idle, off the startup path.  Buffers opened before then
+  ;; don't get `lsp-bridge-mode' until reverted.
+  :defer 1
   :config
+  (global-lsp-bridge-mode)
   (add-to-list 'display-buffer-alist
              `(,(regexp-quote "*lsp-bridge-ref*")
                (display-buffer-in-side-window)
@@ -51,9 +54,8 @@
     'lsp-bridge-single-lang-server-extension-list
     '(("less") . "vscode-css-language-server"))
   (nconc acm-backend-capf-mode-list '(forge-post-mode))
-  (with-eval-after-load 'fate-flycheck-bridge
-    (add-hook 'lsp-bridge-mode-hook #'flycheck-lsp-bridge-setup)
-    (add-hook 'lsp-bridge-mode-hook #'lsp-bridge-breadcrumb-mode))
+  (add-hook 'lsp-bridge-mode-hook #'flycheck-lsp-bridge-setup)
+  (add-hook 'lsp-bridge-mode-hook #'lsp-bridge-breadcrumb-mode)
   :custom
   (lsp-bridge-signature-function 'eldoc-message)
   (acm-markdown-render-font-height 80)
