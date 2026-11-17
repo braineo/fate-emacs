@@ -15,6 +15,12 @@
     ((font-installed-p "Operator Mono") (set-face-attribute 'default nil :font "Operator Mono" :height 80 :weight 'semilight)))
 
   (cond
+   ;; 霞鹜文楷 (apt install fonts-lxgw-wenkai); kana from Klee One, so JP looks native
+   ((font-installed-p "LXGW WenKai Mono")
+    ;; JetBrains Mono is 0.6em wide, so 1.2 makes one CJK char = exactly 2 columns
+    (setq face-font-rescale-alist '(("LXGW WenKai Mono" . 1.2)))
+    (dolist (char '(kana han cjk-misc bopomofo))
+      (set-fontset-font t char (font-spec :family "LXGW WenKai Mono"))))
    ((font-installed-p "LXGW Neo XiHei")
     (dolist (char '(han kana cjk-misc))
       (set-fontset-font t char "LXGW Neo XiHei")))
