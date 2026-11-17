@@ -11,13 +11,14 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'calendar)
-(require 'holidays)
-(require 'icalendar-parser)
-(require 'icalendar-macs)
 (require 'time-date)
+;; calendar, holidays and icalendar-parser load lazily (see `use-package
+;; calendar' and `fate-calendar--feed'); the macros are compile-time only.
+(eval-when-compile
+  (require 'icalendar-parser)           ; the macros check its types while expanding
+  (require 'icalendar-macs))
 
-(use-package plz)
+(use-package plz :defer t)
 (declare-function plz "plz")
 
 (defface fate-calendar-cn-holiday
@@ -93,13 +94,33 @@ An event spanning several days yields one entry per day."
                               (format "[%s] %s" label summary))
                         res))))))))))
 
+(defun fate-calendar--feed (feed)
+  "Entries of FEED from its cached .ics.
+Parsing is slow (~0.2s per feed), so the result is kept in a .eld file
+next to the .ics and reused until the .ics is re-downloaded or FEED changes."
+  (pcase-let* ((`(,name ,label ,_ ,_ ,filter) feed)
+               (ics (fate-calendar--cache-file name))
+               (eld (concat (file-name-sans-extension ics) ".eld"))
+               (coding-system-for-read 'utf-8)
+               (coding-system-for-write 'utf-8))
+    (cond
+     ((not (file-exists-p ics)) nil)
+     ((and (file-newer-than-file-p eld ics)
+           (let ((cached (with-temp-buffer
+                           (insert-file-contents eld)
+                           (ignore-errors (read (current-buffer))))))
+             (and (equal (car cached) feed) (cdr cached)))))
+     (t (require 'icalendar-parser)
+        (let ((entries (fate-calendar--parse ics label filter)))
+          (with-temp-file eld
+            (let ((print-length nil) (print-level nil))
+              (prin1 (cons feed entries) (current-buffer))))
+          entries)))))
+
 (defun fate-calendar--load ()
-  "Parse every cached feed and redraw the calendar if it is open."
+  "Load every cached feed and redraw the calendar if it is open."
   (setq fate-calendar--holidays
-        (mapcar (pcase-lambda (`(,name ,label ,_ ,_ ,filter))
-                  (let ((file (fate-calendar--cache-file name)))
-                    (cons name (and (file-exists-p file)
-                                    (fate-calendar--parse file label filter)))))
+        (mapcar (lambda (feed) (cons (car feed) (fate-calendar--feed feed)))
                 fate-calendar-feeds))
   (when-let* ((buf (get-buffer calendar-buffer)))
     (with-current-buffer buf (calendar-redraw))))
@@ -107,6 +128,7 @@ An event spanning several days yields one entry per day."
 (defun fate-calendar-update-holidays (&optional force)
   "Download holiday feeds older than 30 days (all of them with FORCE)."
   (interactive (list t))
+  (require 'plz)
   (pcase-dolist (`(,name ,_ ,url . ,_) fate-calendar-feeds)
     (let ((file (fate-calendar--cache-file name)))
       (when (or force
@@ -173,6 +195,8 @@ Runs after `calendar-mark-holidays', i.e. on every redraw and on \\`x'."
 
 (use-package calendar
   :ensure nil
+  ;; A lambda in :hook doesn't imply deferral.
+  :defer t
   :custom
   (calendar-mark-holidays-flag t)
   ;; nano-calendar look: month name on a full-width bar.
@@ -194,6 +218,7 @@ Runs after `calendar-mark-holidays', i.e. on every redraw and on \\`x'."
                      (text-scale-set 1.1)
                      (setq-local line-spacing 0.1)))
   :config
+  (require 'holidays)
   (advice-add 'calendar-mark-holidays :after #'fate-calendar-mark-holidays)
   ;; Only US (general) holidays from Emacs; the feeds cover CN/JP.  Drops
   ;; the religious, Chinese and solar groups (e.g. a duplicate 春节).
@@ -204,6 +229,8 @@ Runs after `calendar-mark-holidays', i.e. on every redraw and on \\`x'."
 
 (use-package casual-calendar
   :ensure nil
+  ;; `calendar-mode-map' must exist for :bind.
+  :after calendar
   :bind (:map calendar-mode-map ("C-o" . casual-calendar))
   :config
   (transient-append-suffix 'casual-calendar-tmenu "u"
