@@ -82,7 +82,7 @@
   :vc (:url "https://github.com/LuciusChen/pele.el")
   :custom (pele-module-directory (no-littering-expand-var-file-name "pele/modules/"))
   :hook ((org-mode . pele-org-mode)
-         (markdown-ts-mode . pele-makrdown-mode)))
+         (markdown-ts-mode . pele-markdown-mode)))
 
 (use-package org
   :ensure nil
