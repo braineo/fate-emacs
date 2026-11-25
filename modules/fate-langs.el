@@ -84,6 +84,11 @@
   (setf (alist-get 'oxfmt apheleia-formatters)
         ;; Built-in formats a temp file, which bypasses ignorePatterns
         '("apheleia-npx" "oxfmt" "--stdin-filepath" filepath)
+        ;; oxfmt picks the language by extension; fileless buffers
+        ;; (atomic-chrome) get a fake .md path
+        (alist-get 'oxfmt-markdown apheleia-formatters)
+        '("apheleia-npx" "oxfmt" "--stdin-filepath"
+          (or buffer-file-name (expand-file-name "stdin.md")))
         (alist-get 'qmlformat apheleia-formatters)
         '("qmlformat" input "--no-sort")
         (alist-get 'stylua apheleia-formatters)
@@ -91,7 +96,9 @@
         (alist-get 'shfmt apheleia-formatters)
         '("shfmt" "--indent=4" "--case-indent" "--simplify" "-"))
   (setf (alist-get 'qml-mode apheleia-mode-alist) 'qmlformat
-        (alist-get 'sh-mode apheleia-mode-alist) 'shfmt))
+        (alist-get 'sh-mode apheleia-mode-alist) 'shfmt
+        (alist-get 'markdown-mode apheleia-mode-alist) 'oxfmt-markdown
+        (alist-get 'markdown-ts-mode apheleia-mode-alist) 'oxfmt-markdown))
 
 ;; Lisp
 

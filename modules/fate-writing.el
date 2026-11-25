@@ -48,7 +48,8 @@
 (use-package markdown-ts-mode
   :ensure nil
   :mode ("\\.md\\'")
-  :hook (markdown-ts-mode . fate-currency-hover-mode))
+  :hook (markdown-ts-mode . fate-currency-hover-mode)
+  :bind (:map markdown-ts-mode-map ("C-c C-l" . apheleia-format-buffer)))
 
 (use-package markdown-toc
   :defer)
@@ -76,6 +77,12 @@
   :config
   ;; disable checking spell of Chinses
   (add-to-list 'jinx-exclude-regexps '(t "\\cc")))
+
+(use-package pele
+  :vc (:url "https://github.com/LuciusChen/pele.el")
+  :custom (pele-module-directory (no-littering-expand-var-file-name "pele/modules/"))
+  :hook ((org-mode . pele-org-mode)
+         (markdown-ts-mode . pele-makrdown-mode)))
 
 (use-package org
   :ensure nil
